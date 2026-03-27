@@ -22,8 +22,11 @@ const Navbar = () => {
     return (
         <header className="navbar">
             <div className="nav-wrapper">
-
-                {/* Hamburger */}
+                <div
+                    className={`overlay ${mobileOpen ? "show" : ""}`}
+                    onClick={() => setMobileOpen(false)}
+                >
+                </div>
                 <div
                     className={`hamburger ${mobileOpen ? "active" : ""}`}
                     onClick={() => setMobileOpen(!mobileOpen)}
@@ -32,7 +35,7 @@ const Navbar = () => {
                     <span></span>
                     <span></span>
                 </div>
-
+                
                 {/* Menu */}
                 <nav className={`navmenu ${mobileOpen ? "open" : ""}`}>
                     <ul>
