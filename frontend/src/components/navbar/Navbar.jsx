@@ -1,32 +1,64 @@
-import React from 'react'
-import './Navbar.css'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import React, { useState, useEffect, useRef } from "react";
+import "./Navbar.css";
 
 const Navbar = () => {
-  return (
-    <div className="header fixed-top">
-          <div className="branding d-flex align-items-cente">
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [mobileOpen, setMobileOpen] = useState(false);
 
-          <div className="container position-relative d-flex align-items-center justify-content-end">
+    const indicatorRef = useRef(null);
+    const navRefs = useRef([]);
 
-              <nav id="navmenu" className="navmenu">
-                  <ul>
-                      <li><a href="index.html" className="active">Home</a></li>
-                      <li><a href="#">News</a></li>
-                      <li><a href="#">Events</a></li>
-                      <li><a href="#">Sports</a></li>
-                      <li><a href="#">Photo Gallery</a></li>
-                      <li><a href="#">About Us</a></li>
-                  </ul>
-                  <i className="mobile-nav-toggle d-xl-none bi bi-list"></i>
-              </nav>
+    const menuItems = ["Home", "News", "Events", "Sports", "Photo Gallery", "About"];
 
-          </div>
+    // Indicator fix (correct parent)
+    useEffect(() => {
+        const el = navRefs.current[activeIndex];
+        if (el && indicatorRef.current) {
+            indicatorRef.current.style.width = `${el.offsetWidth}px`;
+            indicatorRef.current.style.left = `${el.offsetLeft}px`;
+        }
+    }, [activeIndex]);
 
-      </div>
-      </div>
-  )
-}
+    return (
+        <header className="navbar">
+            <div className="nav-wrapper">
 
-export default Navbar
+                {/* Hamburger */}
+                <div
+                    className={`hamburger ${mobileOpen ? "active" : ""}`}
+                    onClick={() => setMobileOpen(!mobileOpen)}
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                {/* Menu */}
+                <nav className={`navmenu ${mobileOpen ? "open" : ""}`}>
+                    <ul>
+                        {menuItems.map((item, index) => (
+                            <li key={index}>
+                                <a
+                                    href="#"
+                                    ref={(el) => (navRefs.current[index] = el)}
+                                    onClick={() => {
+                                        setActiveIndex(index);
+                                        setMobileOpen(false);
+                                    }}
+                                    className={activeIndex === index ? "active" : ""}
+                                >
+                                    {item}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+
+                    <span className="nav-indicator" ref={indicatorRef}></span>
+                </nav>
+
+            </div>
+        </header>
+    );
+};
+
+export default Navbar;
