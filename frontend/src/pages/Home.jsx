@@ -1,0 +1,91 @@
+import React, { useState, useEffect, useRef } from "react";
+import "./Home.css";
+
+const Home = () => {
+    const [text, setText] = useState("");
+    const fullText = "Chalukaya Sports Academy";
+
+    useEffect(() => {
+        let index = 0;
+        let isDeleting = false;
+
+        const typing = () => {
+            if (!isDeleting) {
+                setText(fullText.slice(0, index + 1));
+                index++;
+
+                if (index === fullText.length) {
+                    isDeleting = true;
+                    setTimeout(typing, 2000);
+                    return;
+                }
+            } else {
+                setText(fullText.slice(0, index - 1));
+                index--;
+
+                if (index === 0) {
+                    isDeleting = false;
+                }
+            }
+
+            setTimeout(typing, isDeleting ? 60 : 120);
+        };
+
+        typing();
+    }, []);
+    return (
+        
+        <section className="hero">
+
+            {/* Background */}
+            <div className="hero-bg"></div>
+
+            {/* Floating Shapes */}
+            <div className="circle circle1"></div>
+            <div className="circle circle2"></div>
+            <div className="circle circle3"></div>
+
+            <div className="hero-container">
+
+                {/* LEFT CONTENT */}
+                <div className="hero-left">
+
+                    <h1>
+                        Train Hard. Win Big with <span className="typing">{text}</span>
+                    </h1>
+
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    </p>
+
+                    <div className="stats">
+                        <div>
+                            <h3>15+</h3>
+                            <p>Years Experience</p>
+                        </div>
+
+                        <div>
+                            <h3>5000+</h3>
+                            <p>Players Trained</p>
+                        </div>
+
+                        <div>
+                            <h3>50+</h3>
+                            <p>Expert Coaches</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                {/* RIGHT IMAGE */}
+                <div className="hero-right">
+                    <img src="/chalukyaimges/chlukyaphoto.png" alt="academy" />
+                </div>
+
+            </div>
+        </section>
+    );
+};
+
+export default Home;

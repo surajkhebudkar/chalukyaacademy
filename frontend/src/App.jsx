@@ -5,6 +5,7 @@ import Loader from "./components/Loader/Loader";
 import "./App.css";
 import "./index.css";
 import ScrollTop from "./components/scrolltop/ScrollTop";
+import Home from "./pages/Home";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -27,9 +28,7 @@ function App() {
 
           {/* Main Content */}
           <main className="main-content">
-            <h1 style={{ padding: "100px 20px" }}>
-              Your Page Content Here
-            </h1>
+              <Home />
           </main>
 
           <Footer />
