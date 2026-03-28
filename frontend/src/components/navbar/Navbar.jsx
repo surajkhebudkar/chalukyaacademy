@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Navbar.css";
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet"></link>
 
 const Navbar = () => {
     const [activeIndex, setActiveIndex] = useState(0);
