@@ -10,8 +10,19 @@
     position: absolute;
     inset: 0;
     background: url("/bgimage/HeroBackgrounIMG.webp") no-repeat center/cover;
+    animation: bgZoom 20s ease-in-out infinite alternate;
     opacity: 0.08;
     z-index: -1;
+}
+
+@keyframes bgZoom {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.1);
+    }
 }
 
 .hero-container {
@@ -40,6 +51,28 @@
     line-height: 1.6;
 }
 
+.hero-left {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(8px);
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+        filter: blur(8px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
 .stats {
     display: flex;
     gap: 30px;
@@ -52,10 +85,15 @@
 
 .hero-right img {
     width: 40%;
+    left: 130px;
     border-radius: 20px;
     position: relative;
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(6px);
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 0.6s;
     z-index: 2;
-    left: 130px;
 }
 
 .typing::after {
@@ -142,20 +180,21 @@
     .hero-left h1 {
         font-size: 30px;
     }
+
     .hero-left h1 span {
         font-size: 25px;
     }
 
-        .hero-right {
-            display: flex;
-            justify-content: center;
-        }
-    
-        .hero-right img {
-            width: 40%;
-            max-width: 400px;
-            left: 0;
-        }
+    .hero-right {
+        display: flex;
+        justify-content: center;
+    }
+
+    .hero-right img {
+        width: 40%;
+        max-width: 400px;
+        left: 0;
+    }
 
     .circle3 {
         width: 100px;
