@@ -1,0 +1,161 @@
+.footer {
+    background: #fff;
+    padding: 60px 20px 20px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 500;
+    color: #333;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+}
+
+.footer-section h4 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.footer-section p {
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.footer-section p:hover {
+    color: #0d6efd;
+}
+
+.footer-section i {
+    font-size: 16px;
+    color: #0d6efd;
+}
+
+.footer-form input,
+.footer-form select,
+.footer-form textarea,
+.footer-section textarea {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.footer-form input:focus,
+.footer-form select:focus,
+.footer-form textarea:focus,
+.footer-section textarea:focus {
+    border-color: #0d6efd;
+}
+
+.footer-form button,
+.feedback-btn {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    background: #0d6efd;
+    color: #fff;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.footer-form button:hover,
+.feedback-btn:hover {
+    background: #0b5ed7;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 13px;
+    color: #777;
+}
+
+.footer-logo {
+    margin-top: 15px;
+}
+
+.footer-logo img {
+    width: 200px;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.9;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .footer {
+        padding: 40px 15px 20px;
+    }
+
+    .footer-section h4 {
+        font-size: 16px;
+    }
+
+    .footer-section p {
+        font-size: 13px;
+    }
+
+    .footer-form input,
+    .footer-form select,
+    .footer-form textarea {
+        font-size: 12px;
+    }
+
+    .footer-form button,
+    .feedback-btn {
+        font-size: 13px;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+
+    .footer-section {
+        align-items: center;
+    }
+
+    .footer-section p {
+        justify-content: center;
+    }
+
+    .footer-logo img {
+        width: 100px;
+        margin: auto;
+    }
+
+    .footer-form input,
+    .footer-form select,
+    .footer-form textarea,
+    .footer-section textarea {
+        text-align: center;
+    }
+
+    .footer-form button,
+    .feedback-btn {
+        width: 100%;
+    }
+}
