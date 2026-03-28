@@ -4,6 +4,7 @@ import Footer from "./components/footer/Footer";
 import Loader from "./components/Loader/Loader";
 import "./App.css";
 import "./index.css";
+import ScrollTop from "./components/scrolltop/ScrollTop";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -32,6 +33,7 @@ function App() {
           </main>
 
           <Footer />
+          <ScrollTop />
         </div>
       )}
     </>
