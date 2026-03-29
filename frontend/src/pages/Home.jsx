@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Home.css";
 import RunningLine from "../components/runningLine/RunningLine";
+import ImageSlider from "../components/imageSlider/ImageSlider";
 
 const Home = () => {
     const [text, setText] = useState("");
@@ -38,7 +39,7 @@ const Home = () => {
     return (
         <>
             {/* HERO SECTION */}
-            <section className="hero">
+            <section className="hero section-dark">
 
                 {/* Background */}
                 <div className="hero-bg"></div>
@@ -92,6 +93,8 @@ const Home = () => {
             </section>
 
             <RunningLine />
+            <ImageSlider />
+            
         </>
     );
 };
