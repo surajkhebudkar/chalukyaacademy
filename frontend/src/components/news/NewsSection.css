@@ -32,7 +32,7 @@
 
 .news-section.show .news-card {
     visibility: visible;
-    animation: premiumReveal 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: premiumReveal 4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .news-section.show .news-card:nth-child(1) {
@@ -101,9 +101,12 @@
     .news-container {
         grid-template-columns: 1fr;
     }
-
+.news-card {
+    width: 80%;
+    margin: auto;
+}
     .news-card img {
-        height: 200px;
+        height: 250px;
     }
 
     .news-overlay {
