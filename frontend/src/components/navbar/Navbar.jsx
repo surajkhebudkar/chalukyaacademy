@@ -56,7 +56,7 @@ const Navbar = () => {
                         ))}
                     </ul>
 
-                    <span className="nav-indicator" ref={indicatorRef}></span>
+                   
                 </nav>
 
             </div>

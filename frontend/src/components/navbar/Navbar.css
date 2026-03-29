@@ -45,20 +45,31 @@
     font-family: 'Sora', sans-serif;
     border-radius: 8px;
 }
-
 .navmenu ul li a:hover {
     color: #0d6efd;
     background: rgba(13, 110, 253, 0.08);
     transform: translateY(-2px);
 }
 
-.nav-indicator {
+.navmenu ul li a::after {
+    content: "";
     position: absolute;
-    bottom: -6px;
+    left: 50%;
+    bottom: -4px;
+    width: 0%;
     height: 2px;
     background: #0d6efd;
     transition: all 0.3s ease;
-    box-shadow: 0 0 8px rgba(13, 110, 253, 0.6);
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.navmenu ul li a:hover::after {
+    width: 80%;
+}
+
+.navmenu ul li a.active::after {
+    width: 80%;
 }
 
 /* ===== HAMBURGER ===== */
