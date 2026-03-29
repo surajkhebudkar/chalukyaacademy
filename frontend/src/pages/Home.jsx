@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import "./Home.css";
+import RunningLine from "../components/runningLine/RunningLine";
 
 const Home = () => {
     const [text, setText] = useState("");
@@ -33,58 +34,65 @@ const Home = () => {
 
         typing();
     }, []);
+
     return (
-        
-        <section className="hero">
+        <>
+            {/* HERO SECTION */}
+            <section className="hero">
 
-            {/* Background */}
-            <div className="hero-bg"></div>
+                {/* Background */}
+                <div className="hero-bg"></div>
 
-            {/* Floating Shapes */}
-            <div className="circle circle1"></div>
-            <div className="circle circle2"></div>
-            <div className="circle circle3"></div>
+                {/* Floating Shapes */}
+                <div className="circle circle1"></div>
+                <div className="circle circle2"></div>
+                <div className="circle circle3"></div>
 
-            <div className="hero-container">
+                <div className="hero-container">
 
-                {/* LEFT CONTENT */}
-                <div className="hero-left">
+                    {/* LEFT */}
+                    <div className="hero-left">
+                        <h1>
+                            Train Hard. Win Big with{" "}
+                            <span className="typing">{text}</span>
+                        </h1>
 
-                    <h1>
-                        Train Hard. Win Big with <span className="typing">{text}</span>
-                    </h1>
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        </p>
 
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                    </p>
+                        <div className="stats">
+                            <div>
+                                <h3>15+</h3>
+                                <p>Years Experience</p>
+                            </div>
 
-                    <div className="stats">
-                        <div>
-                            <h3>15+</h3>
-                            <p>Years Experience</p>
-                        </div>
+                            <div>
+                                <h3>5000+</h3>
+                                <p>Players Trained</p>
+                            </div>
 
-                        <div>
-                            <h3>5000+</h3>
-                            <p>Players Trained</p>
-                        </div>
-
-                        <div>
-                            <h3>50+</h3>
-                            <p>Expert Coaches</p>
+                            <div>
+                                <h3>50+</h3>
+                                <p>Expert Coaches</p>
+                            </div>
                         </div>
                     </div>
 
-                </div>
+                    {/* RIGHT */}
+                    <div className="hero-right">
+                        <img
+                            src="/chalukyaimges/chlukyaphoto.png"
+                            alt="academy"
+                        />
+                    </div>
 
-                {/* RIGHT IMAGE */}
-                <div className="hero-right">
-                    <img src="/chalukyaimges/chlukyaphoto.png" alt="academy" />
                 </div>
+            </section>
 
-            </div>
-        </section>
+            <RunningLine />
+        </>
     );
 };
 
