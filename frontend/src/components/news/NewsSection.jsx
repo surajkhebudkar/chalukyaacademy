@@ -5,19 +5,18 @@ const NewsSection = () => {
 
     const sectionRef = useRef();
     const [show, setShow] = useState(false);
-
     const [news, setNews] = useState([]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+                if (entry.isIntersecting) {
                     setShow(true);
                     observer.unobserve(entry.target);
                 }
             },
             {
-                threshold: [0.6],
+                threshold: 0.6,
             }
         );
 
@@ -43,8 +42,8 @@ const NewsSection = () => {
             <h2 className="news-title">Latest News</h2>
 
             <div className="news-container">
-                {news.map((item, index) => (
-                    <div className={`news-card card${index + 1}`} key={item.id}>
+                {news.map((item) => (
+                    <div className="news-card" key={item.id}>
                         <img src={item.image} alt="news" />
 
                         <div className="news-overlay">
