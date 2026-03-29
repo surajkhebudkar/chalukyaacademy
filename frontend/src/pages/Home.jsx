@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./Home.css";
 import RunningLine from "../components/runningLine/RunningLine";
 import ImageSlider from "../components/imageSlider/ImageSlider";
+import NewsSection from "../components/news/NewsSection";
 
 const Home = () => {
     const [text, setText] = useState("");
@@ -94,6 +95,7 @@ const Home = () => {
 
             <RunningLine />
             <ImageSlider />
+            <NewsSection />
             
         </>
     );
