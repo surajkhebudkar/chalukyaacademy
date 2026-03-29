@@ -15,7 +15,9 @@
     visibility: hidden;
     transform: translateY(20px);
     transition: all 0.3s ease;
-    z-index: 2000;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
 }
 
 .scroll-top.show {
