@@ -128,7 +128,6 @@
         box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
         background: #fff;
         backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
         z-index: 1500;
     }
 
@@ -219,7 +218,7 @@
         transform: translateY(0);
         transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     }
-.overlay {
+.Navbar-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.20);
@@ -230,7 +229,7 @@
     z-index: 1000;
 }
 
-.overlay.show {
+.Navbar-overlay.show {
     opacity: 1;
     visibility: visible;
 }
