@@ -23,7 +23,7 @@ const Navbar = () => {
         <header className="navbar">
             <div className="nav-wrapper">
                 <div
-                    className={`overlay ${mobileOpen ? "show" : ""}`}
+                    className={`Navbaroverlay ${mobileOpen ? "show" : ""}`}
                     onClick={() => setMobileOpen(false)}
                 >
                 </div>
