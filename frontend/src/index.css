@@ -18,3 +18,10 @@ body {
 .main-content {
     flex: 1;
 }
+.section-light {
+    background: #ffffff;
+}
+
+.section-dark {
+    background: #f8f9fa;
+}
