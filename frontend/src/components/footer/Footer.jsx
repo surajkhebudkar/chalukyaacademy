@@ -33,7 +33,7 @@ const Footer = () => {
                     <p><i className="bi bi-telephone"></i> +91 0000000000</p>
 
                     <div className="footer-logo">
-                        <img src="chalukyaimages/chlukyaacademylogo.png" alt="logo" />
+                        <img src="/chalukyaimages/chlukyaacademylogo.png" alt="logo" />
                     </div>
                 </div>
 
