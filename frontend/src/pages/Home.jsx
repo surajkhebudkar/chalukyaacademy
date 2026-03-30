@@ -4,6 +4,7 @@ import RunningLine from "../components/runningLine/RunningLine";
 import ImageSlider from "../components/imageSlider/ImageSlider";
 import NewsSection from "../components/news/NewsSection";
 import PhotoGallerySection from "../components/gallery/PhotoGallerySection";
+import BestPlayersSection from "../components/bestPlayers/BestPlayersSection";
 
 
 const Home = () => {
@@ -102,6 +103,7 @@ const Home = () => {
             <NewsSection />
             <ImageSlider />
             <PhotoGallerySection />
+            <BestPlayersSection />
         </>
     );
 };
