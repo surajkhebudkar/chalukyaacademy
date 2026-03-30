@@ -3,6 +3,8 @@ import "./Home.css";
 import RunningLine from "../components/runningLine/RunningLine";
 import ImageSlider from "../components/imageSlider/ImageSlider";
 import NewsSection from "../components/news/NewsSection";
+import PhotoGallerySection from "../components/gallery/PhotoGallerySection";
+
 
 const Home = () => {
     const [text, setText] = useState("");
@@ -11,6 +13,7 @@ const Home = () => {
     useEffect(() => {
         let index = 0;
         let isDeleting = false;
+        let timeout;
 
         const typing = () => {
             if (!isDeleting) {
@@ -19,7 +22,7 @@ const Home = () => {
 
                 if (index === fullText.length) {
                     isDeleting = true;
-                    setTimeout(typing, 2000);
+                    timeout = setTimeout(typing, 2000);
                     return;
                 }
             } else {
@@ -31,10 +34,12 @@ const Home = () => {
                 }
             }
 
-            setTimeout(typing, isDeleting ? 60 : 120);
+            timeout = setTimeout(typing, isDeleting ? 60 : 120);
         };
 
         typing();
+
+        return () => clearTimeout(timeout);
     }, []);
 
     return (
@@ -85,7 +90,7 @@ const Home = () => {
                     {/* RIGHT */}
                     <div className="hero-right">
                         <img
-                            src="/chalukyaimges/chlukyaphoto.png"
+                            src="/chalukyaimages/chlukyaphoto.png"
                             alt="academy"
                         />
                     </div>
@@ -94,9 +99,9 @@ const Home = () => {
             </section>
 
             <RunningLine />
-            <ImageSlider />
             <NewsSection />
-            
+            <ImageSlider />
+            <PhotoGallerySection />
         </>
     );
 };
