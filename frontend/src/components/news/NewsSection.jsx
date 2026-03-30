@@ -5,7 +5,7 @@ const NewsSection = () => {
 
     const sectionRef = useRef();
     const [show, setShow] = useState(false);
-    const [news, setNews] = useState([]);
+    const [newss, setNews] = useState([]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -39,14 +39,14 @@ const NewsSection = () => {
 
     return (
         <section className={`news-section ${show ? "show" : ""}`} ref={sectionRef}>
-            <h2 className="news-title">Latest News</h2>
+            <h2 className="newsTitle">Latest News</h2>
 
-            <div className="news-container">
-                {news.map((item) => (
-                    <div className="news-card" key={item.id}>
+            <div className="newsContainer">
+                {newss.map((item) => (
+                    <div className="newsCard" key={item.id}>
                         <img src={item.image} alt="news" />
 
-                        <div className="news-overlay">
+                        <div className="newsoverlay">
                             <h4>{item.title}</h4>
                         </div>
                     </div>
