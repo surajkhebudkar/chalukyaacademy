@@ -6,10 +6,12 @@ import "./App.css";
 import "./index.css";
 import ScrollTop from "./components/scrolltop/ScrollTop";
 import Home from "./pages/Home";
+import News from "./pages/News";
+
+
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-const News = () => <h1>News Page</h1>;
 const Events = () => <h1>Events Page</h1>;
 const Sports = () => <h1>Sports Page</h1>;
 const Gallery = () => <h1>Gallery Page</h1>;
