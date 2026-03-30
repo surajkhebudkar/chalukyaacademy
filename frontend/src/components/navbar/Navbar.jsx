@@ -1,17 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Navbar.css";
+import { Link } from "react-router-dom";
+
 
 const Navbar = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [mobileOpen, setMobileOpen] = useState(false);
-
+    const menuItems = [
+        { name: "Home", path: "/" },
+        { name: "News", path: "/news" },
+        { name: "Events", path: "/events" },
+        { name: "Sports", path: "/sports" },
+        { name: "Photo Gallery", path: "/gallery" },
+        { name: "About", path: "/about" }
+    ];
     const navRefs = useRef([]);
-
-    const menuItems = ["Home", "News", "Events", "Sports", "Photo Gallery", "About"];
 
     return (
         <>
-            {/* ✅ OVERLAY OUTSIDE NAVBAR */}
             <div
                 className={`Navbaroverlay ${mobileOpen ? "show" : ""}`}
                 onClick={() => setMobileOpen(false)}
@@ -33,17 +39,16 @@ const Navbar = () => {
                         <ul>
                             {menuItems.map((item, index) => (
                                 <li key={index}>
-                                    <a
-                                        href="#"
-                                        ref={(el) => (navRefs.current[index] = el)}
+                                    <Link
+                                        to={item.path}
                                         onClick={() => {
                                             setActiveIndex(index);
                                             setMobileOpen(false);
                                         }}
                                         className={activeIndex === index ? "active" : ""}
                                     >
-                                        {item}
-                                    </a>
+                                        {item.name}
+                                    </Link>
                                 </li>
                             ))}
                         </ul>

@@ -7,27 +7,24 @@ import "./index.css";
 import ScrollTop from "./components/scrolltop/ScrollTop";
 import Home from "./pages/Home";
 
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+const News = () => <h1>News Page</h1>;
+const Events = () => <h1>Events Page</h1>;
+const Sports = () => <h1>Sports Page</h1>;
+const Gallery = () => <h1>Gallery Page</h1>;
+const About = () => <h1>About Page</h1>;
+
 function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
+    // simple loader
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500);
 
-    const loadData = async () => {
-      try {
-        await fetchData();
-      } catch (error) {
-        console.error(error);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    loadData();
-
-    return () => {
-      isMounted = false;
-    };
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -35,17 +32,26 @@ function App() {
       {loading ? (
         <Loader />
       ) : (
-        <div className="app-container">
-          <Navbar />
+        <Router>
+          <div className="app-container">
+            <Navbar />
 
-          {/* Main Content */}
-          <main className="main-content">
-              <Home />
-          </main>
+            {/* Main Content */}
+            <main className="main-content">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/news" element={<News />} />
+                <Route path="/events" element={<Events />} />
+                <Route path="/sports" element={<Sports />} />
+                <Route path="/gallery" element={<Gallery />} />
+                <Route path="/about" element={<About />} />
+              </Routes>
+            </main>
 
-          <Footer />
-          <ScrollTop />
-        </div>
+            <Footer />
+            <ScrollTop />
+          </div>
+        </Router>
       )}
     </>
   );
