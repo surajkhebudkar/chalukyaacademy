@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./BestPlayersSection.css";
 
 export default function BestPlayersSection() {
     const [activeIndex, setActiveIndex] = useState(null);
+    const [show, setShow] = useState(false);
+    const sectionRef = useRef();
 
     const players = [
         {
@@ -48,9 +50,28 @@ export default function BestPlayersSection() {
             achievement: "National Finalist"
         }
     ];
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setShow(true);
+                }
+            },
+            { threshold: 0.2 }
+        );
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, []);
 
     return (
-        <section className="players">
+        <section
+            ref={sectionRef}
+            className={`players ${show ? "show" : ""}`}
+        >
             <h2 className="players-title">Our Best Players</h2>
 
             <div className="players-grid">
@@ -58,6 +79,10 @@ export default function BestPlayersSection() {
                     <div
                         className="player-card"
                         key={index}
+                        style={{
+                            animationDelay: `${index * 0.12}s`,
+                            transitionDelay: `${index * 0.05}s`
+                        }}
                         onClick={() =>
                             setActiveIndex(activeIndex === index ? null : index)
                         }
