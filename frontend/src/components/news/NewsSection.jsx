@@ -29,9 +29,9 @@ const NewsSection = () => {
 
     useEffect(() => {
         const dummyNews = [
-            { id: 1, title: "Archery Championship 2026", image: "/slider/1.jpg" },
-            { id: 2, title: "New Basketball Court Open", image: "/slider/3.jpg" },
-            { id: 3, title: "Yoga Camp Registration Open", image: "/slider/7.jpg" }
+            { id: 1, title: "Archery Championship 2026", image: "/newsimages/1.jpg" },
+            { id: 2, title: "New Basketball Court Open", image: "/newsimages/3.jpg" },
+            { id: 3, title: "Yoga Camp Registration Open", image: "/newsimages/7.jpg" }
         ];
 
         setNews(dummyNews);

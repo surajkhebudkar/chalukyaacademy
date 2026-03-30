@@ -2,16 +2,16 @@ import { useEffect, useState, useRef } from "react";
 import "./ImageSlider.css";
 
 const slides = [
-    { img: "/slider/1.jpg", title: "Chalukya Sports Academy" },
-    { img: "/slider/2.jpg", title: "Professional Training" },
-    { img: "/slider/3.jpg", title: "Championship Events" },
-    { img: "/slider/4.jpg", title: "Modern Facilities" },
-    { img: "/slider/5.jpg", title: "Modern Demos" },
-    { img: "/slider/6.jpg", title: "Modern Demos" },
-    { img: "/slider/7.jpg", title: "Modern Demos" },
-    { img: "/slider/8.jpg", title: "Modern Demos" },
-    { img: "/slider/9.jpg", title: "Modern Demos" },
-    { img: "/slider/10.jpg", title: "Modern Demos" },
+    { img: "/sliderimages/1.jpg", title: "Chalukya Sports Academy" },
+    { img: "/sliderimages/2.jpg", title: "Professional Training" },
+    { img: "/sliderimages/3.jpg", title: "Championship Events" },
+    { img: "/sliderimages/4.jpg", title: "Modern Facilities" },
+    { img: "/sliderimages/5.jpg", title: "Modern Demos" },
+    { img: "/sliderimages/6.jpg", title: "Modern Demos" },
+    { img: "/sliderimages/7.jpg", title: "Modern Demos" },
+    { img: "/sliderimages/8.jpg", title: "Modern Demos" },
+    { img: "/sliderimages/9.jpg", title: "Modern Demos" },
+    { img: "/sliderimages/10.jpg", title: "Modern Demos" },
 ];
 
 const ImageSlider = () => {
