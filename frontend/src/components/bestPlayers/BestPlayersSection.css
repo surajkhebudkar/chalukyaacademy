@@ -66,9 +66,7 @@
     transition: 0.4s ease;
 }
 
-.player-card:hover .overlay {
-    transform: translateY(0);
-}
+
 
 .overlay.active {
     transform: translateY(0);
@@ -109,10 +107,17 @@
 
 @media (max-width: 768px) {
     .players-grid {
+        width: 80%;
         grid-template-columns: 1fr;
     }
 
     .player-card img {
-        height: 240px;
+        height: 250px;
+        object-fit: fill;
     }
+}
+@media (hover: hover) and (pointer: fine) {
+.player-card:hover .overlay {
+    transform: translateY(0);
+}
 }

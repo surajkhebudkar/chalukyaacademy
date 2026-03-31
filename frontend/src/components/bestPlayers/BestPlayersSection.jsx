@@ -67,6 +67,19 @@ export default function BestPlayersSection() {
         return () => observer.disconnect();
     }, []);
 
+    useEffect(() => {
+            const handleClickOutside = (e) => {
+                if (!e.target.closest(".player-card")) {
+                    setActiveIndex(null);
+                }
+            };
+    
+            document.addEventListener("click", handleClickOutside);
+    
+            return () => document.removeEventListener("click", handleClickOutside);
+        }, []);
+
+
     return (
         <section
             ref={sectionRef}

@@ -56,9 +56,23 @@ export default function News() {
         return () => observer.disconnect();
     }, []);
 
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (!e.target.closest(".news-card")) {
+                setActiveIndex(null);
+            }
+        };
+
+        document.addEventListener("click", handleClickOutside);
+
+        return () => document.removeEventListener("click", handleClickOutside);
+    }, []);
+    
     return (
         <section ref={sectionRef} className={`news ${show ? "show" : ""}`}>
-            <h2 className="news-title">News</h2>
+            <div className="news-title">
+                <img src="/bgimage/newsbg.jpg" alt="News" />
+            </div>
 
             <div className="news-grid">
                 {newsData.map((item, index) => (
@@ -74,12 +88,12 @@ export default function News() {
                     >
                         <img src={item.image} alt={item.title} />
 
-                        {/* NEW TAG */}
                         {item.isNew && <span className="new-badge">NEW</span>}
 
                         <div
                             className={`news-overlay ${activeIndex === index ? "active" : ""
                                 }`}
+                            onClick={(e) => e.stopPropagation()}
                         >
                             <div className="news-top">
                                 <h3>{item.title}</h3>
