@@ -1,0 +1,143 @@
+.events {
+    padding-bottom: 60px;
+    background: #f8f9fa;
+    font-family: 'Sora', sans-serif;
+}
+
+.events-title {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.events-title img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.events-grid {
+    max-width: 1100px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.event-card {
+    background: linear-gradient(135deg, #0d6efd, #0a58ca);
+    color: #fff;
+    border-radius: 16px;
+    padding: 30px;
+    cursor: pointer;
+    transform: translateY(40px);
+    opacity: 0;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.events.show .event-card {
+    animation: slideUp 0.8s ease forwards;
+}
+
+.event-card:hover {
+    transform: translateY(-5px) scale(1.02);
+}
+
+.event-content h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.event-content span {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.event-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.event-modal-content {
+    background: #fff;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 12px;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.event-modal-content h2 {
+    margin-bottom: 5px;
+}
+
+.event-date {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+.event-text {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.event-modal-content iframe {
+    width: 100%;
+    height: 400px;
+    border: none;
+}
+
+.event-modal-content button {
+    margin-top: 15px;
+    padding: 8px 15px;
+    border: none;
+    background: #0d6efd;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+        filter: blur(6px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .events-grid {
+        grid-template-columns: 1fr;
+        width: 80%;
+    }
+
+    .event-modal-content iframe {
+        height: 300px;
+    }
+}
