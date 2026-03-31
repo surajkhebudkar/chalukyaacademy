@@ -22,19 +22,6 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 25px;
 }
-
-/* .event-card {
-    background: linear-gradient(135deg, #0d6efd, #0a58ca);
-    color: #fff;
-    border-radius: 16px;
-    padding: 30px;
-    cursor: pointer;
-    transform: translateY(40px);
-    opacity: 0;
-    transition: 0.3s;
-    position: relative;
-    overflow: hidden;
-} */
 .event-card {
     position: relative;
     border-radius: 16px;

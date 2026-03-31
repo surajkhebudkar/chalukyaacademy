@@ -47,7 +47,6 @@ export default function Events() {
         return () => observer.disconnect();
     }, []);
 
-    // 🔥 Filter + Search + Sort
     const filteredEvents = eventsData
         .filter(e =>
             e.title.toLowerCase().includes(search.toLowerCase())
@@ -63,12 +62,10 @@ export default function Events() {
     return (
         <section ref={sectionRef} className={`events ${show ? "show" : ""}`}>
 
-            {/* Title */}
             <div className="events-title">
                 <img src="/bgimage/eventbg.jpg" alt="Events" />
             </div>
 
-            {/* 🔍 Search + Filter */}
             <div className="events-controls">
                 <input
                     type="text"
@@ -84,7 +81,6 @@ export default function Events() {
                 </select>
             </div>
 
-            {/* Grid */}
             <div className="events-grid">
                 {filteredEvents.map((event, index) => (
                     <div
@@ -105,7 +101,6 @@ export default function Events() {
                 ))}
             </div>
 
-            {/* Modal */}
             {activeEvent && (
                 <div className="event-modal" onClick={() => setActiveEvent(null)}>
                     <div
