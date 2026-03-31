@@ -4,59 +4,100 @@ import "./Events.css";
 export default function Events() {
     const [activeEvent, setActiveEvent] = useState(null);
     const [show, setShow] = useState(false);
+    const [search, setSearch] = useState("");
+    const [filter, setFilter] = useState("all");
     const sectionRef = useRef();
 
     const eventsData = [
         {
             title: "Inter School Archery Event",
-            date: "20 March 2026",
-            type: "text", // text | pdf
-            content:
-                "This event focuses on young archers competing at school level. It encourages participation and skill development."
+            date: "2026-04-20",
+            image: "/events/eventimages/1.jpeg",
+            isNew: true,
+            type: "text",
+            category: "upcoming",
+            content: "School level competition for young archers."
         },
         {
             title: "State Ranking Tournament",
-            date: "10 April 2026",
+            date: "2026-03-10",
+            image: "/events/eventimages/2.jpg",
+            isNew: true,
             type: "pdf",
-            file: "/events/sample.pdf"
+            category: "upcoming",
+            file: "/events/eventpdf/sample.pdf"
         },
         {
-            title: "Summer Training Camp",
-            date: "01 May 2026",
+            title: "District Championship",
+            date: "2026-01-15",
+            image: "/events/eventimages/3.jpg",
+            isNew: false,
             type: "text",
-            content:
-                "A special training camp for advanced players focusing on technique, fitness, and mental preparation."
+            category: "past",
+            content: "District level winners selected."
         }
     ];
 
     useEffect(() => {
         const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) setShow(true);
-            },
+            ([entry]) => entry.isIntersecting && setShow(true),
             { threshold: 0.2 }
         );
-
         if (sectionRef.current) observer.observe(sectionRef.current);
         return () => observer.disconnect();
     }, []);
 
+    // 🔥 Filter + Search + Sort
+    const filteredEvents = eventsData
+        .filter(e =>
+            e.title.toLowerCase().includes(search.toLowerCase())
+        )
+        .filter(e => (filter === "all" ? true : e.category === filter))
+        .sort((a, b) => {
+            // NEW first
+            if (a.isNew && !b.isNew) return -1;
+            if (!a.isNew && b.isNew) return 1;
+            return new Date(b.date) - new Date(a.date);
+        });
+
     return (
         <section ref={sectionRef} className={`events ${show ? "show" : ""}`}>
 
+            {/* Title */}
             <div className="events-title">
                 <img src="/bgimage/eventbg.jpg" alt="Events" />
             </div>
 
+            {/* 🔍 Search + Filter */}
+            <div className="events-controls">
+                <input
+                    type="text"
+                    placeholder="Search events..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
+
+                <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+                    <option value="all">All</option>
+                    <option value="upcoming">Upcoming</option>
+                    <option value="past">Past</option>
+                </select>
+            </div>
+
+            {/* Grid */}
             <div className="events-grid">
-                {eventsData.map((event, index) => (
+                {filteredEvents.map((event, index) => (
                     <div
                         key={index}
                         className="event-card"
-                        style={{ animationDelay: `${index * 0.15}s` }}
+                        style={{ animationDelay: `${index * 0.1}s` }}
                         onClick={() => setActiveEvent(event)}
                     >
-                        <div className="event-content">
+                        <img src={event.image} alt={event.title} />
+
+                        {event.isNew && <span className="new-badge">NEW</span>}
+
+                        <div className="event-overlay">
                             <h3>{event.title}</h3>
                             <span>{event.date}</span>
                         </div>
@@ -64,7 +105,7 @@ export default function Events() {
                 ))}
             </div>
 
-            {/* 🔥 Modal */}
+            {/* Modal */}
             {activeEvent && (
                 <div className="event-modal" onClick={() => setActiveEvent(null)}>
                     <div
@@ -75,17 +116,21 @@ export default function Events() {
                         <p className="event-date">{activeEvent.date}</p>
 
                         {activeEvent.type === "pdf" ? (
-                            <iframe
-                                src={activeEvent.file}
-                                title="PDF Viewer"
-                            ></iframe>
+                            <>
+                                <iframe src={activeEvent.file} title="PDF"></iframe>
+                                <a
+                                    href={activeEvent.file}
+                                    download
+                                    className="download-btn"
+                                >
+                                    Download PDF
+                                </a>
+                            </>
                         ) : (
                             <p className="event-text">{activeEvent.content}</p>
                         )}
 
-                        <button onClick={() => setActiveEvent(null)}>
-                            Close
-                        </button>
+                        <button onClick={() => setActiveEvent(null)}>Close</button>
                     </div>
                 </div>
             )}
