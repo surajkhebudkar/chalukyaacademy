@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Navbar.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 
 const Navbar = () => {
-    const [activeIndex, setActiveIndex] = useState(0);
+    const location = useLocation();
     const [mobileOpen, setMobileOpen] = useState(false);
     const menuItems = [
         { name: "Home", path: "/" },
@@ -41,11 +41,8 @@ const Navbar = () => {
                                 <li key={index}>
                                     <Link
                                         to={item.path}
-                                        onClick={() => {
-                                            setActiveIndex(index);
-                                            setMobileOpen(false);
-                                        }}
-                                        className={activeIndex === index ? "active" : ""}
+                                        onClick={() => setMobileOpen(false)}
+                                        className={location.pathname === item.path ? "active" : ""}
                                     >
                                         {item.name}
                                     </Link>
