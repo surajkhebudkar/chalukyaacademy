@@ -1,0 +1,166 @@
+.sports {
+    padding: 40px 0;
+    background: #f8f9fa;
+    font-family: 'Sora', sans-serif;
+}
+
+.sports-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Grid */
+.sports-grid {
+    max-width: 1100px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+/* Card */
+.sport-card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.sport-card:hover {
+    transform: scale(1.03);
+}
+
+.sport-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.sport-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    color: #fff;
+}
+
+/* Modal */
+.sport-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.sport-modal-content {
+    background: #fff;
+    width: 90%;
+    max-width: 900px;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.tabs button {
+    padding: 8px 15px;
+    border: none;
+    background: #0d6efd;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Text */
+.sport-text {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Equipment */
+.equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.equipment-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
+/* Coaches */
+.coach-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.coach-card {
+    text-align: center;
+    background: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.coach-card img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.coach-exp {
+    font-size: 13px;
+    margin: 5px 0;
+}
+
+/* Badges */
+.badges {
+    margin-top: 5px;
+}
+
+.badge {
+    display: inline-block;
+    background: #ffc107;
+    color: #000;
+    padding: 4px 8px;
+    margin: 3px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* Button */
+.sport-modal-content button {
+    margin-top: 15px;
+    padding: 8px 15px;
+    border: none;
+    background: #0d6efd;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .sports-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .equipment-grid,
+    .coach-grid {
+        grid-template-columns: 1fr;
+    }
+}
