@@ -1,15 +1,19 @@
 .sports {
-    padding: 40px 0;
+    padding-bottom: 40px;
     background: #f8f9fa;
     font-family: 'Sora', sans-serif;
 }
 
 .sports-title {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
-/* Grid */
+.sports-title img {
+    width: 100%;
+    max-width: 100%;
+    height: 300px;
+}
 .sports-grid {
     max-width: 1100px;
     margin: auto;
@@ -18,7 +22,6 @@
     gap: 20px;
 }
 
-/* Card */
 .sport-card {
     position: relative;
     border-radius: 16px;
@@ -33,7 +36,7 @@
 
 .sport-card img {
     width: 100%;
-    height: 220px;
+    height: 300px;
     object-fit: cover;
 }
 
@@ -46,7 +49,6 @@
     color: #fff;
 }
 
-/* Modal */
 .sport-modal {
     position: fixed;
     inset: 0;
@@ -65,7 +67,6 @@
     padding: 20px;
 }
 
-/* Tabs */
 .tabs {
     display: flex;
     gap: 10px;
@@ -81,13 +82,11 @@
     cursor: pointer;
 }
 
-/* Text */
 .sport-text {
     font-size: 14px;
     line-height: 1.5;
 }
 
-/* Equipment */
 .equipment-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -100,7 +99,6 @@
     object-fit: cover;
 }
 
-/* Coaches */
 .coach-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -118,7 +116,7 @@
 .coach-card img {
     width: 100%;
     height: 140px;
-    object-fit: cover;
+    object-fit: fill;
     border-radius: 8px;
 }
 
@@ -127,7 +125,6 @@
     margin: 5px 0;
 }
 
-/* Badges */
 .badges {
     margin-top: 5px;
 }
@@ -142,7 +139,6 @@
     font-size: 12px;
 }
 
-/* Button */
 .sport-modal-content button {
     margin-top: 15px;
     padding: 8px 15px;
@@ -153,14 +149,18 @@
     cursor: pointer;
 }
 
-/* Mobile */
 @media (max-width: 768px) {
     .sports-grid {
+        width: 80%;
         grid-template-columns: 1fr;
     }
 
     .equipment-grid,
     .coach-grid {
         grid-template-columns: 1fr;
+    }
+
+    .sport-card img {
+        height: 250px;
     }
 }

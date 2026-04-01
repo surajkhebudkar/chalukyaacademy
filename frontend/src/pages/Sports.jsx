@@ -114,7 +114,7 @@ export default function Sports() {
         <section className="sports">
 
             <div className="sports-title">
-                <h1>Our Sports</h1>
+                <img src="/bgimage/sportbg.jpg" alt="Sports" />
             </div>
 
             {/* Grid */}
