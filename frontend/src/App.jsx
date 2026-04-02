@@ -10,12 +10,12 @@ import News from "./pages/News";
 import Events from "./pages/Events";
 import Sports from "./pages/Sports";
 import PhotoGallery from "./pages/PhotoGallery";
+import AboutUs from "./pages/AboutUs";
 
 
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-const About = () => <h1>About Page</h1>;
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -46,7 +46,7 @@ function App() {
                 <Route path="/events" element={<Events />} />
                 <Route path="/sports" element={<Sports />} />
                   <Route path="/gallery" element={<PhotoGallery />} />
-                <Route path="/about" element={<About />} />
+                  <Route path="/about" element={<AboutUs />} />
               </Routes>
             </main>
 
