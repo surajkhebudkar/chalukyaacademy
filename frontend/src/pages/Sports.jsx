@@ -117,12 +117,12 @@ export default function Sports() {
                 <img src="/bgimage/sportbg.jpg" alt="Sports" />
             </div>
 
-            {/* Grid */}
             <div className="sports-grid">
                 {sportsData.map((sport, index) => (
                     <div
                         key={index}
                         className="sport-card"
+                        style={{ animationDelay: `${index * 0.15}s` }} // 👈 MAGIC
                         onClick={() => {
                             setActiveSport(sport);
                             setTab("history");
@@ -136,7 +136,6 @@ export default function Sports() {
                 ))}
             </div>
 
-            {/* Modal */}
             {activeSport && (
                 <div className="sport-modal" onClick={() => setActiveSport(null)}>
                     <div
@@ -145,19 +144,18 @@ export default function Sports() {
                     >
                         <h2>{activeSport.name}</h2>
 
-                        {/* Tabs */}
                         <div className="tabs">
                             <button onClick={() => setTab("history")}>History</button>
                             <button onClick={() => setTab("equipment")}>Equipment</button>
                             <button onClick={() => setTab("coaches")}>Coaches</button>
                         </div>
 
-                        {/* History */}
+
                         {tab === "history" && (
                             <p className="sport-text">{activeSport.history}</p>
                         )}
 
-                        {/* Equipment */}
+
                         {tab === "equipment" && (
                             <div className="equipment-grid">
                                 {activeSport.equipment.length > 0 ? (
@@ -173,7 +171,7 @@ export default function Sports() {
                             </div>
                         )}
 
-                        {/* Coaches */}
+
                         {tab === "coaches" && (
                             <div className="coach-grid">
                                 {activeSport.coaches.length > 0 ? (

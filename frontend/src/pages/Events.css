@@ -22,6 +22,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 25px;
 }
+
 .event-card {
     position: relative;
     border-radius: 16px;
@@ -36,6 +37,7 @@
     height: 250px;
     object-fit: cover;
 }
+
 .events.show .event-card {
     animation: slideUp 0.8s ease forwards;
 }
@@ -61,7 +63,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 999;
+    z-index: 1601;
 }
 
 .event-modal-content {
@@ -103,8 +105,10 @@
     border-radius: 6px;
     cursor: pointer;
 }
+
 .events-controls {
-    max-width: 80%;
+    max-width: 100%;
+    width: 80%;
     margin: 20px auto;
     display: flex;
     gap: 15px;
@@ -197,5 +201,9 @@
 
     .event-modal-content iframe {
         height: 300px;
+    }
+
+    .events-controls {
+        margin: 20px;
     }
 }

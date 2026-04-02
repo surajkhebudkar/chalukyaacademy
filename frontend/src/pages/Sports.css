@@ -14,6 +14,7 @@
     max-width: 100%;
     height: 300px;
 }
+
 .sports-grid {
     max-width: 1100px;
     margin: auto;
@@ -28,6 +29,8 @@
     overflow: hidden;
     cursor: pointer;
     transition: 0.3s;
+    opacity: 0;
+    animation: slideUp 0.6s ease forwards;
 }
 
 .sport-card:hover {
@@ -56,6 +59,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    animation: fadeIn 0.3s ease;
     z-index: 1601;
 }
 
@@ -65,6 +69,10 @@
     max-width: 900px;
     border-radius: 12px;
     padding: 20px;
+    box-sizing: border-box;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideIn 0.4s ease;
 }
 
 .tabs {
@@ -162,5 +170,48 @@
 
     .sport-card img {
         height: 250px;
+    }
+
+    .sport-modal-content {
+        width: 95%;
+        max-width: 100%;
+        border-radius: 10px;
+        padding: 15px;
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+        filter: blur(6px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
     }
 }
