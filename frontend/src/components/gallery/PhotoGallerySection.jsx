@@ -49,13 +49,13 @@ const PhotoGallerySection = () => {
     return (
         <section
             ref={galleryRef}
-            className={`gallery section-dark ${show ? "show" : ""}`}
+            className={`Hgallery section-dark ${show ? "show" : ""}`}
         >
-            <h2 className="gallery-title">Photo Gallery</h2>
+            <h2 className="Hgallery-title">Photo Gallery</h2>
 
-            <div className="gallery-grid">
+            <div className="Hgallery-grid">
                 {photos.map((img, index) => (
-                    <div className="gallery-item" key={index}>
+                    <div className="Hgallery-item" key={index}>
                         <img src={img} alt="gallery" />
                     </div>
                 ))}
