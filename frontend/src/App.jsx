@@ -9,12 +9,12 @@ import Home from "./pages/Home";
 import News from "./pages/News";
 import Events from "./pages/Events";
 import Sports from "./pages/Sports";
+import PhotoGallery from "./pages/PhotoGallery";
 
 
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-const Gallery = () => <h1>Gallery Page</h1>;
 const About = () => <h1>About Page</h1>;
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
     // simple loader
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1500);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -45,7 +45,7 @@ function App() {
                 <Route path="/news" element={<News />} />
                 <Route path="/events" element={<Events />} />
                 <Route path="/sports" element={<Sports />} />
-                <Route path="/gallery" element={<Gallery />} />
+                  <Route path="/gallery" element={<PhotoGallery />} />
                 <Route path="/about" element={<About />} />
               </Routes>
             </main>
