@@ -12,10 +12,13 @@ const Navbar = () => {
         { name: "Events", path: "/events" },
         { name: "Sports", path: "/sports" },
         { name: "Photo Gallery", path: "/gallery" },
-        { name: "About", path: "/about" }
+        { name: "About", path: "/about" },
     ];
     const navRefs = useRef([]);
-
+    const handleLogout = () => {
+        localStorage.clear();
+        window.location.href = "/login";
+    };
     return (
         <>
             <div
@@ -48,6 +51,7 @@ const Navbar = () => {
                                     </Link>
                                 </li>
                             ))}
+                            <button onClick={handleLogout}>Logout</button>
                         </ul>
                     </nav>
 

@@ -11,9 +11,10 @@ import Events from "./pages/Events";
 import Sports from "./pages/Sports";
 import PhotoGallery from "./pages/PhotoGallery";
 import AboutUs from "./pages/AboutUs";
-
-
-
+import Login from "./pages/Login";
+import AdminDashboard from "./pages/AdminDashboard";
+import CoachDashboard from "./pages/CoachDashboard";
+import PrivateRoute from "./components/PrivateRoute";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
@@ -47,6 +48,24 @@ function App() {
                 <Route path="/sports" element={<Sports />} />
                   <Route path="/gallery" element={<PhotoGallery />} />
                   <Route path="/about" element={<AboutUs />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route
+                    path="/admin-dashboard"
+                    element={
+                      <PrivateRoute role="admin">
+                        <AdminDashboard />
+                      </PrivateRoute>
+                    }
+                  />
+
+                  <Route
+                    path="/coach-dashboard"
+                    element={
+                      <PrivateRoute role="coach">
+                        <CoachDashboard />
+                      </PrivateRoute>
+                    }
+                  />
               </Routes>
             </main>
 
