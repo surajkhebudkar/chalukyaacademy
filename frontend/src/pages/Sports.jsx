@@ -5,108 +5,128 @@ export default function Sports() {
     const [activeSport, setActiveSport] = useState(null);
     const [tab, setTab] = useState("history");
 
-    const sportsData = [
+    const branchesData = [
         {
-            name: "Archery",
-            image: "/sports/archery.jpg",
-            history:
-                "Archery is an ancient sport requiring focus, precision, and discipline.",
-            equipment: [
-                { name: "Bow", image: "/equipments/bow.jpg" },
-                { name: "Arrow", image: "/equipments/arrow.jpg" }
-            ],
-            coaches: [
+            name: "Kolhapur Branch",
+            image: "/branches/kolhapur.jpg",
+            location: "Kolhapur, Maharashtra",
+            map: "https://www.google.com/maps?q=kolhapur&output=embed",
+
+            sports: [
                 {
-                    name: "Coach Rahul",
-                    photo: "/coaches/trainer.png",
-                    experience: "8 Years",
-                    achievements: ["National Medalist", "Level 2 Certified"]
+                    name: "Archery",
+                    image: "/sports/archery.jpg",
+                    history: "Archery is an ancient sport requiring focus and precision.",
+                    equipment: [
+                        { name: "Bow", image: "/equipments/bow.jpg" },
+                        { name: "Arrow", image: "/equipments/arrow.jpg" }
+                    ],
+                    coaches: [
+                        {
+                            name: "Coach Rahul",
+                            photo: "/coaches/trainer.png",
+                            experience: "8 Years",
+                            achievements: ["National Medalist"]
+                        }
+                    ]
+                },
+                {
+                    name: "Basketball",
+                    image: "/sports/basketball.jpg",
+                    history: "Basketball is one of the most popular sports.",
+                    equipment: [
+                        { name: "Basketball", image: "/equipments/basketball.jpg" }
+                    ],
+                    coaches: []
+                },
+                {
+                    name: "Fencing",
+                    image: "/sports/fencing.jpg",
+                    history: "Fencing evolved from sword fighting.",
+                    equipment: [],
+                    coaches: []
+                },
+                {
+                    name: "MMA",
+                    image: "/sports/mma.jpg",
+                    history: "Mixed Martial Arts combines combat styles.",
+                    equipment: [],
+                    coaches: []
+                },
+                {
+                    name: "Sports Nursery",
+                    image: "/sports/nursery.jpg",
+                    history: "Basic sports training for kids.",
+                    equipment: [],
+                    coaches: []
+                },
+                {
+                    name: "Gymnastic",
+                    image: "/sports/gymnastic.jpg",
+                    history: "Gymnastics builds strength.",
+                    equipment: [],
+                    coaches: []
+                },
+                {
+                    name: "Kurash",
+                    image: "/sports/kurash.jpg",
+                    history: "Traditional wrestling sport.",
+                    equipment: [],
+                    coaches: []
+                },
+                {
+                    name: "Skating",
+                    image: "/sports/skating.jpg",
+                    history: "Fun and competitive sport.",
+                    equipment: [],
+                    coaches: []
+                },
+                {
+                    name: "Yoga",
+                    image: "/sports/yoga.jpeg",
+                    history: "Improves mental and physical health.",
+                    equipment: [],
+                    coaches: []
                 }
             ]
         },
+
         {
-            name: "Basketball",
-            image: "/sports/basketball.jpg",
-            history:
-                "Basketball is one of the most popular sports worldwide.",
-            equipment: [
-                { name: "Basketball", image: "/equipments/basketball.jpg" }
-            ],
-            coaches: [
+            name: "Sangli Branch",
+            image: "/branches/sangli.jpg",
+            location: "Sangli, Maharashtra",
+            map: "https://www.google.com/maps?q=sangli&output=embed",
+
+            sports: [
                 {
-                    name: "Coach Amit",
-                    photo: "/coaches/trainer.png",
-                    experience: "5 Years",
-                    achievements: ["State Champion", "Level 2 Certified"]
+                    name: "Gymnastic",
+                    image: "/sports/gymnastic.jpg",
+                    history: "Gymnastics builds flexibility.",
+                    equipment: [],
+                    coaches: []
+                },
+                {
+                    name: "Kurash",
+                    image: "/sports/kurash.jpg",
+                    history: "Traditional sport.",
+                    equipment: [],
+                    coaches: []
+                },
+                {
+                    name: "Skating",
+                    image: "/sports/skating.jpg",
+                    history: "Speed and balance sport.",
+                    equipment: [],
+                    coaches: []
+                },
+                {
+                    name: "Yoga",
+                    image: "/sports/yoga.jpeg",
+                    history: "Mind-body balance.",
+                    equipment: [],
+                    coaches: []
                 }
             ]
-        },
-        {
-            name: "Fencing",
-            image: "/sports/fencing.jpg",
-            history: "Fencing evolved from sword fighting.",
-            equipment: [
-                { name: "Fencing", image: "/equipments/fencing.jpg" }
-            ],
-            coaches: [
-                {
-                    name: "Coach Amit",
-                    photo: "/coaches/trainer.png",
-                    experience: "5 Years",
-                    achievements: ["State Champion", "Level 2 Certified"]
-                }
-            ]
-        },
-        {
-            name: "Gymnastic",
-            image: "/sports/gymnastic.jpg",
-            history: "Gymnastics builds strength and flexibility.",
-            equipment: [
-                { name: "Gymnastics", image: "/equipments/gymnastics.jpg" }
-            ],
-            coaches: [
-                {
-                    name: "Coach Amit",
-                    photo: "/coaches/trainer.png",
-                    experience: "5 Years",
-                    achievements: ["State Champion", "Level 2 Certified"]
-                }
-            ]
-        },
-        {
-            name: "Kurash",
-            image: "/sports/kurash.jpg",
-            history: "Kurash is a traditional wrestling sport.",
-            equipment: [],
-            coaches: []
-        },
-        {
-            name: "MMA",
-            image: "/sports/mma.jpg",
-            history: "Mixed Martial Arts combines various combat styles.",
-            equipment: [],
-            coaches: []
-        },
-        {
-            name: "Skating",
-            image: "/sports/skating.jpg",
-            history: "Skating is both fun and competitive.",
-            equipment: [],
-            coaches: []
-        },
-        {
-            name: "Sports Nursery",
-            image: "/sports/nursery.jpg",
-            history: "Basic sports training for kids.",
-            equipment: [],
-            coaches: []
-        },
-        {
-            name: "Yoga",
-            image: "/sports/yoga.jpeg",
-            history: "Yoga promotes physical and mental wellness.",
-            equipment: [],
-            coaches: []
         }
     ];
 
@@ -117,25 +137,50 @@ export default function Sports() {
                 <img src="/bgimage/sportbg.jpg" alt="Sports" />
             </div>
 
-            <div className="sports-grid">
-                {sportsData.map((sport, index) => (
-                    <div
-                        key={index}
-                        className="sport-card"
-                        style={{ animationDelay: `${index * 0.15}s` }} // 👈 MAGIC
-                        onClick={() => {
-                            setActiveSport(sport);
-                            setTab("history");
-                        }}
-                    >
-                        <img src={sport.image} alt={sport.name} />
-                        <div className="sport-overlay">
-                            <h3>{sport.name}</h3>
+            {branchesData.map((branch, bIndex) => (
+                <div key={bIndex} className="branch-section">
+
+                    {/* Branch Header */}
+                    <div className="branch-header">
+                        <img src={branch.image} alt={branch.name} />
+
+                        <div className="branch-info">
+                            <h2>{branch.name}</h2>
+                            <p>{branch.location}</p>
+
+                            <iframe
+                                src={branch.map}
+                                width="100%"
+                                height="200"
+                                loading="lazy"
+                                title={branch.name}
+                            ></iframe>
                         </div>
                     </div>
-                ))}
-            </div>
 
+                    {/* Sports Grid */}
+                    <div className="sports-grid">
+                        {branch.sports.map((sport, index) => (
+                            <div
+                                key={index}
+                                className="sport-card"
+                                style={{ animationDelay: `${index * 0.1}s` }}
+                                onClick={() => {
+                                    setActiveSport(sport);
+                                    setTab("history");
+                                }}
+                            >
+                                <img src={sport.image} alt={sport.name} />
+                                <div className="sport-overlay">
+                                    <h3>{sport.name}</h3>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ))}
+
+            {/* Modal */}
             {activeSport && (
                 <div className="sport-modal" onClick={() => setActiveSport(null)}>
                     <div
@@ -150,11 +195,9 @@ export default function Sports() {
                             <button onClick={() => setTab("coaches")}>Coaches</button>
                         </div>
 
-
                         {tab === "history" && (
                             <p className="sport-text">{activeSport.history}</p>
                         )}
-
 
                         {tab === "equipment" && (
                             <div className="equipment-grid">
@@ -166,11 +209,10 @@ export default function Sports() {
                                         </div>
                                     ))
                                 ) : (
-                                    <p>No equipment info available</p>
+                                    <p>No equipment available</p>
                                 )}
                             </div>
                         )}
-
 
                         {tab === "coaches" && (
                             <div className="coach-grid">
@@ -179,7 +221,6 @@ export default function Sports() {
                                         <div key={i} className="coach-card">
                                             <img src={coach.photo} alt={coach.name} />
                                             <h4>{coach.name}</h4>
-
                                             <p className="coach-exp">
                                                 Experience: {coach.experience}
                                             </p>
