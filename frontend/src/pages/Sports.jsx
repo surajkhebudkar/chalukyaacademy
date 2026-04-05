@@ -5,6 +5,9 @@ export default function Sports() {
     const [activeSport, setActiveSport] = useState(null);
     const [tab, setTab] = useState("history");
 
+    // 👉 NEW STATE (branch select)
+    const [activeBranch, setActiveBranch] = useState("Kolhapur Branch");
+
     const branchesData = [
         {
             name: "Kolhapur Branch",
@@ -26,7 +29,7 @@ export default function Sports() {
                             name: "Coach Rahul",
                             photo: "/coaches/trainer.png",
                             experience: "8 Years",
-                            achievements: ["National Medalist"]
+                            achievements: ["State Champion", "Level 2 Certified"]
                         }
                     ]
                 },
@@ -37,7 +40,12 @@ export default function Sports() {
                     equipment: [
                         { name: "Basketball", image: "/equipments/basketball.jpg" }
                     ],
-                    coaches: []
+                    coaches: [{
+                        name: "Coach Rahul",
+                        photo: "/coaches/trainer.png",
+                        experience: "8 Years",
+                        achievements: ["State Champion", "Level 2 Certified"]
+                    }]
                 },
                 {
                     name: "Fencing",
@@ -103,14 +111,24 @@ export default function Sports() {
                     image: "/sports/gymnastic.jpg",
                     history: "Gymnastics builds flexibility.",
                     equipment: [],
-                    coaches: []
+                    coaches: [{
+                        name: "Coach Rahul",
+                        photo: "/coaches/trainer.png",
+                        experience: "8 Years",
+                        achievements: ["State Champion", "Level 2 Certified"]
+                    }]
                 },
                 {
                     name: "Kurash",
                     image: "/sports/kurash.jpg",
                     history: "Traditional sport.",
                     equipment: [],
-                    coaches: []
+                    coaches: [{
+                        name: "Coach Rahul",
+                        photo: "/coaches/trainer.png",
+                        experience: "8 Years",
+                        achievements: ["State Champion", "Level 2 Certified"]
+                    }]
                 },
                 {
                     name: "Skating",
@@ -137,48 +155,60 @@ export default function Sports() {
                 <img src="/bgimage/sportbg.jpg" alt="Sports" />
             </div>
 
-            {branchesData.map((branch, bIndex) => (
-                <div key={bIndex} className="branch-section">
+            <div className="branch-tabs">
+                {branchesData.map((branch, i) => (
+                    <button
+                        key={i}
+                        className={activeBranch === branch.name ? "active-tab" : ""}
+                        onClick={() => setActiveBranch(branch.name)}
+                    >
+                        {branch.name}
+                    </button>
+                ))}
+            </div>
 
-                    {/* Branch Header */}
-                    <div className="branch-header">
-                        <img src={branch.image} alt={branch.name} />
+            {branchesData
+                .filter(branch => branch.name === activeBranch)
+                .map((branch, bIndex) => (
+                    <div key={activeBranch} className="branch-section animate-branch">
 
-                        <div className="branch-info">
-                            <h2>{branch.name}</h2>
-                            <p>{branch.location}</p>
+                        <div className="branch-header">
+                            <img src={branch.image} alt={branch.name} />
 
-                            <iframe
-                                src={branch.map}
-                                width="100%"
-                                height="200"
-                                loading="lazy"
-                                title={branch.name}
-                            ></iframe>
+                            <div className="branch-info">
+                                <h2>{branch.name}</h2>
+                                <p>{branch.location}</p>
+
+                                <iframe
+                                    src={branch.map}
+                                    width="100%"
+                                    height="200"
+                                    loading="lazy"
+                                    title={branch.name}
+                                ></iframe>
+                            </div>
+                        </div>
+
+                        <div className="sports-grid">
+                            {branch.sports.map((sport, index) => (
+                                <div
+                                    key={index}
+                                    className="sport-card"
+                                    style={{ animationDelay: `${index * 0.1}s` }}
+                                    onClick={() => {
+                                        setActiveSport(sport);
+                                        setTab("history");
+                                    }}
+                                >
+                                    <img src={sport.image} alt={sport.name} />
+                                    <div className="sport-overlay">
+                                        <h3>{sport.name}</h3>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
-
-                    {/* Sports Grid */}
-                    <div className="sports-grid">
-                        {branch.sports.map((sport, index) => (
-                            <div
-                                key={index}
-                                className="sport-card"
-                                style={{ animationDelay: `${index * 0.1}s` }}
-                                onClick={() => {
-                                    setActiveSport(sport);
-                                    setTab("history");
-                                }}
-                            >
-                                <img src={sport.image} alt={sport.name} />
-                                <div className="sport-overlay">
-                                    <h3>{sport.name}</h3>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            ))}
+                ))}
 
             {/* Modal */}
             {activeSport && (
