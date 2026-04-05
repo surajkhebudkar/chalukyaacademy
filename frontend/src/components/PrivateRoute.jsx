@@ -1,10 +1,9 @@
 import { Navigate } from "react-router-dom";
-import { getToken } from "../utils/auth";
+import { getToken, getRole } from "../utils/auth";
 
 const PrivateRoute = ({ children, role }) => {
     const token = getToken();
-    const role = getRole();
-    const userRole = localStorage.getItem("role");
+    const userRole = getRole();
 
     // Not logged in
     if (!token) {
