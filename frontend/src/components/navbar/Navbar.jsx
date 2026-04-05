@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./Navbar.css";
 import { Link, useLocation } from "react-router-dom";
-
 
 const Navbar = () => {
     const location = useLocation();
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const dropdownRef = useRef();
+
     const menuItems = [
         { name: "Home", path: "/" },
         { name: "News", path: "/news" },
@@ -14,11 +16,18 @@ const Navbar = () => {
         { name: "Photo Gallery", path: "/gallery" },
         { name: "About", path: "/about" },
     ];
-    const navRefs = useRef([]);
-    const handleLogout = () => {
-        localStorage.clear();
-        window.location.href = "/login";
-    };
+
+    // close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setDropdownOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
     return (
         <>
             <div
@@ -28,7 +37,7 @@ const Navbar = () => {
 
             <header className="navbar">
                 <div className="nav-wrapper">
-
+                    {/* HAMBURGER */}
                     <div
                         className={`hamburger ${mobileOpen ? "active" : ""}`}
                         onClick={() => setMobileOpen(!mobileOpen)}
@@ -38,6 +47,7 @@ const Navbar = () => {
                         <span></span>
                     </div>
 
+                    {/* MENU */}
                     <nav className={`navmenu ${mobileOpen ? "open" : ""}`}>
                         <ul>
                             {menuItems.map((item, index) => (
@@ -51,9 +61,23 @@ const Navbar = () => {
                                     </Link>
                                 </li>
                             ))}
-                            <button onClick={handleLogout}>Logout</button>
                         </ul>
                     </nav>
+                    
+                    <div className="profile-container" ref={dropdownRef}>
+                        <div
+                            className="avatar"
+                            onClick={() => setDropdownOpen(!dropdownOpen)}
+                        >
+                            👤
+                        </div>
+
+                        <div className={`dropdown-menu ${dropdownOpen ? "show" : ""}`}>
+                            <Link to="/login" onClick={() => setDropdownOpen(false)}>
+                                Login
+                            </Link>
+                        </div>
+                    </div>
 
                 </div>
             </header>
