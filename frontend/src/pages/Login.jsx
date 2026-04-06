@@ -25,9 +25,9 @@ const Login = () => {
             setAuth(data);
 
             if (data.role === "admin") {
-                navigate("/admin-dashboard");
+                navigate("/adminpages/admin-dashboard");
             } else {
-                navigate("/coach-dashboard");
+                navigate("/adminpages/coach-dashboard");
             }
 
         } catch (err) {
