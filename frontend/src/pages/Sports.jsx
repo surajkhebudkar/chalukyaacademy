@@ -210,7 +210,6 @@ export default function Sports() {
                     </div>
                 ))}
 
-            {/* Modal */}
             {activeSport && (
                 <div className="sport-modal" onClick={() => setActiveSport(null)}>
                     <div
