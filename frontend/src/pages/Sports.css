@@ -181,12 +181,14 @@
 
 .branch-tabs {
     display: flex;
+    width: 100%;
     justify-content: center;
     gap: 10px;
     margin-bottom: 30px;
 }
 
 .branch-tabs button {
+    width: 30%;
     padding: 8px 15px;
     border: none;
     background: #ccc;
