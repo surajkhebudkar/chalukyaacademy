@@ -1,8 +1,15 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import newsRoutes from "./routes/newsRoutes.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 connectDB();
@@ -12,6 +19,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+app.use("/api/auth", authRoutes);
+app.use("/api/news", newsRoutes);
+
+const PORT = 5000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
