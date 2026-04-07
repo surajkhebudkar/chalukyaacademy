@@ -61,7 +61,8 @@ const Home = () => {
                     {/* LEFT */}
                     <div className="hero-left">
                         <h1>
-                            Train Hard. Win Big with{" "}
+                            Train With Intencity, Lets Rebuild Dencity <br />
+                            {" "}
                             <span className="typing">{text}</span>
                         </h1>
 
