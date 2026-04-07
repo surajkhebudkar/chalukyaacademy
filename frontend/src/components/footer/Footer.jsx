@@ -61,6 +61,7 @@ const Footer = () => {
                             <option>MMA</option>
                             <option>Skating</option>
                             <option>Yoga</option>
+                            <option>Other</option>
                         </select>
 
                         <textarea placeholder="Remark"></textarea>
