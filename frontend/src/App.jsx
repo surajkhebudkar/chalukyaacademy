@@ -14,7 +14,7 @@ import PhotoGallery from "./pages/PhotoGallery";
 import AboutUs from "./pages/AboutUs";
 import Login from "./pages/Login";
 import AdminDashboard from "./adminpages/AdminDashboard";
-import CoachDashboard from "./adminpages/CoachDashboard";
+import CoachDashboard from "./coachpages/CoachDashboard";
 import PrivateRoute from "./components/PrivateRoute";
 
 
@@ -46,7 +46,7 @@ function AppContent() {
           />
 
           <Route
-            path="/adminpages/coach-dashboard"
+            path="/coachpages/coach-dashboard"
             element={
               <PrivateRoute role="coach">
                 <CoachDashboard />
