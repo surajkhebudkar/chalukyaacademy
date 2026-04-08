@@ -1,6 +1,4 @@
 import express from "express";
-const router = express.Router();
-
 import {
     createNews,
     getAllNews,
@@ -8,19 +6,13 @@ import {
     deleteNews
 } from "../controllers/newsController.js";
 
-import upload from "../config/multer.js";
-import { verifyToken } from "../middleware/authMiddleware.js";
+import upload from "../middleware/upload.js";
 
-// CREATE
-router.post("/", verifyToken, upload.single("image"), createNews);
+const router = express.Router();
 
-// READ
-router.get("/", verifyToken, getAllNews);
-
-// UPDATE
-router.put("/:id", verifyToken, upload.single("image"), updateNews);
-
-// DELETE
-router.delete("/:id", verifyToken, deleteNews);
+router.post("/", upload.single("image"), createNews);
+router.get("/", getAllNews);
+router.put("/:id", upload.single("image"), updateNews);
+router.delete("/:id", deleteNews);
 
 export default router;
