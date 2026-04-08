@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { getProtectedData } from "../services/api";
 import "./AdminDashboard.css";
 import { useNavigate } from "react-router-dom";
+import AddNews from "./AddNews";
+import NewsTable from "./NewsTable";
+import axios from "axios";
+
 
 const AdminDashboard = () => {
     const [data, setData] = useState([]);
@@ -16,10 +19,17 @@ const AdminDashboard = () => {
     };
 
     useEffect(() => {
-        getProtectedData()
-            .then(setData)
-            .catch((err) => console.log(err));
+        fetchNews();
     }, []);
+
+    const fetchNews = async () => {
+        try {
+            const res = await axios.get("http://localhost:5000/api/news");
+            setData(res.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
     
     return (
         <div
@@ -111,8 +121,26 @@ const AdminDashboard = () => {
                 <div className="section">
                     {activeMenu === "news" && (
                         <div className="fade">
-                            <h2>📰 News Data</h2>
-                            <pre>{JSON.stringify(data, null, 2)}</pre>
+                            <div className="news-header">
+                                <h2>📰 News Management</h2>
+
+                                <button
+                                    className="add-btn"
+                                    onClick={() => setActiveMenu("addNews")}
+                                >
+                                    + Add News
+                                </button>
+                            </div>
+
+                            <NewsTable news={data} refresh={fetchNews} />
+                        </div>
+                    )}
+                    {activeMenu === "addNews" && (
+                        <div className="fade">
+                            <AddNews onSuccess={() => {
+                                fetchNews();
+                                setActiveMenu("news");
+                            }} onCancel={() => setActiveMenu("news")} />
                         </div>
                     )}
 

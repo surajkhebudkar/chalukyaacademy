@@ -1,0 +1,47 @@
+.add-news-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.add-news-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.add-news-form input,
+.add-news-form textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.preview-img {
+    width: 200px;
+    border-radius: 8px;
+    margin: auto;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+.add-news-form button {
+    flex: 1;
+    padding: 10px;
+    background: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background: #6c757d;
+}
