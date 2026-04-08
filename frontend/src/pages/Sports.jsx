@@ -5,7 +5,6 @@ export default function Sports() {
     const [activeSport, setActiveSport] = useState(null);
     const [tab, setTab] = useState("history");
 
-    // 👉 NEW STATE (branch select)
     const [activeBranch, setActiveBranch] = useState("Kolhapur Branch");
 
     const branchesData = [
@@ -152,7 +151,6 @@ export default function Sports() {
         <section className="sports">
 
             <div className="sports-title">
-                <img src="/bgimage/sportbg.jpg" alt="Sports" />
             </div>
 
             <div className="branch-tabs">

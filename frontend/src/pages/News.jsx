@@ -32,13 +32,7 @@ export default function News() {
                 "Top performers from district competitions have been selected for state-level qualifiers."
         }
     ];
-    // const [newsData, setNewsData] = useState([]);
-
-    // useEffect(() => {
-    //     fetch("/api/news")
-    //         .then(res => res.json())
-    //         .then(data => setNewsData(data));
-    // }, []);
+    
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -71,7 +65,7 @@ export default function News() {
     return (
         <section ref={sectionRef} className={`news ${show ? "show" : ""}`}>
             <div className="news-title">
-                <img src="/bgimage/newsbg.jpg" alt="News" />
+                
             </div>
 
             <div className="news-grid">

@@ -46,7 +46,7 @@ export default function AboutUs() {
         <section className="about">
 
             <div className="about-title">
-                <img src="/bgimage/aboutusbg.jpg" alt="About" />
+                
             </div>
 
             <div className="about-container">

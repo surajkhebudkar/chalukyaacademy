@@ -48,12 +48,10 @@ export default function PhotoGallery() {
     return (
         <section className="gallery">
 
-            {/* TITLE */}
             <div className="gallery-title">
-                <img src="/bgimage/photogallerybg.jpg" alt="Gallery" />
+               
             </div>
 
-            {/* ALBUM GRID */}
             <div className="gallery-grid">
                 {galleryData.map((album, index) => (
                     <div
@@ -70,7 +68,6 @@ export default function PhotoGallery() {
                 ))}
             </div>
 
-            {/* ALBUM MODAL */}
             {activeAlbum && (
                 <div className="album-modal" onClick={() => setActiveAlbum(null)}>
                     <div
@@ -96,7 +93,6 @@ export default function PhotoGallery() {
                 </div>
             )}
 
-            {/* FULLSCREEN VIEW */}
             {activeAlbum && activeImageIndex !== null && (
                 <div className="fullscreen" onClick={() => setActiveImageIndex(null)}>
                     <span className="close" onClick={() => setActiveImageIndex(null)}>✖</span>

@@ -53,7 +53,6 @@ export default function Events() {
         )
         .filter(e => (filter === "all" ? true : e.category === filter))
         .sort((a, b) => {
-            // NEW first
             if (a.isNew && !b.isNew) return -1;
             if (!a.isNew && b.isNew) return 1;
             return new Date(b.date) - new Date(a.date);
@@ -63,7 +62,7 @@ export default function Events() {
         <section ref={sectionRef} className={`events ${show ? "show" : ""}`}>
 
             <div className="events-title">
-                <img src="/bgimage/eventbg.jpg" alt="Events" />
+               
             </div>
 
             <div className="events-controls">
