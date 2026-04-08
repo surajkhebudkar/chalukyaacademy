@@ -207,7 +207,13 @@ body {
     padding: 6px 10px;
     cursor: pointer;
 }
-
+.edit-btn{
+    background: rgb(13, 234, 83);
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        cursor: pointer;
+}
 
 
 

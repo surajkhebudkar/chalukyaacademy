@@ -50,6 +50,11 @@ const NewsTable = ({ news, refresh }) => {
                         <td>{item.description}</td>
 
                         <td>
+                           <button
+                           className="edit-btn" 
+                           onClick={() => onEdit(item)}>Edit</button>
+                        </td>
+                        <td>
                             <button
                                 className="delete-btn"
                                 onClick={() => deleteNews(item._id)}

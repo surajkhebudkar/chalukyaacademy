@@ -17,6 +17,7 @@ const AdminDashboard = () => {
         localStorage.removeItem("token");
         navigate("/login"); 
     };
+    const [editData, setEditData] = useState(null);
 
     useEffect(() => {
         fetchNews();
@@ -132,7 +133,14 @@ const AdminDashboard = () => {
                                 </button>
                             </div>
 
-                            <NewsTable news={data} refresh={fetchNews} />
+                            <NewsTable
+                                news={data}
+                                refresh={fetchNews}
+                                onEdit={(item) => {
+                                    setEditData(item);
+                                    setActiveMenu("editNews");
+                                }}
+                            />
                         </div>
                     )}
                     {activeMenu === "addNews" && (
@@ -141,6 +149,18 @@ const AdminDashboard = () => {
                                 fetchNews();
                                 setActiveMenu("news");
                             }} onCancel={() => setActiveMenu("news")} />
+                        </div>
+                    )}
+                    {activeMenu === "editNews" && (
+                        <div className="fade">
+                        <AddNews
+                            editData={editData}
+                            onSuccess={() => {
+                                fetchNews();
+                                setActiveMenu("news");
+                            }}
+                            onCancel={() => setActiveMenu("news")}
+                        />
                         </div>
                     )}
 
