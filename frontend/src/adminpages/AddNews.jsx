@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../utils/axiosInstance";
 import "./AddNews.css";
 
 const AddNews = ({ onSuccess, onCancel, editData }) => {
@@ -50,7 +50,7 @@ const AddNews = ({ onSuccess, onCancel, editData }) => {
                 await axios.put(`http://localhost:5000/api/news/${editData._id}`, formData);
                 alert("Updated ✅");
             } else {
-                await axios.post("http://localhost:5000/api/news", formData);
+                await axios.post("/news", formData);
                 alert("Added ✅");
             }
 

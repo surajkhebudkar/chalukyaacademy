@@ -1,55 +1,36 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./News.css";
+import axios from "../utils/axiosInstance";
 
 export default function News() {
+    const [newsData, setNewsData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
     const [activeIndex, setActiveIndex] = useState(null);
     const [show, setShow] = useState(false);
+
+    const itemsPerPage = 4;
     const sectionRef = useRef();
 
-    const newsData = [
-        {
-            title: "State Archery Championship 2026",
-            date: "12 Feb 2026",
-            image: "/newsimages/1.jpg",
-            isNew: true,
-            details:
-                "The state-level archery championship witnessed participation from over 200 athletes across Maharashtra. The competition highlighted exceptional talent and discipline."
-        },
-        {
-            title: "National Training Camp Announced",
-            date: "05 Feb 2026",
-            image: "/newsimages/7.jpg",
-            isNew: true,
-            details:
-                "A national-level training camp has been scheduled to prepare athletes for upcoming international tournaments."
-        },
-        {
-            title: "District Level Winners Declared",
-            date: "28 Jan 2026",
-            image: "/newsimages/3.jpg",
-            isNew: false,
-            details:
-                "Top performers from district competitions have been selected for state-level qualifiers."
-        }
-    ];
-    
+    // 👉 fetch news
     useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setShow(true);
-                }
-            },
-            { threshold: 0.2 }
-        );
-
-        if (sectionRef.current) {
-            observer.observe(sectionRef.current);
-        }
-
-        return () => observer.disconnect();
+        fetchNews();
     }, []);
 
+    const fetchNews = async () => {
+        try {
+            const res = await axios.get("/news?page=1&limit=100");
+            setNewsData(res.data.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    // 👉 animation trigger
+    useEffect(() => {
+        setTimeout(() => setShow(true), 200);
+    }, []);
+
+    // 👉 click outside = close overlay
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (!e.target.closest(".news-card")) {
@@ -58,48 +39,97 @@ export default function News() {
         };
 
         document.addEventListener("click", handleClickOutside);
-
         return () => document.removeEventListener("click", handleClickOutside);
     }, []);
-    
+
+    // 👉 swipe down to close (mobile)
+    const touchStartY = useRef(0);
+    const touchEndY = useRef(0);
+
+    const handleTouchStart = (e) => {
+        touchStartY.current = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e) => {
+        touchEndY.current = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = () => {
+        if (touchStartY.current < touchEndY.current - 50) {
+            // swipe down
+            setActiveIndex(null);
+        }
+    };
+
+    // 👉 new badge logic
+    const isNew = (date) => {
+        const diff = (new Date() - new Date(date)) / (1000 * 60 * 60 * 24);
+        return diff <= 3;
+    };
+
+    // 👉 pagination
+    const indexOfLast = currentPage * itemsPerPage;
+    const indexOfFirst = indexOfLast - itemsPerPage;
+
+    const currentNews = Array.isArray(newsData)
+        ? newsData.slice(indexOfFirst, indexOfLast)
+        : [];
+
+    const totalPages = Math.ceil(newsData.length / itemsPerPage) || 1;
+
     return (
         <section ref={sectionRef} className={`news ${show ? "show" : ""}`}>
-            <div className="news-title">
-                
-            </div>
-
             <div className="news-grid">
-                {newsData.map((item, index) => (
+                {currentNews.map((item) => (
                     <div
-                        key={index}
                         className="news-card"
-                        style={{
-                            animationDelay: `${index * 0.15}s`
-                        }}
+                        key={item._id}
                         onClick={() =>
-                            setActiveIndex(activeIndex === index ? null : index)
+                            setActiveIndex(activeIndex === item._id ? null : item._id)
                         }
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
                     >
-                        <img src={item.image} alt={item.title} />
+                        <img
+                            src={`http://localhost:5000/uploads/news/${item.image}`}
+                        />
 
-                        {item.isNew && <span className="new-badge">NEW</span>}
+                        {isNew(item.createdAt) && (
+                            <span className="new-badge">NEW</span>
+                        )}
 
                         <div
-                            className={`news-overlay ${activeIndex === index ? "active" : ""
+                            className={`news-overlay ${activeIndex === item._id ? "active" : ""
                                 }`}
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={() => setActiveIndex(null)}
                         >
-                            <div className="news-top">
-                                <h3>{item.title}</h3>
-                                <span>{item.date}</span>
-                            </div>
-
-                            <div className="news-details">
-                                <p>{item.details}</p>
-                            </div>
+                            <h3>{item.title}</h3>
+                            <p>{item.description}</p>
                         </div>
                     </div>
                 ))}
+            </div>
+
+            {/* Pagination */}
+            <div className="pagination">
+                <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage((prev) => prev - 1)}
+                >
+                    ⬅ Prev
+                </button>
+
+                <span>
+                    {currentPage} / {totalPages}
+                </span>
+
+                <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage((prev) => prev + 1)}
+                >
+                    Next ➡
+                </button>
             </div>
         </section>
     );

@@ -1,6 +1,9 @@
-import axios from "axios";
+import axios from "../utils/axiosInstance";
 
 const NewsTable = ({ news, refresh, onEdit }) => {
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    const role = user?.role;
 
     const deleteNews = async (id) => {
         try {
@@ -49,12 +52,16 @@ const NewsTable = ({ news, refresh, onEdit }) => {
 
                         <td>{item.description}</td>
                         <td>
-                            <button
-                                className="edit-btn"
-                                onClick={() => onEdit(item)}>Edit</button>
-                            <button
-                                className="delete-btn"
-                                onClick={() => deleteNews(item._id)}>Delete</button>
+                            {role === "admin" && (
+                                <button onClick={() => onEdit(item)}>
+                                    Edit
+                                </button>
+                            )}
+                            {role === "admin" && (
+                                <button onClick={() => deleteNews(item._id)}>
+                                    Delete
+                                </button>
+                            )}
                         </td>
                     </tr>
                 ))}

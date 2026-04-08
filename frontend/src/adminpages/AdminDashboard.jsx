@@ -3,27 +3,45 @@ import "./AdminDashboard.css";
 import { useNavigate } from "react-router-dom";
 import AddNews from "./AddNews";
 import NewsTable from "./NewsTable";
-import axios from "axios";
-
+import axios from "../utils/axiosInstance";
 
 const AdminDashboard = () => {
     const [data, setData] = useState([]);
     const [activeMenu, setActiveMenu] = useState("news");
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [touchStartX, setTouchStartX] = useState(0);
-    const [touchEndX, setTouchEndX] = useState(0);
-    const navigate = useNavigate();
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        navigate("/login"); 
-    };
     const [editData, setEditData] = useState(null);
     const [search, setSearch] = useState("");
 
-    useEffect(() => {
-        fetchNews();
-    }, []);
+    // ✅ Backend pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/login");
+    };
+
+    useEffect(() => {
+        fetchNews(currentPage);
+    }, [currentPage]);
+
+    // 🔥 FETCH WITH PAGINATION
+    const fetchNews = async (page = 1) => {
+        try {
+            const res = await axios.get(
+                `http://localhost:5000/api/news?page=${page}&limit=5`
+            );
+
+            setData(res.data.data);
+            setTotalPages(res.data.totalPages);
+
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    // 🔍 SEARCH FILTER (FRONTEND)
     const filterData = (list) => {
         if (!search) return list;
 
@@ -37,102 +55,43 @@ const AdminDashboard = () => {
     };
 
     const filteredData = filterData(data);
-
-    const fetchNews = async () => {
-        try {
-            const res = await axios.get("http://localhost:5000/api/news");
-            setData(res.data);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-    
+    const user = JSON.parse(localStorage.getItem("user"));
+    const role = user?.role;
     return (
-        <div
-            className="admin-container"
-            onTouchStart={(e) => setTouchStartX(e.targetTouches[0].clientX)}
-            onTouchMove={(e) => setTouchEndX(e.targetTouches[0].clientX)}
-            onTouchEnd={() => {
-                if (touchStartX < 50 && touchEndX > 100) {
-                    setSidebarOpen(true); // swipe right → open
-                }
-                if (touchStartX > 200 && touchEndX < 100) {
-                    setSidebarOpen(false); // swipe left → close
-                }
-            }}
-        >
-            <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+        <div className="admin-container">
+
+            {/* Sidebar */}
+            <div className="sidebar">
                 <div className="logo-container">
-                    <img src="/chalukyaimages/chlukyaacademylogo.png" alt="logo" className="logo-img" />
+                    <img src="/chalukyaimages/chlukyaacademylogo.png" className="logo-img" />
                     <h2 className="logo-text">Chalukya Admin</h2>
                 </div>
+
                 <ul>
-                    <li
-                        className={activeMenu === "news" ? "active" : ""}
-                        onClick={() => {
-                            setActiveMenu("news");
-                            setSidebarOpen(false);
-                        }}
-                    >
-                        📰 News
-                    </li>
-                    <li
-                        className={activeMenu === "events" ? "active" : ""}
-                        onClick={() => {
-                            setActiveMenu("events");
-                            setSidebarOpen(false);
-                        }}
-                    >
-                        📅 Events
-                    </li>
-                    <li
-                        className={activeMenu === "sports" ? "active" : ""}
-                        onClick={() => {
-                            setActiveMenu("sports");
-                            setSidebarOpen(false);
-                        }}
-                    >
-                        🏆 Sports
-                    </li>
+                    <li onClick={() => setActiveMenu("news")}>📰 News</li>
+                    <li onClick={() => setActiveMenu("events")}>📅 Events</li>
+                    <li onClick={() => setActiveMenu("sports")}>🏆 Sports</li>
                 </ul>
             </div>
 
-            {sidebarOpen && (
-                <div
-                    className="admin-overlay"
-                    onClick={() => setSidebarOpen(false)}
-                ></div>
-            )}
-
             <div className="main">
+                {/* Topbar */}
                 <div className="topbar">
-                    <div className="left">
-                        <button className="menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
-                            ☰
-                        </button>
-                        <h1>Dashboard</h1>
-                    </div>
-
+                    <h1>Dashboard</h1>
                     <button className="logout-btn" onClick={handleLogout}>
                         Logout
                     </button>
                 </div>
 
+                {/* Cards */}
                 <div className="cards">
                     <div className="card gradient1">
                         <h3>Total News</h3>
                         <p>{data.length}</p>
                     </div>
-                    <div className="card gradient2">
-                        <h3>Total Events</h3>
-                        <p>0</p>
-                    </div>
-                    <div className="card gradient3">
-                        <h3>Total Sports</h3>
-                        <p>0</p>
-                    </div>
                 </div>
 
+                {/* Search */}
                 <div style={{ marginBottom: "15px" }}>
                     <input
                         placeholder="🔍 Search..."
@@ -149,59 +108,64 @@ const AdminDashboard = () => {
 
                 <div className="section">
                     {activeMenu === "news" && (
-                        <div className="fade">
-                            <div className="news-header">
-                                <h2>📰 News Management</h2>
-
-                                <button
-                                    className="add-btn"
-                                    onClick={() => setActiveMenu("addNews")}
-                                >
+                        <>
+                            {role === "admin" && (
+                                <button onClick={() => setActiveMenu("addNews")}>
                                     + Add News
                                 </button>
-                            </div>
+                            )}
 
                             <NewsTable
                                 news={filteredData}
-                                refresh={fetchNews}
+                                refresh={() => fetchNews(currentPage)}
                                 onEdit={(item) => {
                                     setEditData(item);
                                     setActiveMenu("editNews");
                                 }}
                             />
-                        </div>
+
+                            {/* 🔥 BACKEND PAGINATION UI */}
+                            <div className="pagination">
+                                <button
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage(prev => prev - 1)}
+                                >
+                                    Prev
+                                </button>
+
+                                <span>
+                                    {currentPage} / {totalPages}
+                                </span>
+
+                                <button
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage(prev => prev + 1)}
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        </>
                     )}
+
                     {activeMenu === "addNews" && (
-                        <div className="fade">
-                            <AddNews onSuccess={() => {
-                                fetchNews();
-                                setActiveMenu("news");
-                            }} onCancel={() => setActiveMenu("news")} />
-                        </div>
-                    )}
-                    {activeMenu === "editNews" && (
-                        <div className="fade">
                         <AddNews
-                            editData={editData}
                             onSuccess={() => {
-                                fetchNews();
+                                fetchNews(currentPage);
                                 setActiveMenu("news");
                             }}
                             onCancel={() => setActiveMenu("news")}
                         />
-                        </div>
                     )}
 
-                    {activeMenu === "events" && (
-                        <div className="fade">
-                            <h2>📅 Events Section</h2>
-                        </div>
-                    )}
-
-                    {activeMenu === "sports" && (
-                        <div className="fade">
-                            <h2>🏆 Sports Section</h2>
-                        </div>
+                    {activeMenu === "editNews" && (
+                        <AddNews
+                            editData={editData}
+                            onSuccess={() => {
+                                fetchNews(currentPage);
+                                setActiveMenu("news");
+                            }}
+                            onCancel={() => setActiveMenu("news")}
+                        />
                     )}
                 </div>
             </div>

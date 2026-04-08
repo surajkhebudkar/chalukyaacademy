@@ -13,8 +13,9 @@ export const register = async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            role,
+            role: "admin",
         });
+
 
         res.json(user);
     } catch (err) {
@@ -35,16 +36,27 @@ export const login = async (req, res) => {
 
         if (!isMatch) return res.status(400).json({ msg: "Wrong password" });
 
+        // const token = jwt.sign(
+        //     { id: user._id, role: user.role },
+        //     process.env.JWT_SECRET,
+        //     { expiresIn: "1d" }
+        // );
         const token = jwt.sign(
-            { id: user._id, role: user.role },
+            {
+                id: user._id,
+                role: user.role
+            },
             process.env.JWT_SECRET,
-            { expiresIn: "1d" }
+            { expiresIn: "7d" }
         );
 
         res.json({
             token,
-            role: user.role,
-            name: user.name,
+            user: {
+                id: user._id,
+                name: user.name,
+                role: user.role
+            }
         });
     } catch (err) {
         res.status(500).json({ message: err.message });

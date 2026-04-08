@@ -1,9 +1,13 @@
 export const getToken = () => localStorage.getItem("token");
-export const getRole = () => localStorage.getItem("role");
+
+export const getRole = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user?.role;
+};
 
 export const setAuth = (data) => {
     localStorage.setItem("token", data.token);
-    localStorage.setItem("role", data.role);
+    localStorage.setItem("user", JSON.stringify(data.user));
 };
 
 export const logout = () => {

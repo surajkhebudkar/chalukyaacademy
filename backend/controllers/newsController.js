@@ -22,8 +22,25 @@ export const createNews = async (req, res) => {
 // 📄 GET
 export const getAllNews = async (req, res) => {
     try {
-        const news = await News.find().sort({ createdAt: -1 });
-        res.status(200).json(news);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+
+        const skip = (page - 1) * limit;
+
+        const total = await News.countDocuments();
+
+        const news = await News.find()
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        res.status(200).json({
+            data: news,
+            currentPage: page,
+            totalPages: Math.ceil(total / limit),
+            totalItems: total
+        });
+
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
