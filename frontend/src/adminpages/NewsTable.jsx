@@ -41,7 +41,7 @@ const NewsTable = ({ news, refresh, onEdit }) => {
                         <td>
                             {item.title}
                             {isNew(item.createdAt) && (
-                                <span className="new-badge" style={{ marginLeft: "8px" }}>
+                                <span className="new-news-badge" style={{ marginLeft: "8px" }}>
                                     NEW
                                 </span>
                             )}
