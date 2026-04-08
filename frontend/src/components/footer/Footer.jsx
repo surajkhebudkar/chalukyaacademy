@@ -22,6 +22,25 @@ const Footer = () => {
 
         return () => observer.disconnect();
     }, []);
+    const logoRef = useRef();
+
+    const handleTilt = (e) => {
+        const rect = logoRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = -(y - centerY) / 6;
+        const rotateY = (x - centerX) / 6;
+
+        logoRef.current.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.20)`;
+    };
+
+    const resetTilt = () => {
+        logoRef.current.style.transform = "rotateX(0) rotateY(0) scale(1)";
+    };
 
     return (
         <footer className={`footer ${show ? "show" : ""}`} ref={footerRef}>
@@ -32,8 +51,16 @@ const Footer = () => {
                     <p><i className="bi bi-envelope"></i> hello@example.com</p>
                     <p><i className="bi bi-telephone"></i> +91 0000000000</p>
 
-                    <div className="footer-logo">
-                        <img src="/chalukyaimages/chlukyaacademylogo.png" alt="logo" />
+                    <div
+                        className="footer-logo"
+                        onMouseMove={(e) => handleTilt(e)}
+                        onMouseLeave={() => resetTilt()}
+                    >
+                        <img
+                            src="/chalukyaimages/chlukyaacademylogo.png"
+                            alt="logo"
+                            ref={logoRef}
+                        />
                     </div>
                 </div>
 

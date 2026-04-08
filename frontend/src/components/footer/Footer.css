@@ -90,6 +90,8 @@
 
 .footer-logo {
     margin-top: 15px;
+    perspective: 1000px;
+    display: inline-block;
 }
 
 .footer-logo img {
@@ -97,7 +99,16 @@
     height: auto;
     object-fit: contain;
     opacity: 0.9;
+    transition: transform 0.2s ease;
+    transform-style: preserve-3d;
+    will-change: transform;
 }
+.footer-logo img:active {
+    transform: scale(0.95);
+}
+
+
+
 
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {
@@ -161,6 +172,7 @@
         width: 100%;
     }
 }
+
 .footer-section {
     opacity: 0;
     transform: translateX(40px) scale(0.95);
@@ -214,6 +226,7 @@
         filter: blur(0);
     }
 }
+
 .footer-form input:focus,
 .footer-form select:focus,
 .footer-form textarea:focus,
@@ -222,6 +235,7 @@
     box-shadow: 0 0 8px rgba(13, 110, 253, 0.3);
     transform: scale(1.02);
 }
+
 .footer-form button,
 .feedback-btn {
     transition: all 0.3s ease;
