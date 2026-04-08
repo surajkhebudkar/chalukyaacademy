@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const NewsTable = ({ news, refresh }) => {
+const NewsTable = ({ news, refresh, onEdit }) => {
 
     const deleteNews = async (id) => {
         try {
@@ -48,19 +48,13 @@ const NewsTable = ({ news, refresh }) => {
                         </td>
 
                         <td>{item.description}</td>
-
-                        <td>
-                           <button
-                           className="edit-btn" 
-                           onClick={() => onEdit(item)}>Edit</button>
-                        </td>
                         <td>
                             <button
+                                className="edit-btn"
+                                onClick={() => onEdit(item)}>Edit</button>
+                            <button
                                 className="delete-btn"
-                                onClick={() => deleteNews(item._id)}
-                            >
-                                Delete
-                            </button>
+                                onClick={() => deleteNews(item._id)}>Delete</button>
                         </td>
                     </tr>
                 ))}

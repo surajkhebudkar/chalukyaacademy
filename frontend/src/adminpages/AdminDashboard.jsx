@@ -18,10 +18,25 @@ const AdminDashboard = () => {
         navigate("/login"); 
     };
     const [editData, setEditData] = useState(null);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         fetchNews();
     }, []);
+
+    const filterData = (list) => {
+        if (!search) return list;
+
+        const text = search.toLowerCase();
+
+        return list.filter(item =>
+            Object.values(item).some(val =>
+                String(val).toLowerCase().includes(text)
+            )
+        );
+    };
+
+    const filteredData = filterData(data);
 
     const fetchNews = async () => {
         try {
@@ -118,6 +133,19 @@ const AdminDashboard = () => {
                     </div>
                 </div>
 
+                <div style={{ marginBottom: "15px" }}>
+                    <input
+                        placeholder="🔍 Search..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        style={{
+                            padding: "8px",
+                            width: "250px",
+                            borderRadius: "6px",
+                            border: "1px solid #ccc"
+                        }}
+                    />
+                </div>
 
                 <div className="section">
                     {activeMenu === "news" && (
@@ -134,7 +162,7 @@ const AdminDashboard = () => {
                             </div>
 
                             <NewsTable
-                                news={data}
+                                news={filteredData}
                                 refresh={fetchNews}
                                 onEdit={(item) => {
                                     setEditData(item);
