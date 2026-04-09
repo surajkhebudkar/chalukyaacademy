@@ -216,6 +216,19 @@ body {
         padding: 6px 10px;
         cursor: pointer;
 }
+.edit-btn,
+.delete-btn {
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.edit-btn:hover {
+    background: rgb(6, 110, 155);
+}
+
+.delete-btn:hover {
+    background: darkred;
+}
 
 .pagination {
     display: flex;

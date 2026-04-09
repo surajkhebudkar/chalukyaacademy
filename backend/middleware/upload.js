@@ -1,24 +1,25 @@
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "uploads/news/");
-    },
-    filename: (req, file, cb) => {
-        const uniqueName = Date.now() + path.extname(file.originalname);
-        cb(null, uniqueName);
-    },
-});
-
-const fileFilter = (req, file, cb) => {
-    if (file.mimetype.startsWith("image")) {
-        cb(null, true);
-    } else {
-        cb(new Error("Only images allowed"), false);
-    }
+const createStorage = (folderName) => {
+    return multer.diskStorage({
+        destination: function (req, file, cb) {
+            const folder = `uploads/${folderName}`;
+            fs.mkdirSync(folder, { recursive: true });
+            cb(null, folder);
+        },
+        filename: function (req, file, cb) {
+            const uniqueName = Date.now() + path.extname(file.originalname);
+            cb(null, uniqueName);
+        }
+    });
 };
 
-const upload = multer({ storage, fileFilter });
+export const uploadNews = multer({
+    storage: createStorage("news"),
+});
 
-export default upload;
+export const uploadEvents = multer({
+    storage: createStorage("events"),
+});

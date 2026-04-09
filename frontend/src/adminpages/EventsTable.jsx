@@ -1,76 +1,78 @@
 import axios from "../utils/axiosInstance";
-import "./AdminDashboard.css";
 
-
-const EventsTable = ({ events, refresh, onEdit }) => {
-
-    const user = JSON.parse(localStorage.getItem("user"));
-    const role = user?.role;
+const EventsTable = ({
+    events,
+    refresh,
+    onEdit,
+    currentPage,
+    totalPages,
+    setCurrentPage
+}) => {
 
     const deleteEvent = async (id) => {
-        try {
-            await axios.delete(`/events/${id}`);
-            refresh();
-        } catch (err) {
-            console.log(err);
-            alert("Delete failed");
-        }
+        await axios.delete(`/events/${id}`);
+        refresh();
     };
 
     const isNew = (date) => {
-        const diff = (new Date() - new Date(date)) / (1000 * 60 * 60 * 24);
-        return diff <= 3;
+        return (new Date() - new Date(date)) / (1000 * 60 * 60 * 24) <= 3;
     };
 
     return (
-        <table className="news-table">
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Title</th>
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
+        <>
+            <table className="news-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                {events.map((item) => (
-                    <tr key={item._id}>
-                        <td>
-                            <img
-                                src={`http://localhost:5000/uploads/events/${item.image}`}
-                                width="60"
-                            />
-                        </td>
+                <tbody>
+                    {events.map(e => (
+                        <tr key={e._id}>
+                            <td>
+                                <img
+                                    src={`http://localhost:5000/uploads/events/${e.image}`}
+                                    width="60"
+                                />
+                            </td>
 
-                        <td>
-                            {item.title}
-                            {isNew(item.createdAt) && (
-                                <span className="new-news-badge">NEW</span>
-                            )}
-                        </td>
+                            <td>
+                                {e.title}
+                                {isNew(e.createdAt) && (
+                                    <span className="new-news-badge">NEW</span>
+                                )}
+                            </td>
 
-                        <td>{new Date(item.date).toLocaleDateString()}</td>
+                            <td>
+                                {new Date(e.date).toLocaleDateString()}
+                            </td>
 
-                        <td>{item.description}</td>
-
-                        <td>
-                            {role === "admin" && (
-                                <button className="edit-btn" onClick={() => onEdit(item)}>
+                            <td>
+                                <button
+                                    className="edit-btn"
+                                    onClick={() => onEdit(e)}
+                                >
                                     Edit
                                 </button>
-                            )}
-                            {role === "admin" && (
-                                <button className="delete-btn" onClick={() => deleteEvent(item._id)}>
+
+                                <button
+                                    className="delete-btn"
+                                    onClick={() => deleteEvent(e._id)}
+                                >
                                     Delete
                                 </button>
-                            )}
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            
+        </>
     );
 };
 

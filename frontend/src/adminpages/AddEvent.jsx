@@ -3,7 +3,6 @@ import axios from "../utils/axiosInstance";
 import "./AddNews.css";
 
 const AddEvent = ({ onSuccess, onCancel, editData }) => {
-
     const [form, setForm] = useState({
         title: "",
         description: "",
@@ -12,14 +11,13 @@ const AddEvent = ({ onSuccess, onCancel, editData }) => {
 
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (editData) {
             setForm({
                 title: editData.title,
                 description: editData.description,
-                date: editData.date?.split("T")[0]
+                date: editData.date?.substring(0, 10)
             });
 
             if (editData.image) {
@@ -28,42 +26,20 @@ const AddEvent = ({ onSuccess, onCancel, editData }) => {
         }
     }, [editData]);
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        setImage(file);
-        setPreview(URL.createObjectURL(file));
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            setLoading(true);
 
-            const formData = new FormData();
-            formData.append("title", form.title);
-            formData.append("description", form.description);
-            formData.append("date", form.date);
-            if (image) formData.append("image", image);
+        const formData = new FormData();
+        Object.keys(form).forEach(key => formData.append(key, form[key]));
+        if (image) formData.append("image", image);
 
-            if (editData) {
-                await axios.put(`/events/${editData._id}`, formData);
-                alert("Updated ✅");
-            } else {
-                await axios.post("/events", formData);
-                alert("Added ✅");
-            }
-
-            onSuccess();
-        } catch (err) {
-            console.log(err);
-            alert("Error");
-        } finally {
-            setLoading(false);
+        if (editData) {
+            await axios.put(`/events/${editData._id}`, formData);
+        } else {
+            await axios.post("/events", formData);
         }
+
+        onSuccess();
     };
 
     return (
@@ -71,43 +47,22 @@ const AddEvent = ({ onSuccess, onCancel, editData }) => {
             <h2>{editData ? "Edit Event" : "Add Event"}</h2>
 
             <form onSubmit={handleSubmit} className="add-news-form">
+                <input name="title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
 
-                <input
-                    type="text"
-                    name="title"
-                    value={form.title}
-                    onChange={handleChange}
-                    required
-                />
+                <textarea name="description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required />
 
-                <textarea
-                    name="description"
-                    value={form.description}
-                    onChange={handleChange}
-                    required
-                />
+                <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} required />
 
-                {/* 🆕 DATE FIELD */}
-                <input
-                    type="date"
-                    name="date"
-                    value={form.date}
-                    onChange={handleChange}
-                    required
-                />
-
-                <input type="file" onChange={handleImageChange} />
+                <input type="file" onChange={(e) => {
+                    setImage(e.target.files[0]);
+                    setPreview(URL.createObjectURL(e.target.files[0]));
+                }} />
 
                 {preview && <img src={preview} className="preview-img" />}
 
                 <div className="btn-group">
-                    <button type="submit">
-                        {loading ? "Saving..." : editData ? "Update" : "Add"}
-                    </button>
-
-                    <button type="button" className="cancel-btn" onClick={onCancel}>
-                        Cancel
-                    </button>
+                    <button type="submit">Save</button>
+                    <button type="button" onClick={onCancel}>Cancel</button>
                 </div>
             </form>
         </div>

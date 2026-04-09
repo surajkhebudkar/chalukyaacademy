@@ -4,13 +4,12 @@ import Event from "../models/Event.js";
 export const createEvent = async (req, res) => {
     try {
         const { title, description, date } = req.body;
-        const image = req.file ? req.file.filename : null;
 
         const event = new Event({
             title,
             description,
             date,
-            image
+            image: req.file ? req.file.filename : null
         });
 
         await event.save();
@@ -18,15 +17,14 @@ export const createEvent = async (req, res) => {
         res.status(201).json({
             success: true,
             message: "Event created successfully",
-            data: event,
+            data: event
         });
-
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
-// 📄 GET ALL (Pagination)
+// 📄 GET
 export const getAllEvents = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -41,13 +39,12 @@ export const getAllEvents = async (req, res) => {
             .skip(skip)
             .limit(limit);
 
-        res.status(200).json({
+        res.json({
             data: events,
             currentPage: page,
             totalPages: Math.ceil(total / limit),
             totalItems: total
         });
-
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -68,10 +65,9 @@ export const updateEvent = async (req, res) => {
             updateData.image = req.file.filename;
         }
 
-        const updatedEvent = await Event.findByIdAndUpdate(id, updateData, { new: true });
+        const updated = await Event.findByIdAndUpdate(id, updateData, { new: true });
 
-        res.status(200).json(updatedEvent);
-
+        res.json(updated);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -80,14 +76,8 @@ export const updateEvent = async (req, res) => {
 // ❌ DELETE
 export const deleteEvent = async (req, res) => {
     try {
-        const { id } = req.params;
-
-        await Event.findByIdAndDelete(id);
-
-        res.status(200).json({
-            message: "Event deleted successfully"
-        });
-
+        await Event.findByIdAndDelete(req.params.id);
+        res.json({ message: "Event deleted" });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

@@ -244,6 +244,9 @@ const AdminDashboard = () => {
                                     setEditData(item);
                                     setActiveMenu("editEvent");
                                 }}
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                setCurrentPage={setCurrentPage}
                             />
 
                             <div className="pagination">

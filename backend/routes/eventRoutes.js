@@ -1,7 +1,7 @@
 import express from "express";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { checkRole } from "../middleware/roleMiddleware.js";
-import upload from "../middleware/upload.js";
+import { uploadEvents } from "../middleware/upload.js";
 
 import {
     createEvent,
@@ -12,27 +12,33 @@ import {
 
 const router = express.Router();
 
-// ✅ ADMIN
+// CREATE
 router.post(
     "/",
     authMiddleware,
     checkRole(["admin"]),
-    upload.single("image"), 
+    uploadEvents.single("image"),
     createEvent
 );
 
+// UPDATE
 router.put(
     "/:id",
     authMiddleware,
     checkRole(["admin"]),
-    upload.single("image"), 
+    uploadEvents.single("image"),
     updateEvent
 );
 
-// ❌ DELETE
-router.delete("/:id", authMiddleware, checkRole(["admin"]), deleteEvent);
+// DELETE
+router.delete(
+    "/:id",
+    authMiddleware,
+    checkRole(["admin"]),
+    deleteEvent
+);
 
-// 🌐 PUBLIC
+// GET
 router.get("/", getAllEvents);
 
 export default router;
