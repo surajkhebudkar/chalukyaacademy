@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 import AddNews from "./AddNews";
 import NewsTable from "./NewsTable";
 import axios from "../utils/axiosInstance";
+import AddEvent from "./AddEvent";
+import EventsTable from "./EventsTable";
 
 const AdminDashboard = () => {
     const [data, setData] = useState([]);
+    const [eventData, setEventData] = useState([]);
     const [activeMenu, setActiveMenu] = useState("news");
     const [editData, setEditData] = useState(null);
     const [search, setSearch] = useState("");
@@ -23,8 +26,9 @@ const AdminDashboard = () => {
     };
 
     useEffect(() => {
-        fetchNews(currentPage);
-    }, [currentPage]);
+        if (activeMenu === "news") fetchNews(currentPage);
+        if (activeMenu === "events") fetchEvents(currentPage);
+    }, [currentPage, activeMenu]);
 
     // 🔥 FETCH WITH PAGINATION
     const fetchNews = async (page = 1) => {
@@ -36,6 +40,16 @@ const AdminDashboard = () => {
             setData(res.data.data);
             setTotalPages(res.data.totalPages);
 
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const fetchEvents = async (page = 1) => {
+        try {
+            const res = await axios.get(`/events?page=${page}&limit=5`);
+            setEventData(res.data.data);
+            setTotalPages(res.data.totalPages);
         } catch (err) {
             console.log(err);
         }
@@ -167,6 +181,63 @@ const AdminDashboard = () => {
                             onCancel={() => setActiveMenu("news")}
                         />
                     )}
+
+
+                    {activeMenu === "events" && (
+                        <>
+                            {role === "admin" && (
+                                <button onClick={() => setActiveMenu("addEvent")}>
+                                    + Add Event
+                                </button>
+                            )}
+
+                            <EventsTable
+                                events={filterData(eventData)}
+                                refresh={() => fetchEvents(currentPage)}
+                                onEdit={(item) => {
+                                    setEditData(item);
+                                    setActiveMenu("editEvent");
+                                }}
+                            />
+
+                            <div className="pagination">
+                                <button disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage(prev => prev - 1)}>
+                                    Prev
+                                </button>
+
+                                <span>{currentPage} / {totalPages}</span>
+
+                                <button disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage(prev => prev + 1)}>
+                                    Next
+                                </button>
+                            </div>
+                        </>
+                    )}
+
+                    {activeMenu === "addEvent" && (
+                        <AddEvent
+                            onSuccess={() => {
+                                fetchEvents(currentPage);
+                                setActiveMenu("events");
+                            }}
+                            onCancel={() => setActiveMenu("events")}
+                        />
+                    )}
+
+                    {activeMenu === "editEvent" && (
+                        <AddEvent
+                            editData={editData}
+                            onSuccess={() => {
+                                fetchEvents(currentPage);
+                                setActiveMenu("events");
+                            }}
+                            onCancel={() => setActiveMenu("events")}
+                        />
+                    )}
+
+
                 </div>
             </div>
         </div>
