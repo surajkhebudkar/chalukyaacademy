@@ -209,7 +209,7 @@ body {
     cursor: pointer;
 }
 .edit-btn{
-    margin: 10px;
+    margin: 8px;
     background: rgb(8, 135, 188);
         color: white;
         border: none;
@@ -217,7 +217,27 @@ body {
         cursor: pointer;
 }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    gap: 10px;
+}
 
+.pagination button {
+    padding: 6px 12px;
+    border: none;
+    background: #3b82f6;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
 
 
 

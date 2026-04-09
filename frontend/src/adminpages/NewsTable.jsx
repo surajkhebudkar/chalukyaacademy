@@ -1,4 +1,6 @@
 import axios from "../utils/axiosInstance";
+import "./AdminDashboard.css";
+
 
 const NewsTable = ({ news, refresh, onEdit }) => {
 
@@ -32,7 +34,7 @@ const NewsTable = ({ news, refresh, onEdit }) => {
             </thead>
 
             <tbody>
-                {news.map((item) => (
+                {(Array.isArray(news) ? news : []).map((item) => (
                     <tr key={item._id}>
                         <td>
                             <img
@@ -53,12 +55,12 @@ const NewsTable = ({ news, refresh, onEdit }) => {
                         <td>{item.description}</td>
                         <td>
                             {role === "admin" && (
-                                <button onClick={() => onEdit(item)}>
+                                <button className="edit-btn" onClick={() => onEdit(item)}>
                                     Edit
                                 </button>
                             )}
                             {role === "admin" && (
-                                <button onClick={() => deleteNews(item._id)}>
+                                <button className="delete-btn" onClick={() => deleteNews(item._id)}>
                                     Delete
                                 </button>
                             )}

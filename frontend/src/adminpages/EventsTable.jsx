@@ -1,4 +1,6 @@
 import axios from "../utils/axiosInstance";
+import "./AdminDashboard.css";
+
 
 const EventsTable = ({ events, refresh, onEdit }) => {
 
@@ -55,10 +57,14 @@ const EventsTable = ({ events, refresh, onEdit }) => {
 
                         <td>
                             {role === "admin" && (
-                                <button onClick={() => onEdit(item)}>Edit</button>
+                                <button className="edit-btn" onClick={() => onEdit(item)}>
+                                    Edit
+                                </button>
                             )}
                             {role === "admin" && (
-                                <button onClick={() => deleteEvent(item._id)}>Delete</button>
+                                <button className="delete-btn" onClick={() => deleteEvent(item._id)}>
+                                    Delete
+                                </button>
                             )}
                         </td>
                     </tr>

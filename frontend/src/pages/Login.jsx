@@ -61,8 +61,9 @@ const Login = () => {
         } finally {
             setLoading(false);
         }
+       
     };
-    localStorage.setItem("user", JSON.stringify(res.data.user));
+    
 
     return (
         <div className="login-page">
@@ -103,7 +104,7 @@ const Login = () => {
                     </div>
 
                     <button className="loginbtn" type="submit" disabled={loading}>
-                       
+                        {loading ? "Logging in..." : "Login"}
                     </button>
                 </form>
             </div>

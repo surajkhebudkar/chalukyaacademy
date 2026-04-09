@@ -1,7 +1,7 @@
 import express from "express";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { checkRole } from "../middleware/roleMiddleware.js";
-import upload from "../middleware/upload.js"; // 👈 SAME FILE (Option 1)
+import upload from "../middleware/upload.js";
 
 import {
     createEvent,

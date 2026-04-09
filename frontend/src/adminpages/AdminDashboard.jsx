@@ -14,9 +14,12 @@ const AdminDashboard = () => {
     const [editData, setEditData] = useState(null);
     const [search, setSearch] = useState("");
 
-    // ✅ Backend pagination
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [touchStartX, setTouchStartX] = useState(0);
+    const [touchEndX, setTouchEndX] = useState(0);
 
     const navigate = useNavigate();
 
@@ -30,16 +33,11 @@ const AdminDashboard = () => {
         if (activeMenu === "events") fetchEvents(currentPage);
     }, [currentPage, activeMenu]);
 
-    // 🔥 FETCH WITH PAGINATION
     const fetchNews = async (page = 1) => {
         try {
-            const res = await axios.get(
-                `http://localhost:5000/api/news?page=${page}&limit=5`
-            );
-
-            setData(res.data.data);
-            setTotalPages(res.data.totalPages);
-
+            const res = await axios.get(`/news?page=${page}&limit=5`);
+            setData(res.data.data || []);
+            setTotalPages(res.data.totalPages || 1);
         } catch (err) {
             console.log(err);
         }
@@ -48,64 +46,104 @@ const AdminDashboard = () => {
     const fetchEvents = async (page = 1) => {
         try {
             const res = await axios.get(`/events?page=${page}&limit=5`);
-            setEventData(res.data.data);
-            setTotalPages(res.data.totalPages);
+            setEventData(res.data.data || []);
+            setTotalPages(res.data.totalPages || 1);
         } catch (err) {
             console.log(err);
         }
     };
 
-    // 🔍 SEARCH FILTER (FRONTEND)
     const filterData = (list) => {
         if (!search) return list;
-
-        const text = search.toLowerCase();
-
         return list.filter(item =>
             Object.values(item).some(val =>
-                String(val).toLowerCase().includes(text)
+                String(val).toLowerCase().includes(search.toLowerCase())
             )
         );
     };
 
-    const filteredData = filterData(data);
     const user = JSON.parse(localStorage.getItem("user"));
     const role = user?.role;
-    return (
-        <div className="admin-container">
 
-            {/* Sidebar */}
-            <div className="sidebar">
+    return (
+        <div
+            className="admin-container"
+            onTouchStart={(e) => setTouchStartX(e.targetTouches[0].clientX)}
+            onTouchMove={(e) => setTouchEndX(e.targetTouches[0].clientX)}
+            onTouchEnd={() => {
+                if (touchStartX < 50 && touchEndX > 100) setSidebarOpen(true);
+                if (touchStartX > 200 && touchEndX < 100) setSidebarOpen(false);
+            }}
+        >
+
+            {/* SIDEBAR */}
+            <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
                 <div className="logo-container">
                     <img src="/chalukyaimages/chlukyaacademylogo.png" className="logo-img" />
                     <h2 className="logo-text">Chalukya Admin</h2>
                 </div>
 
                 <ul>
-                    <li onClick={() => setActiveMenu("news")}>📰 News</li>
-                    <li onClick={() => setActiveMenu("events")}>📅 Events</li>
-                    <li onClick={() => setActiveMenu("sports")}>🏆 Sports</li>
+                    <li
+                        className={activeMenu === "news" ? "active" : ""}
+                        onClick={() => {
+                            setActiveMenu("news");
+                            setSidebarOpen(false);
+                        }}
+                    >
+                        📰 News
+                    </li>
+
+                    <li
+                        className={activeMenu === "events" ? "active" : ""}
+                        onClick={() => {
+                            setActiveMenu("events");
+                            setSidebarOpen(false);
+                        }}
+                    >
+                        📅 Events
+                    </li>
+
+                    <li>🏆 Sports</li>
                 </ul>
             </div>
 
+            {/* OVERLAY */}
+            {sidebarOpen && (
+                <div className="admin-overlay" onClick={() => setSidebarOpen(false)}></div>
+            )}
+
+            {/* MAIN */}
             <div className="main">
-                {/* Topbar */}
+
+                {/* TOPBAR */}
                 <div className="topbar">
-                    <h1>Dashboard</h1>
+                    <div className="left">
+                        <button className="menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
+                            ☰
+                        </button>
+                        <h1>Dashboard</h1>
+                    </div>
+
                     <button className="logout-btn" onClick={handleLogout}>
                         Logout
                     </button>
                 </div>
 
-                {/* Cards */}
+                {/* CARDS */}
                 <div className="cards">
                     <div className="card gradient1">
                         <h3>Total News</h3>
                         <p>{data.length}</p>
                     </div>
+
+                    <div className="card gradient2">
+                        <h3>Total Events</h3>
+                        <p>{eventData.length}</p>
+                    </div>
                 </div>
 
-                {/* Search */}
+                {/* SEARCH */}
                 <div style={{ marginBottom: "15px" }}>
                     <input
                         placeholder="🔍 Search..."
@@ -121,16 +159,22 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className="section">
+
+                    {/* NEWS */}
                     {activeMenu === "news" && (
                         <>
-                            {role === "admin" && (
-                                <button onClick={() => setActiveMenu("addNews")}>
-                                    + Add News
-                                </button>
-                            )}
+                            <div className="news-header">
+                                <h2>📰 News Management</h2>
+
+                                {role === "admin" && (
+                                    <button className="add-btn" onClick={() => setActiveMenu("addNews")}>
+                                        + Add News
+                                    </button>
+                                )}
+                            </div>
 
                             <NewsTable
-                                news={filteredData}
+                                news={filterData(data)}
                                 refresh={() => fetchNews(currentPage)}
                                 onEdit={(item) => {
                                     setEditData(item);
@@ -138,29 +182,23 @@ const AdminDashboard = () => {
                                 }}
                             />
 
-                            {/* 🔥 BACKEND PAGINATION UI */}
                             <div className="pagination">
-                                <button
-                                    disabled={currentPage === 1}
-                                    onClick={() => setCurrentPage(prev => prev - 1)}
-                                >
+                                <button disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage(p => p - 1)}>
                                     Prev
                                 </button>
 
-                                <span>
-                                    {currentPage} / {totalPages}
-                                </span>
+                                <span>{currentPage} / {totalPages}</span>
 
-                                <button
-                                    disabled={currentPage === totalPages}
-                                    onClick={() => setCurrentPage(prev => prev + 1)}
-                                >
+                                <button disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage(p => p + 1)}>
                                     Next
                                 </button>
                             </div>
                         </>
                     )}
 
+                    {/* ADD NEWS */}
                     {activeMenu === "addNews" && (
                         <AddNews
                             onSuccess={() => {
@@ -171,6 +209,7 @@ const AdminDashboard = () => {
                         />
                     )}
 
+                    {/* EDIT NEWS */}
                     {activeMenu === "editNews" && (
                         <AddNews
                             editData={editData}
@@ -182,14 +221,21 @@ const AdminDashboard = () => {
                         />
                     )}
 
-
+                    {/* EVENTS */}
                     {activeMenu === "events" && (
                         <>
-                            {role === "admin" && (
-                                <button onClick={() => setActiveMenu("addEvent")}>
-                                    + Add Event
-                                </button>
-                            )}
+                            <div className="news-header">
+                                <h2>📅 Events Management</h2>
+
+                                {role === "admin" && (
+                                    <button
+                                        className="add-btn"
+                                        onClick={() => setActiveMenu("addEvent")}
+                                    >
+                                        + Add Event
+                                    </button>
+                                )}
+                            </div>
 
                             <EventsTable
                                 events={filterData(eventData)}
@@ -201,21 +247,26 @@ const AdminDashboard = () => {
                             />
 
                             <div className="pagination">
-                                <button disabled={currentPage === 1}
-                                    onClick={() => setCurrentPage(prev => prev - 1)}>
+                                <button
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage(p => p - 1)}
+                                >
                                     Prev
                                 </button>
 
                                 <span>{currentPage} / {totalPages}</span>
 
-                                <button disabled={currentPage === totalPages}
-                                    onClick={() => setCurrentPage(prev => prev + 1)}>
+                                <button
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage(p => p + 1)}
+                                >
                                     Next
                                 </button>
                             </div>
                         </>
                     )}
 
+                    {/* ADD EVENT */}
                     {activeMenu === "addEvent" && (
                         <AddEvent
                             onSuccess={() => {
@@ -226,6 +277,7 @@ const AdminDashboard = () => {
                         />
                     )}
 
+                    {/* EDIT EVENT */}
                     {activeMenu === "editEvent" && (
                         <AddEvent
                             editData={editData}
@@ -236,7 +288,6 @@ const AdminDashboard = () => {
                             onCancel={() => setActiveMenu("events")}
                         />
                     )}
-
 
                 </div>
             </div>

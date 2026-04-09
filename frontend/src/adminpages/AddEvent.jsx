@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "../utils/axiosInstance";
-import "./AddNews.css"; // ✅ same CSS reuse
+import "./AddNews.css";
 
 const AddEvent = ({ onSuccess, onCancel, editData }) => {
 
