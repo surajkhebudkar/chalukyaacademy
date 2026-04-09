@@ -104,7 +104,15 @@ const AdminDashboard = () => {
                         📅 Events
                     </li>
 
-                    <li>🏆 Sports</li>
+                    <li
+                        className={activeMenu === "sports" ? "active" : ""}
+                        onClick={() => {
+                            setActiveMenu("sports");
+                            setSidebarOpen(false);
+                        }}
+                    >
+                        🏆 Sports
+                    </li>
                 </ul>
             </div>
 
