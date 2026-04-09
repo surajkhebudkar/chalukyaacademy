@@ -1,6 +1,7 @@
 import express from "express";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { checkRole } from "../middleware/roleMiddleware.js";
+import upload from "../middleware/upload.js"; // 👈 SAME FILE (Option 1)
 
 import {
     createEvent,
@@ -11,9 +12,24 @@ import {
 
 const router = express.Router();
 
-// 🔐 ADMIN ONLY
-router.post("/", authMiddleware, checkRole(["admin"]), createEvent);
-router.put("/:id", authMiddleware, checkRole(["admin"]), updateEvent);
+// ✅ ADMIN
+router.post(
+    "/",
+    authMiddleware,
+    checkRole(["admin"]),
+    upload.single("image"), 
+    createEvent
+);
+
+router.put(
+    "/:id",
+    authMiddleware,
+    checkRole(["admin"]),
+    upload.single("image"), 
+    updateEvent
+);
+
+// ❌ DELETE
 router.delete("/:id", authMiddleware, checkRole(["admin"]), deleteEvent);
 
 // 🌐 PUBLIC
