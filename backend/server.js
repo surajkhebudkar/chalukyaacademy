@@ -7,6 +7,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import newsRoutes from "./routes/newsRoutes.js";
 import eventRoutes from "./routes/eventRoutes.js";
+import sportRoutes from "./routes/sportRoutes.js";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -25,6 +26,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRoutes);
 app.use("/api/news", newsRoutes);
 app.use("/api/events", eventRoutes);
+app.use("/api/sports", sportRoutes);
 
 const PORT = 5000;
 app.listen(PORT, () => {
