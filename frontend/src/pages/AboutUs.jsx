@@ -45,10 +45,6 @@ export default function AboutUs() {
     return (
         <section className="about">
 
-            <div className="about-title">
-                
-            </div>
-
             <div className="about-container">
 
                 <div className="about-box">

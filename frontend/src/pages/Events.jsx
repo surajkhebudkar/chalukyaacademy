@@ -42,8 +42,6 @@ export default function Events() {
     return (
         <section ref={sectionRef} className={`events ${show ? "show" : ""}`}>
 
-            <div className="events-title"></div>
-
             <div className="events-grid">
                 {eventsData.map((event) => (
                     <div

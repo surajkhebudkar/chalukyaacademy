@@ -48,10 +48,6 @@ export default function PhotoGallery() {
     return (
         <section className="gallery">
 
-            <div className="gallery-title">
-               
-            </div>
-
             <div className="gallery-grid">
                 {galleryData.map((album, index) => (
                     <div

@@ -48,7 +48,7 @@ export default function Sports() {
     return (
         <section className="sports">
 
-            <div className="sports-title"></div>
+           
 
             {/* BRANCH TABS */}
             <div className="branch-tabs">
