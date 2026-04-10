@@ -39,7 +39,7 @@ const deleteFile = (file) => {
     }
 };
 
-// ➕ CREATE (🔥 MAIN LOGIC)
+// ➕ CREATE
 export const createSport = async (req, res) => {
     try {
         const data = JSON.parse(req.body.data);
@@ -75,15 +75,12 @@ export const createSport = async (req, res) => {
             coaches
         };
 
-        // 🔥 CHECK IF BRANCH EXISTS
         let branch = await Sport.findOne({ branchName: data.branchName });
 
         if (branch) {
-            // 👉 ADD SPORT TO EXISTING BRANCH
             branch.sports.push(newSport);
             await branch.save();
         } else {
-            // 👉 CREATE NEW BRANCH
             branch = new Sport({
                 branchName: data.branchName,
                 branchLocation: data.branchLocation,
@@ -121,7 +118,34 @@ export const getAllSports = async (req, res) => {
     }
 };
 
-// ❌ DELETE (DELETE FULL BRANCH)
+// ✏️ UPDATE (🔥 FIXED — ADD THIS)
+export const updateSport = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const branch = await Sport.findById(id);
+        if (!branch) {
+            return res.status(404).json({ error: "Branch not found" });
+        }
+
+        const data = req.body;
+
+        branch.branchName = data.branchName || branch.branchName;
+        branch.branchLocation = data.branchLocation || branch.branchLocation;
+        branch.branchMap = data.branchMap || branch.branchMap;
+
+        await branch.save();
+
+        sportsCache = null;
+
+        res.json({ success: true, data: branch });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// ❌ DELETE
 export const deleteSport = async (req, res) => {
     try {
         const branch = await Sport.findById(req.params.id);
@@ -130,7 +154,6 @@ export const deleteSport = async (req, res) => {
             return res.status(404).json({ error: "Not found" });
         }
 
-        // delete images
         deleteFile(branch.branchImage);
 
         branch.sports.forEach(s => {
