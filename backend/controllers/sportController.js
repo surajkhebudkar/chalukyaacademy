@@ -3,11 +3,11 @@ import path from "path";
 import Joi from "joi";
 import Sport from "../models/Sport.js";
 
-// ✅ SIMPLE CACHE
+// ✅ CACHE
 let sportsCache = null;
 
-// ✅ JOI VALIDATION
-const sportSchema = Joi.object({
+// ✅ VALIDATION
+const schema = Joi.object({
     branchName: Joi.string().required(),
     branchLocation: Joi.string().allow(""),
     branchMap: Joi.string().allow(""),
@@ -30,7 +30,7 @@ const sportSchema = Joi.object({
     ).default([])
 });
 
-// 🧹 DELETE FILE HELPER
+// 🧹 DELETE FILE
 const deleteFile = (file) => {
     if (!file) return;
     const filePath = path.join("uploads/sports", file);
@@ -39,16 +39,13 @@ const deleteFile = (file) => {
     }
 };
 
-// ➕ CREATE
+// ➕ CREATE (🔥 MAIN LOGIC)
 export const createSport = async (req, res) => {
     try {
         const data = JSON.parse(req.body.data);
 
-        // ✅ VALIDATION
-        const { error } = sportSchema.validate(data);
-        if (error) {
-            return res.status(400).json({ error: error.message });
-        }
+        const { error } = schema.validate(data);
+        if (error) return res.status(400).json({ error: error.message });
 
         const files = req.files || {};
 
@@ -70,52 +67,51 @@ export const createSport = async (req, res) => {
             photo: coachPhotos[i]?.filename
         }));
 
-        const sport = new Sport({
-            ...data,
-            sportImage,
-            branchImage,
+        const newSport = {
+            name: data.sportName,
+            image: sportImage,
+            history: data.history,
             equipment,
             coaches
-        });
+        };
 
-        await sport.save();
+        // 🔥 CHECK IF BRANCH EXISTS
+        let branch = await Sport.findOne({ branchName: data.branchName });
 
-        // ❌ clear cache
+        if (branch) {
+            // 👉 ADD SPORT TO EXISTING BRANCH
+            branch.sports.push(newSport);
+            await branch.save();
+        } else {
+            // 👉 CREATE NEW BRANCH
+            branch = new Sport({
+                branchName: data.branchName,
+                branchLocation: data.branchLocation,
+                branchMap: data.branchMap,
+                branchImage,
+                sports: [newSport]
+            });
+            await branch.save();
+        }
+
         sportsCache = null;
 
-        res.status(201).json({ success: true, data: sport });
+        res.status(201).json({ success: true, data: branch });
 
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
 
-// 📄 GET (WITH CACHE)
+// 📄 GET
 export const getAllSports = async (req, res) => {
     try {
-        // ✅ RETURN CACHE
-        if (sportsCache) {
-            return res.json(sportsCache);
-        }
+        if (sportsCache) return res.json(sportsCache);
 
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 6;
-        const skip = (page - 1) * limit;
+        const branches = await Sport.find().sort({ createdAt: -1 });
 
-        const total = await Sport.countDocuments();
+        const response = { data: branches };
 
-        const sports = await Sport.find()
-            .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(limit);
-
-        const response = {
-            data: sports,
-            currentPage: page,
-            totalPages: Math.ceil(total / limit)
-        };
-
-        // ✅ STORE CACHE
         sportsCache = response;
 
         res.json(response);
@@ -125,70 +121,29 @@ export const getAllSports = async (req, res) => {
     }
 };
 
-// ✏️ UPDATE
-export const updateSport = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const existing = await Sport.findById(id);
-
-        if (!existing) {
-            return res.status(404).json({ error: "Sport not found" });
-        }
-
-        const data = req.body;
-
-        // ✅ VALIDATION
-        const { error } = sportSchema.validate(data);
-        if (error) {
-            return res.status(400).json({ error: error.message });
-        }
-
-        // ❗ ONLY DELETE IF IMAGE IS CHANGED
-        if (data.branchImage && data.branchImage !== existing.branchImage) {
-            deleteFile(existing.branchImage);
-        }
-
-        if (data.sportImage && data.sportImage !== existing.sportImage) {
-            deleteFile(existing.sportImage);
-        }
-
-        // ❗ DO NOT DELETE ALL equipment/coach images blindly
-        // (very important fix)
-
-        const updated = await Sport.findByIdAndUpdate(id, data, { new: true });
-
-        // ❌ clear cache
-        sportsCache = null;
-
-        res.json(updated);
-
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
-
-// ❌ DELETE
+// ❌ DELETE (DELETE FULL BRANCH)
 export const deleteSport = async (req, res) => {
     try {
-        const sport = await Sport.findById(req.params.id);
+        const branch = await Sport.findById(req.params.id);
 
-        if (!sport) {
+        if (!branch) {
             return res.status(404).json({ error: "Not found" });
         }
 
-        // 🧹 DELETE ALL IMAGES
-        deleteFile(sport.branchImage);
-        deleteFile(sport.sportImage);
+        // delete images
+        deleteFile(branch.branchImage);
 
-        sport.equipment?.forEach(eq => deleteFile(eq.image));
-        sport.coaches?.forEach(c => deleteFile(c.photo));
+        branch.sports.forEach(s => {
+            deleteFile(s.image);
+            s.equipment?.forEach(eq => deleteFile(eq.image));
+            s.coaches?.forEach(c => deleteFile(c.photo));
+        });
 
-        await sport.deleteOne();
+        await branch.deleteOne();
 
-        // ❌ clear cache
         sportsCache = null;
 
-        res.json({ message: "Deleted successfully" });
+        res.json({ message: "Branch deleted" });
 
     } catch (err) {
         res.status(500).json({ error: err.message });

@@ -13,19 +13,22 @@ const equipmentSchema = new mongoose.Schema({
 });
 
 const sportSchema = new mongoose.Schema({
+    name: String,
+    image: String,
+    history: String,
+    equipment: [equipmentSchema],
+    coaches: [coachSchema]
+});
+
+const branchSchema = new mongoose.Schema({
     branchName: { type: String, required: true },
     branchImage: String,
     branchLocation: String,
     branchMap: String,
 
-    sportName: { type: String, required: true },
-    sportImage: String,
-    history: String,
-
-    equipment: [equipmentSchema],
-    coaches: [coachSchema],
+    sports: [sportSchema], // 🔥 IMPORTANT CHANGE
 
     createdAt: { type: Date, default: Date.now }
 });
 
-export default mongoose.model("Sport", sportSchema);
+export default mongoose.model("Sport", branchSchema);

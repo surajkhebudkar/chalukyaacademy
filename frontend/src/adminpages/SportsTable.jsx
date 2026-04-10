@@ -1,7 +1,7 @@
 import axios from "../utils/axiosInstance";
 import "./AdminDashboard.css";
 
-const SportsTable = ({ sports, refresh, onEdit }) => {
+const SportsTable = ({ sports = [], refresh, onEdit }) => {
 
     const user = JSON.parse(localStorage.getItem("user"));
     const role = user?.role;
@@ -11,7 +11,8 @@ const SportsTable = ({ sports, refresh, onEdit }) => {
             await axios.delete(`/sports/${id}`);
             refresh();
         } catch (err) {
-            alert("Delete failed");
+            console.log(err);
+            alert("Delete failed ❌");
         }
     };
 
@@ -32,19 +33,26 @@ const SportsTable = ({ sports, refresh, onEdit }) => {
             </thead>
 
             <tbody>
-                {sports.map((item) => (
+                {(Array.isArray(sports) ? sports : []).map((item) => (
                     <tr key={item._id}>
                         <td>
                             <img
-                                src={`http://localhost:5000/uploads/sports/${item.sportImage}`}
+                                src={
+                                    item.sportImage
+                                        ? `http://localhost:5000/uploads/sports/${item.sportImage}`
+                                        : "/placeholder.png"
+                                }
                                 width="60"
+                                alt="sport"
                             />
                         </td>
 
                         <td>
                             {item.sportName}
                             {isNew(item.createdAt) && (
-                                <span className="new-news-badge">NEW</span>
+                                <span className="new-news-badge" style={{ marginLeft: "8px" }}>
+                                    NEW
+                                </span>
                             )}
                         </td>
 

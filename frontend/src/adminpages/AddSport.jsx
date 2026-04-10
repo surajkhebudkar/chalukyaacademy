@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "../utils/axiosInstance";
 import "./AddSport.css";
 
-export default function AddSport({ onSuccess, onCancel, editData }) {
+export default function AddSport({ onSuccess, onCancel }) {
 
     const [form, setForm] = useState({
         branchName: "",
@@ -16,34 +16,17 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
 
     const [files, setFiles] = useState({});
 
-    // ✅ EDIT MODE FIX
-    useEffect(() => {
-        if (editData) {
-            setForm({
-                ...editData,
-                equipment: editData.equipment || [],
-                coaches: editData.coaches || []
-            });
-        }
-    }, [editData]);
-
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
-    };
-
-    // ✅ VALIDATION (basic)
-    const validate = () => {
-        if (!form.branchName || !form.sportName) {
-            alert("Branch & Sport name required");
-            return false;
-        }
-        return true;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!validate()) return;
+        if (!form.branchName || !form.sportName) {
+            alert("Branch & Sport name required");
+            return;
+        }
 
         try {
             const formData = new FormData();
@@ -58,17 +41,9 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                 }
             });
 
-            if (editData) {
-                // ✅ UPDATE (send JSON only, NOT files)
-                await axios.put(`/sports/${editData._id}`, {
-                    ...form
-                });
-                alert("Updated ✅");
-            } else {
-                await axios.post("/sports", formData);
-                alert("Added ✅");
-            }
+            await axios.post("/sports", formData);
 
+            alert("Sport Added Successfully ✅");
             onSuccess();
 
         } catch (err) {
@@ -79,7 +54,7 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
 
     return (
         <div className="add-sport-container">
-            <h2>{editData ? "Edit Sport" : "Add Sport"}</h2>
+            <h2>Add Sport</h2>
 
             <form onSubmit={handleSubmit} className="add-sport-form">
 
@@ -122,7 +97,7 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
 
                 <textarea
                     name="history"
-                    placeholder="History"
+                    placeholder="Sport History"
                     value={form.history}
                     onChange={handleChange}
                 />
@@ -139,6 +114,7 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
 
                 <button
                     type="button"
+                    className="add-btn"
                     onClick={() =>
                         setForm({
                             ...form,
@@ -150,10 +126,10 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                 </button>
 
                 {form.equipment.map((eq, i) => (
-                    <div key={i}>
+                    <div key={i} className="dynamic-row">
                         <input
-                            value={eq.name}
                             placeholder="Equipment Name"
+                            value={eq.name}
                             onChange={(e) => {
                                 const newEq = [...form.equipment];
                                 newEq[i].name = e.target.value;
@@ -176,6 +152,7 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
 
                 <button
                     type="button"
+                    className="add-btn"
                     onClick={() =>
                         setForm({
                             ...form,
@@ -190,10 +167,10 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                 </button>
 
                 {form.coaches.map((c, i) => (
-                    <div key={i}>
+                    <div key={i} className="dynamic-row">
                         <input
+                            placeholder="Coach Name"
                             value={c.name}
-                            placeholder="Name"
                             onChange={(e) => {
                                 const arr = [...form.coaches];
                                 arr[i].name = e.target.value;
@@ -202,8 +179,8 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                         />
 
                         <input
-                            value={c.experience}
                             placeholder="Experience"
+                            value={c.experience}
                             onChange={(e) => {
                                 const arr = [...form.coaches];
                                 arr[i].experience = e.target.value;
@@ -230,12 +207,13 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                     </div>
                 ))}
 
+                {/* BUTTONS */}
                 <div className="btn-group">
-                    <button type="submit">
-                        {editData ? "Update" : "Add"}
+                    <button type="submit" className="primary-btn">
+                        Add Sport
                     </button>
 
-                    <button type="button" onClick={onCancel}>
+                    <button type="button" className="cancel-btn" onClick={onCancel}>
                         Cancel
                     </button>
                 </div>

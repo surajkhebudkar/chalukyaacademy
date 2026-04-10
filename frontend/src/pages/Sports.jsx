@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "../utils/axiosInstance";
 import "./Sports.css";
 
@@ -6,97 +6,44 @@ export default function Sports() {
     const [activeSport, setActiveSport] = useState(null);
     const [tab, setTab] = useState("history");
 
-    const [sportsData, setSportsData] = useState([]);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
-    const [loading, setLoading] = useState(false);
-
+    const [branchesData, setBranchesData] = useState([]);
     const [activeBranch, setActiveBranch] = useState("");
 
-    // ✅ TRANSFORM FUNCTION (VERY IMPORTANT)
-    const transformSportsData = (data) => {
-        const branches = {};
-
-        data.forEach(item => {
-            if (!branches[item.branchName]) {
-                branches[item.branchName] = {
-                    name: item.branchName,
-                    image: `http://localhost:5000/uploads/sports/${item.branchImage}`,
-                    location: item.branchLocation,
-                    map: item.branchMap,
-                    sports: []
-                };
-            }
-
-            branches[item.branchName].sports.push({
-                name: item.sportName,
-                image: `http://localhost:5000/uploads/sports/${item.sportImage}`,
-                history: item.history,
-                equipment: item.equipment || [],
-                coaches: item.coaches || []
-            });
-        });
-
-        return Object.values(branches);
-    };
-
-    // ✅ FETCH DATA
+    // ✅ FETCH (UPDATED)
     const fetchSports = async () => {
-        if (loading || !hasMore) return;
-
         try {
-            setLoading(true);
+            const res = await axios.get(`/sports`);
+            const data = res.data.data || [];
 
-            const res = await axios.get(`/sports?page=${page}&limit=6`);
-            const newData = res.data.data;
+            // 🔥 DIRECT USE (NO TRANSFORM)
+            const formatted = data.map(branch => ({
+                name: branch.branchName,
+                image: `http://localhost:5000/uploads/sports/${branch.branchImage}`,
+                location: branch.branchLocation,
+                map: branch.branchMap,
+                sports: (branch.sports || []).map(s => ({
+                    name: s.name,
+                    image: `http://localhost:5000/uploads/sports/${s.image}`,
+                    history: s.history,
+                    equipment: s.equipment || [],
+                    coaches: s.coaches || []
+                }))
+            }));
 
-            if (newData.length === 0) {
-                setHasMore(false);
-                return;
+            setBranchesData(formatted);
+
+            if (formatted.length > 0) {
+                setActiveBranch(formatted[0].name);
             }
-
-            setSportsData(prev => [...prev, ...newData]);
 
         } catch (err) {
             console.log(err);
-        } finally {
-            setLoading(false);
         }
     };
 
-    // ✅ FETCH ON PAGE CHANGE
     useEffect(() => {
         fetchSports();
-    }, [page]);
-
-    // ✅ SCROLL LOAD
-    useEffect(() => {
-        const handleScroll = () => {
-            if (
-                window.innerHeight + document.documentElement.scrollTop
-                >= document.documentElement.offsetHeight - 100
-            ) {
-                if (!loading && hasMore) {
-                    setPage(prev => prev + 1);
-                }
-            }
-        };
-
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, [loading, hasMore]);
-
-    // ✅ GROUP DATA
-    const branchesData = useMemo(() => {
-        return transformSportsData(sportsData);
-    }, [sportsData]);
-
-    // ✅ SET DEFAULT BRANCH (IMPORTANT FIX)
-    useEffect(() => {
-        if (branchesData.length > 0 && !activeBranch) {
-            setActiveBranch(branchesData[0].name);
-        }
-    }, [branchesData]);
+    }, []);
 
     return (
         <section className="sports">

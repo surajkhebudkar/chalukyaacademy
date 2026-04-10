@@ -2,13 +2,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
 }
 
 .add-sport-form {
-    width: 400px;
+    width: 100%;
+    max-width: 420px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 .add-sport-form input,
@@ -16,9 +18,73 @@
     padding: 10px;
     border-radius: 6px;
     border: 1px solid #ccc;
+    transition: 0.2s ease;
 }
 
+.add-sport-form input:focus,
+.add-sport-form textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+}
+
+/* 🔥 dynamic rows */
+.dynamic-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    border: 1px dashed #ddd;
+    border-radius: 6px;
+}
+
+/* 🔥 add button */
+.add-btn {
+    padding: 8px;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.add-btn:hover {
+    background: #059669;
+}
+
+/* 🔥 buttons */
 .btn-group {
     display: flex;
     gap: 10px;
+}
+
+.primary-btn {
+    flex: 1;
+    padding: 10px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.primary-btn:hover {
+    background: #2563eb;
+}
+
+.cancel-btn {
+    flex: 1;
+    padding: 10px;
+    background: #6b7280;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.cancel-btn:hover {
+    background: #4b5563;
 }

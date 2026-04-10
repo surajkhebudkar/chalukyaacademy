@@ -6,6 +6,8 @@ import NewsTable from "./NewsTable";
 import axios from "../utils/axiosInstance";
 import AddEvent from "./AddEvent";
 import EventsTable from "./EventsTable";
+import SportsTable from "./SportsTable";
+import AddSport from "./AddSport";
 
 const AdminDashboard = () => {
     const [data, setData] = useState([]);
@@ -101,6 +103,7 @@ const AdminDashboard = () => {
                         className={activeMenu === "news" ? "active" : ""}
                         onClick={() => {
                             setActiveMenu("news");
+                            setCurrentPage(1);
                             setSidebarOpen(false);
                         }}
                     >
@@ -111,6 +114,7 @@ const AdminDashboard = () => {
                         className={activeMenu === "events" ? "active" : ""}
                         onClick={() => {
                             setActiveMenu("events");
+                            setCurrentPage(1);
                             setSidebarOpen(false);
                         }}
                     >
@@ -121,6 +125,7 @@ const AdminDashboard = () => {
                         className={activeMenu === "sports" ? "active" : ""}
                         onClick={() => {
                             setActiveMenu("sports");
+                            setCurrentPage(1);
                             setSidebarOpen(false);
                         }}
                     >
@@ -162,6 +167,10 @@ const AdminDashboard = () => {
                         <h3>Total Events</h3>
                         <p>{eventData.length}</p>
                     </div>
+                </div>
+                <div className="card gradient3">
+                    <h3>Total Sports</h3>
+                    <p>{sportsData.length}</p>
                 </div>
 
                 {/* SEARCH */}
