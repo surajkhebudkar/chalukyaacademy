@@ -1,0 +1,24 @@
+.add-sport-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-sport-form {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.add-sport-form input,
+.add-sport-form textarea {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+}

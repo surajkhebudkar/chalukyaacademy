@@ -1,158 +1,109 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import axios from "../utils/axiosInstance";
 import "./Sports.css";
 
 export default function Sports() {
     const [activeSport, setActiveSport] = useState(null);
     const [tab, setTab] = useState("history");
 
-    const [activeBranch, setActiveBranch] = useState("Kolhapur Branch");
+    const [sportsData, setSportsData] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(false);
 
-    const branchesData = [
-        {
-            name: "Kolhapur Branch",
-            image: "/branches/kolhapur.jpg",
-            location: "Kolhapur, Maharashtra",
-            map: "https://www.google.com/maps?q=kolhapur&output=embed",
+    const [activeBranch, setActiveBranch] = useState("");
 
-            sports: [
-                {
-                    name: "Archery",
-                    image: "/sports/archery.jpg",
-                    history: "Archery is an ancient sport requiring focus and precision.",
-                    equipment: [
-                        { name: "Bow", image: "/equipments/bow.jpg" },
-                        { name: "Arrow", image: "/equipments/arrow.jpg" }
-                    ],
-                    coaches: [
-                        {
-                            name: "Coach Rahul",
-                            photo: "/coaches/trainer.png",
-                            experience: "8 Years",
-                            achievements: ["State Champion", "Level 2 Certified"]
-                        }
-                    ]
-                },
-                {
-                    name: "Basketball",
-                    image: "/sports/basketball.jpg",
-                    history: "Basketball is one of the most popular sports.",
-                    equipment: [
-                        { name: "Basketball", image: "/equipments/basketball.jpg" }
-                    ],
-                    coaches: [{
-                        name: "Coach Rahul",
-                        photo: "/coaches/trainer.png",
-                        experience: "8 Years",
-                        achievements: ["State Champion", "Level 2 Certified"]
-                    }]
-                },
-                {
-                    name: "Fencing",
-                    image: "/sports/fencing.jpg",
-                    history: "Fencing evolved from sword fighting.",
-                    equipment: [],
-                    coaches: []
-                },
-                {
-                    name: "MMA",
-                    image: "/sports/mma.jpg",
-                    history: "Mixed Martial Arts combines combat styles.",
-                    equipment: [],
-                    coaches: []
-                },
-                {
-                    name: "Sports Nursery",
-                    image: "/sports/nursery.jpg",
-                    history: "Basic sports training for kids.",
-                    equipment: [],
-                    coaches: []
-                },
-                {
-                    name: "Gymnastic",
-                    image: "/sports/gymnastic.jpg",
-                    history: "Gymnastics builds strength.",
-                    equipment: [],
-                    coaches: []
-                },
-                {
-                    name: "Kurash",
-                    image: "/sports/kurash.jpg",
-                    history: "Traditional wrestling sport.",
-                    equipment: [],
-                    coaches: []
-                },
-                {
-                    name: "Skating",
-                    image: "/sports/skating.jpg",
-                    history: "Fun and competitive sport.",
-                    equipment: [],
-                    coaches: []
-                },
-                {
-                    name: "Yoga",
-                    image: "/sports/yoga.jpeg",
-                    history: "Improves mental and physical health.",
-                    equipment: [],
-                    coaches: []
-                }
-            ]
-        },
+    // ✅ TRANSFORM FUNCTION (VERY IMPORTANT)
+    const transformSportsData = (data) => {
+        const branches = {};
 
-        {
-            name: "Sangli Branch",
-            image: "/branches/sangli.jpg",
-            location: "Sangli, Maharashtra",
-            map: "https://www.google.com/maps?q=sangli&output=embed",
+        data.forEach(item => {
+            if (!branches[item.branchName]) {
+                branches[item.branchName] = {
+                    name: item.branchName,
+                    image: `http://localhost:5000/uploads/sports/${item.branchImage}`,
+                    location: item.branchLocation,
+                    map: item.branchMap,
+                    sports: []
+                };
+            }
 
-            sports: [
-                {
-                    name: "Gymnastic",
-                    image: "/sports/gymnastic.jpg",
-                    history: "Gymnastics builds flexibility.",
-                    equipment: [],
-                    coaches: [{
-                        name: "Coach Rahul",
-                        photo: "/coaches/trainer.png",
-                        experience: "8 Years",
-                        achievements: ["State Champion", "Level 2 Certified"]
-                    }]
-                },
-                {
-                    name: "Kurash",
-                    image: "/sports/kurash.jpg",
-                    history: "Traditional sport.",
-                    equipment: [],
-                    coaches: [{
-                        name: "Coach Rahul",
-                        photo: "/coaches/trainer.png",
-                        experience: "8 Years",
-                        achievements: ["State Champion", "Level 2 Certified"]
-                    }]
-                },
-                {
-                    name: "Skating",
-                    image: "/sports/skating.jpg",
-                    history: "Speed and balance sport.",
-                    equipment: [],
-                    coaches: []
-                },
-                {
-                    name: "Yoga",
-                    image: "/sports/yoga.jpeg",
-                    history: "Mind-body balance.",
-                    equipment: [],
-                    coaches: []
-                }
-            ]
+            branches[item.branchName].sports.push({
+                name: item.sportName,
+                image: `http://localhost:5000/uploads/sports/${item.sportImage}`,
+                history: item.history,
+                equipment: item.equipment || [],
+                coaches: item.coaches || []
+            });
+        });
+
+        return Object.values(branches);
+    };
+
+    // ✅ FETCH DATA
+    const fetchSports = async () => {
+        if (loading || !hasMore) return;
+
+        try {
+            setLoading(true);
+
+            const res = await axios.get(`/sports?page=${page}&limit=6`);
+            const newData = res.data.data;
+
+            if (newData.length === 0) {
+                setHasMore(false);
+                return;
+            }
+
+            setSportsData(prev => [...prev, ...newData]);
+
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
         }
-    ];
+    };
+
+    // ✅ FETCH ON PAGE CHANGE
+    useEffect(() => {
+        fetchSports();
+    }, [page]);
+
+    // ✅ SCROLL LOAD
+    useEffect(() => {
+        const handleScroll = () => {
+            if (
+                window.innerHeight + document.documentElement.scrollTop
+                >= document.documentElement.offsetHeight - 100
+            ) {
+                if (!loading && hasMore) {
+                    setPage(prev => prev + 1);
+                }
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [loading, hasMore]);
+
+    // ✅ GROUP DATA
+    const branchesData = useMemo(() => {
+        return transformSportsData(sportsData);
+    }, [sportsData]);
+
+    // ✅ SET DEFAULT BRANCH (IMPORTANT FIX)
+    useEffect(() => {
+        if (branchesData.length > 0 && !activeBranch) {
+            setActiveBranch(branchesData[0].name);
+        }
+    }, [branchesData]);
 
     return (
         <section className="sports">
 
-            <div className="sports-title">
-            </div>
+            <div className="sports-title"></div>
 
+            {/* BRANCH TABS */}
             <div className="branch-tabs">
                 {branchesData.map((branch, i) => (
                     <button
@@ -165,10 +116,11 @@ export default function Sports() {
                 ))}
             </div>
 
+            {/* BRANCH DATA */}
             {branchesData
                 .filter(branch => branch.name === activeBranch)
-                .map((branch, bIndex) => (
-                    <div key={activeBranch} className="branch-section animate-branch">
+                .map((branch) => (
+                    <div key={branch.name} className="branch-section animate-branch">
 
                         <div className="branch-header">
                             <img src={branch.image} alt={branch.name} />
@@ -187,6 +139,7 @@ export default function Sports() {
                             </div>
                         </div>
 
+                        {/* SPORTS GRID */}
                         <div className="sports-grid">
                             {branch.sports.map((sport, index) => (
                                 <div
@@ -208,6 +161,7 @@ export default function Sports() {
                     </div>
                 ))}
 
+            {/* MODAL */}
             {activeSport && (
                 <div className="sport-modal" onClick={() => setActiveSport(null)}>
                     <div
@@ -231,7 +185,7 @@ export default function Sports() {
                                 {activeSport.equipment.length > 0 ? (
                                     activeSport.equipment.map((item, i) => (
                                         <div key={i} className="equipment-card">
-                                            <img src={item.image} alt={item.name} />
+                                            <img src={`http://localhost:5000/uploads/sports/${item.image}`} alt={item.name} />
                                             <p>{item.name}</p>
                                         </div>
                                     ))
@@ -246,7 +200,7 @@ export default function Sports() {
                                 {activeSport.coaches.length > 0 ? (
                                     activeSport.coaches.map((coach, i) => (
                                         <div key={i} className="coach-card">
-                                            <img src={coach.photo} alt={coach.name} />
+                                            <img src={`http://localhost:5000/uploads/sports/${coach.photo}`} alt={coach.name} />
                                             <h4>{coach.name}</h4>
                                             <p className="coach-exp">
                                                 Experience: {coach.experience}
@@ -271,6 +225,7 @@ export default function Sports() {
                     </div>
                 </div>
             )}
+
         </section>
     );
 }
