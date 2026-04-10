@@ -12,10 +12,11 @@ import AddSport from "./AddSport";
 const AdminDashboard = () => {
     const [data, setData] = useState([]);
     const [eventData, setEventData] = useState([]);
+    const [sportsData, setSportsData] = useState([]);
+
     const [activeMenu, setActiveMenu] = useState("news");
     const [editData, setEditData] = useState(null);
     const [search, setSearch] = useState("");
-    const [sportsData, setSportsData] = useState([]);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -59,21 +60,17 @@ const AdminDashboard = () => {
 
     const fetchSports = async (page = 1) => {
         try {
-            const res = await axios.get(`/sports?page=${page}&limit=5`);
+            const res = await axios.get(`/sports`);
             setSportsData(res.data.data || []);
-            setTotalPages(res.data.totalPages || 1);
         } catch (err) {
             console.log(err);
         }
     };
 
-
     const filterData = (list) => {
         if (!search) return list;
         return list.filter(item =>
-            Object.values(item).some(val =>
-                String(val).toLowerCase().includes(search.toLowerCase())
-            )
+            JSON.stringify(item).toLowerCase().includes(search.toLowerCase())
         );
     };
 
@@ -99,36 +96,29 @@ const AdminDashboard = () => {
                 </div>
 
                 <ul>
-                    <li
-                        className={activeMenu === "news" ? "active" : ""}
+                    <li className={activeMenu === "news" ? "active" : ""}
                         onClick={() => {
                             setActiveMenu("news");
                             setCurrentPage(1);
                             setSidebarOpen(false);
-                        }}
-                    >
+                        }}>
                         📰 News
                     </li>
 
-                    <li
-                        className={activeMenu === "events" ? "active" : ""}
+                    <li className={activeMenu === "events" ? "active" : ""}
                         onClick={() => {
                             setActiveMenu("events");
                             setCurrentPage(1);
                             setSidebarOpen(false);
-                        }}
-                    >
+                        }}>
                         📅 Events
                     </li>
 
-                    <li
-                        className={activeMenu === "sports" ? "active" : ""}
+                    <li className={activeMenu === "sports" ? "active" : ""}
                         onClick={() => {
                             setActiveMenu("sports");
-                            setCurrentPage(1);
                             setSidebarOpen(false);
-                        }}
-                    >
+                        }}>
                         🏆 Sports
                     </li>
                 </ul>
@@ -167,10 +157,11 @@ const AdminDashboard = () => {
                         <h3>Total Events</h3>
                         <p>{eventData.length}</p>
                     </div>
-                </div>
-                <div className="card gradient3">
-                    <h3>Total Sports</h3>
-                    <p>{sportsData.length}</p>
+
+                    <div className="card gradient3">
+                        <h3>Total Branches</h3>
+                        <p>{sportsData.length}</p>
+                    </div>
                 </div>
 
                 {/* SEARCH */}
@@ -195,7 +186,6 @@ const AdminDashboard = () => {
                         <>
                             <div className="news-header">
                                 <h2>📰 News Management</h2>
-
                                 {role === "admin" && (
                                     <button className="add-btn" onClick={() => setActiveMenu("addNews")}>
                                         + Add News
@@ -211,24 +201,9 @@ const AdminDashboard = () => {
                                     setActiveMenu("editNews");
                                 }}
                             />
-
-                            <div className="pagination">
-                                <button disabled={currentPage === 1}
-                                    onClick={() => setCurrentPage(p => p - 1)}>
-                                    Prev
-                                </button>
-
-                                <span>{currentPage} / {totalPages}</span>
-
-                                <button disabled={currentPage === totalPages}
-                                    onClick={() => setCurrentPage(p => p + 1)}>
-                                    Next
-                                </button>
-                            </div>
                         </>
                     )}
 
-                    {/* ADD NEWS */}
                     {activeMenu === "addNews" && (
                         <AddNews
                             onSuccess={() => {
@@ -239,7 +214,6 @@ const AdminDashboard = () => {
                         />
                     )}
 
-                    {/* EDIT NEWS */}
                     {activeMenu === "editNews" && (
                         <AddNews
                             editData={editData}
@@ -256,12 +230,8 @@ const AdminDashboard = () => {
                         <>
                             <div className="news-header">
                                 <h2>📅 Events Management</h2>
-
                                 {role === "admin" && (
-                                    <button
-                                        className="add-btn"
-                                        onClick={() => setActiveMenu("addEvent")}
-                                    >
+                                    <button className="add-btn" onClick={() => setActiveMenu("addEvent")}>
                                         + Add Event
                                     </button>
                                 )}
@@ -274,32 +244,10 @@ const AdminDashboard = () => {
                                     setEditData(item);
                                     setActiveMenu("editEvent");
                                 }}
-                                currentPage={currentPage}
-                                totalPages={totalPages}
-                                setCurrentPage={setCurrentPage}
                             />
-
-                            <div className="pagination">
-                                <button
-                                    disabled={currentPage === 1}
-                                    onClick={() => setCurrentPage(p => p - 1)}
-                                >
-                                    Prev
-                                </button>
-
-                                <span>{currentPage} / {totalPages}</span>
-
-                                <button
-                                    disabled={currentPage === totalPages}
-                                    onClick={() => setCurrentPage(p => p + 1)}
-                                >
-                                    Next
-                                </button>
-                            </div>
                         </>
                     )}
 
-                    {/* ADD EVENT */}
                     {activeMenu === "addEvent" && (
                         <AddEvent
                             onSuccess={() => {
@@ -310,7 +258,6 @@ const AdminDashboard = () => {
                         />
                     )}
 
-                    {/* EDIT EVENT */}
                     {activeMenu === "editEvent" && (
                         <AddEvent
                             editData={editData}
@@ -321,7 +268,6 @@ const AdminDashboard = () => {
                             onCancel={() => setActiveMenu("events")}
                         />
                     )}
-
 
                     {/* SPORTS */}
                     {activeMenu === "sports" && (
@@ -341,50 +287,31 @@ const AdminDashboard = () => {
 
                             <SportsTable
                                 sports={filterData(sportsData)}
-                                refresh={() => fetchSports(currentPage)}
+                                refresh={fetchSports}
                                 onEdit={(item) => {
                                     setEditData(item);
                                     setActiveMenu("editSport");
                                 }}
                             />
-
-                            <div className="pagination">
-                                <button
-                                    disabled={currentPage === 1}
-                                    onClick={() => setCurrentPage(p => p - 1)}
-                                >
-                                    Prev
-                                </button>
-
-                                <span>{currentPage} / {totalPages}</span>
-
-                                <button
-                                    disabled={currentPage === totalPages}
-                                    onClick={() => setCurrentPage(p => p + 1)}
-                                >
-                                    Next
-                                </button>
-                            </div>
                         </>
                     )}
 
-                    {/* ADD SPORT */}
                     {activeMenu === "addSport" && (
                         <AddSport
                             onSuccess={() => {
-                                fetchSports(currentPage);
+                                fetchSports();
                                 setActiveMenu("sports");
                             }}
                             onCancel={() => setActiveMenu("sports")}
                         />
                     )}
 
-                    {/* EDIT SPORT */}
                     {activeMenu === "editSport" && (
                         <AddSport
                             editData={editData}
+                            isEdit={true} 
                             onSuccess={() => {
-                                fetchSports(currentPage);
+                                fetchSports();
                                 setActiveMenu("sports");
                             }}
                             onCancel={() => setActiveMenu("sports")}

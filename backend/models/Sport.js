@@ -22,12 +22,10 @@ const sportSchema = new mongoose.Schema({
 
 const branchSchema = new mongoose.Schema({
     branchName: { type: String, required: true },
-    branchImage: String,
     branchLocation: String,
     branchMap: String,
-
-    sports: [sportSchema], // 🔥 IMPORTANT CHANGE
-
+    branchImage: String,
+    sports: [sportSchema],
     createdAt: { type: Date, default: Date.now }
 });
 

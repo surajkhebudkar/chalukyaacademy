@@ -9,21 +9,40 @@ export default function Sports() {
     const [branchesData, setBranchesData] = useState([]);
     const [activeBranch, setActiveBranch] = useState("");
 
-    // ✅ FETCH (UPDATED)
+    // ✅ MAP FIX FUNCTION
+    const getMapUrl = (url) => {
+        if (!url) return "";
+
+        if (url.includes("output=embed")) return url;
+
+        if (url.includes("google.com/maps")) {
+            const query = url.split("q=")[1];
+            if (query) {
+                return `https://www.google.com/maps?q=${query}&output=embed`;
+            }
+        }
+
+        return `https://www.google.com/maps?q=${encodeURIComponent(url)}&output=embed`;
+    };
+
+    // ✅ FETCH
     const fetchSports = async () => {
         try {
             const res = await axios.get(`/sports`);
             const data = res.data.data || [];
 
-            // 🔥 DIRECT USE (NO TRANSFORM)
             const formatted = data.map(branch => ({
                 name: branch.branchName,
-                image: `http://localhost:5000/uploads/sports/${branch.branchImage}`,
+                image: branch.branchImage
+                    ? `http://localhost:5000/uploads/sports/${branch.branchImage}`
+                    : "/placeholder.png",
                 location: branch.branchLocation,
                 map: branch.branchMap,
                 sports: (branch.sports || []).map(s => ({
                     name: s.name,
-                    image: `http://localhost:5000/uploads/sports/${s.image}`,
+                    image: s.image
+                        ? `http://localhost:5000/uploads/sports/${s.image}`
+                        : "/placeholder.png",
                     history: s.history,
                     equipment: s.equipment || [],
                     coaches: s.coaches || []
@@ -32,8 +51,9 @@ export default function Sports() {
 
             setBranchesData(formatted);
 
+            // ✅ FIX: only set once
             if (formatted.length > 0) {
-                setActiveBranch(formatted[0].name);
+                setActiveBranch(prev => prev || formatted[0].name);
             }
 
         } catch (err) {
@@ -47,8 +67,6 @@ export default function Sports() {
 
     return (
         <section className="sports">
-
-           
 
             {/* BRANCH TABS */}
             <div className="branch-tabs">
@@ -76,13 +94,15 @@ export default function Sports() {
                                 <h2>{branch.name}</h2>
                                 <p>{branch.location}</p>
 
-                                <iframe
-                                    src={branch.map}
-                                    width="100%"
-                                    height="200"
-                                    loading="lazy"
-                                    title={branch.name}
-                                ></iframe>
+                                {branch.map && (
+                                    <iframe
+                                        src={getMapUrl(branch.map)}
+                                        width="100%"
+                                        height="200"
+                                        loading="lazy"
+                                        title={branch.name}
+                                    ></iframe>
+                                )}
                             </div>
                         </div>
 
@@ -124,15 +144,24 @@ export default function Sports() {
                         </div>
 
                         {tab === "history" && (
-                            <p className="sport-text">{activeSport.history}</p>
+                            <p className="sport-text">
+                                {activeSport.history || "No history available"}
+                            </p>
                         )}
 
                         {tab === "equipment" && (
                             <div className="equipment-grid">
-                                {activeSport.equipment.length > 0 ? (
+                                {activeSport.equipment?.length > 0 ? (
                                     activeSport.equipment.map((item, i) => (
                                         <div key={i} className="equipment-card">
-                                            <img src={`http://localhost:5000/uploads/sports/${item.image}`} alt={item.name} />
+                                            <img
+                                                src={
+                                                    item.image
+                                                        ? `http://localhost:5000/uploads/sports/${item.image}`
+                                                        : "/placeholder.png"
+                                                }
+                                                alt={item.name}
+                                            />
                                             <p>{item.name}</p>
                                         </div>
                                     ))
@@ -144,17 +173,24 @@ export default function Sports() {
 
                         {tab === "coaches" && (
                             <div className="coach-grid">
-                                {activeSport.coaches.length > 0 ? (
+                                {activeSport.coaches?.length > 0 ? (
                                     activeSport.coaches.map((coach, i) => (
                                         <div key={i} className="coach-card">
-                                            <img src={`http://localhost:5000/uploads/sports/${coach.photo}`} alt={coach.name} />
+                                            <img
+                                                src={
+                                                    coach.photo
+                                                        ? `http://localhost:5000/uploads/sports/${coach.photo}`
+                                                        : "/placeholder.png"
+                                                }
+                                                alt={coach.name}
+                                            />
                                             <h4>{coach.name}</h4>
                                             <p className="coach-exp">
                                                 Experience: {coach.experience}
                                             </p>
 
                                             <div className="badges">
-                                                {coach.achievements.map((ach, j) => (
+                                                {coach.achievements?.map((ach, j) => (
                                                     <span key={j} className="badge">
                                                         🏆 {ach}
                                                     </span>

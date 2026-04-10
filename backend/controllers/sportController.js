@@ -1,34 +1,6 @@
 import fs from "fs";
 import path from "path";
-import Joi from "joi";
 import Sport from "../models/Sport.js";
-
-// ✅ CACHE
-let sportsCache = null;
-
-// ✅ VALIDATION
-const schema = Joi.object({
-    branchName: Joi.string().required(),
-    branchLocation: Joi.string().allow(""),
-    branchMap: Joi.string().allow(""),
-
-    sportName: Joi.string().required(),
-    history: Joi.string().allow(""),
-
-    equipment: Joi.array().items(
-        Joi.object({
-            name: Joi.string().allow("")
-        })
-    ).default([]),
-
-    coaches: Joi.array().items(
-        Joi.object({
-            name: Joi.string().allow(""),
-            experience: Joi.string().allow(""),
-            achievements: Joi.array().items(Joi.string()).default([])
-        })
-    ).default([])
-});
 
 // 🧹 DELETE FILE
 const deleteFile = (file) => {
@@ -39,120 +11,152 @@ const deleteFile = (file) => {
     }
 };
 
-// ➕ CREATE
+// ➕ CREATE (MULTIPLE SPORTS)
 export const createSport = async (req, res) => {
     try {
         const data = JSON.parse(req.body.data);
-
-        const { error } = schema.validate(data);
-        if (error) return res.status(400).json({ error: error.message });
-
         const files = req.files || {};
 
-        const sportImage = files["sportImage"]?.[0]?.filename;
         const branchImage = files["branchImage"]?.[0]?.filename;
-
+        const sportImages = files["sportImages"] || [];
         const equipmentImages = files["equipmentImages"] || [];
         const coachPhotos = files["coachPhotos"] || [];
 
-        const equipment = (data.equipment || []).map((item, i) => ({
-            name: item.name,
-            image: equipmentImages[i]?.filename
-        }));
+        let eqIndex = 0;
+        let coachIndex = 0;
 
-        const coaches = (data.coaches || []).map((coach, i) => ({
-            name: coach.name,
-            experience: coach.experience,
-            achievements: coach.achievements,
-            photo: coachPhotos[i]?.filename
-        }));
+        const sports = (data.sports || []).map((sport, sIndex) => {
 
-        const newSport = {
-            name: data.sportName,
-            image: sportImage,
-            history: data.history,
-            equipment,
-            coaches
-        };
-
-        let branch = await Sport.findOne({ branchName: data.branchName });
-
-        if (branch) {
-            branch.sports.push(newSport);
-            await branch.save();
-        } else {
-            branch = new Sport({
-                branchName: data.branchName,
-                branchLocation: data.branchLocation,
-                branchMap: data.branchMap,
-                branchImage,
-                sports: [newSport]
+            const equipment = (sport.equipment || []).map((eq) => {
+                const imageFile = equipmentImages[eqIndex++];
+                return {
+                    name: eq.name,
+                    image: imageFile ? imageFile.filename : null
+                };
             });
-            await branch.save();
-        }
 
-        sportsCache = null;
+            const coaches = (sport.coaches || []).map((c) => {
+                const photoFile = coachPhotos[coachIndex++];
+                return {
+                    name: c.name,
+                    experience: c.experience,
+                    achievements: c.achievements || [],
+                    photo: photoFile ? photoFile.filename : null
+                };
+            });
+
+            return {
+                name: sport.name,
+                history: sport.history,
+                image: sportImages[sIndex]?.filename || null,
+                equipment,
+                coaches
+            };
+        });
+
+        const branch = new Sport({
+            branchName: data.branchName,
+            branchLocation: data.branchLocation,
+            branchMap: data.branchMap,
+            branchImage,
+            sports
+        });
+
+        await branch.save();
 
         res.status(201).json({ success: true, data: branch });
 
     } catch (err) {
+        console.log(err);
         res.status(500).json({ error: err.message });
     }
 };
 
-// 📄 GET
+// 📄 GET ALL
 export const getAllSports = async (req, res) => {
     try {
-        if (sportsCache) return res.json(sportsCache);
-
-        const branches = await Sport.find().sort({ createdAt: -1 });
-
-        const response = { data: branches };
-
-        sportsCache = response;
-
-        res.json(response);
-
+        const data = await Sport.find().sort({ createdAt: -1 });
+        res.json({ data });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
 
-// ✏️ UPDATE (🔥 FIXED — ADD THIS)
+// ✏️ UPDATE FULL BRANCH
 export const updateSport = async (req, res) => {
     try {
         const { id } = req.params;
+        const existing = await Sport.findById(id);
 
-        const branch = await Sport.findById(id);
-        if (!branch) {
+        if (!existing) {
             return res.status(404).json({ error: "Branch not found" });
         }
 
-        const data = req.body;
+        const data = JSON.parse(req.body.data);
+        const files = req.files || {};
 
-        branch.branchName = data.branchName || branch.branchName;
-        branch.branchLocation = data.branchLocation || branch.branchLocation;
-        branch.branchMap = data.branchMap || branch.branchMap;
+        // 🔥 branch update
+        existing.branchName = data.branchName;
+        existing.branchLocation = data.branchLocation;
+        existing.branchMap = data.branchMap;
 
-        await branch.save();
+        if (files["branchImage"]) {
+            deleteFile(existing.branchImage);
+            existing.branchImage = files["branchImage"][0].filename;
+        }
 
-        sportsCache = null;
+        const sportImages = files["sportImages"] || [];
+        const equipmentImages = files["equipmentImages"] || [];
+        const coachPhotos = files["coachPhotos"] || [];
 
-        res.json({ success: true, data: branch });
+        let eqIndex = 0;
+        let coachIndex = 0;
+
+        existing.sports = (data.sports || []).map((sport, sIndex) => {
+
+            const equipment = (sport.equipment || []).map((eq) => {
+                const file = equipmentImages[eqIndex++];
+                return {
+                    name: eq.name,
+                    image: file ? file.filename : eq.image || null
+                };
+            });
+
+            const coaches = (sport.coaches || []).map((c) => {
+                const file = coachPhotos[coachIndex++];
+                return {
+                    name: c.name,
+                    experience: c.experience,
+                    achievements: c.achievements || [],
+                    photo: file ? file.filename : c.photo || null
+                };
+            });
+
+            return {
+                name: sport.name,
+                history: sport.history,
+                image: sportImages[sIndex]?.filename || sport.image || null,
+                equipment,
+                coaches
+            };
+        });
+
+        await existing.save();
+
+        res.json({ success: true, data: existing });
 
     } catch (err) {
+        console.log(err);
         res.status(500).json({ error: err.message });
     }
 };
 
-// ❌ DELETE
+// ❌ DELETE FULL BRANCH
 export const deleteSport = async (req, res) => {
     try {
         const branch = await Sport.findById(req.params.id);
 
-        if (!branch) {
-            return res.status(404).json({ error: "Not found" });
-        }
+        if (!branch) return res.status(404).json({ error: "Not found" });
 
         deleteFile(branch.branchImage);
 
@@ -164,9 +168,33 @@ export const deleteSport = async (req, res) => {
 
         await branch.deleteOne();
 
-        sportsCache = null;
-
         res.json({ message: "Branch deleted" });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// ❌ DELETE SINGLE SPORT
+export const deleteSingleSport = async (req, res) => {
+    try {
+        const { branchId, sportId } = req.params;
+
+        const branch = await Sport.findById(branchId);
+        if (!branch) return res.status(404).json({ error: "Branch not found" });
+
+        const sport = branch.sports.id(sportId);
+        if (!sport) return res.status(404).json({ error: "Sport not found" });
+
+        deleteFile(sport.image);
+        sport.equipment?.forEach(eq => deleteFile(eq.image));
+        sport.coaches?.forEach(c => deleteFile(c.photo));
+
+        sport.remove();
+
+        await branch.save();
+
+        res.json({ message: "Sport deleted" });
 
     } catch (err) {
         res.status(500).json({ error: err.message });

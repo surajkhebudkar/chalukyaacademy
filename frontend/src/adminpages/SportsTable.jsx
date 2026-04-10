@@ -6,9 +6,9 @@ const SportsTable = ({ sports = [], refresh, onEdit }) => {
     const user = JSON.parse(localStorage.getItem("user"));
     const role = user?.role;
 
-    const deleteSport = async (id) => {
+    const deleteSport = async (branchId, sportId) => {
         try {
-            await axios.delete(`/sports/${id}`);
+            await axios.delete(`/sports/${branchId}/sport/${sportId}`);
             refresh();
         } catch (err) {
             console.log(err);
@@ -33,52 +33,63 @@ const SportsTable = ({ sports = [], refresh, onEdit }) => {
             </thead>
 
             <tbody>
-                {(Array.isArray(sports) ? sports : []).map((item) => (
-                    <tr key={item._id}>
-                        <td>
-                            <img
-                                src={
-                                    item.sportImage
-                                        ? `http://localhost:5000/uploads/sports/${item.sportImage}`
-                                        : "/placeholder.png"
-                                }
-                                width="60"
-                                alt="sport"
-                            />
-                        </td>
+                {sports.map((branch) =>
+                    (branch.sports || []).map((sport, index) => (
+                        <tr key={sport._id}>
+                            <td>
+                                <img
+                                    src={
+                                        sport.image
+                                            ? `http://localhost:5000/uploads/sports/${sport.image}`
+                                            : "/placeholder.png"
+                                    }
+                                    width="60"
+                                    alt="sport"
+                                />
+                            </td>
 
-                        <td>
-                            {item.sportName}
-                            {isNew(item.createdAt) && (
-                                <span className="new-news-badge" style={{ marginLeft: "8px" }}>
-                                    NEW
-                                </span>
-                            )}
-                        </td>
+                            <td>
+                                {sport.name}
+                                {isNew(branch.createdAt) && (
+                                    <span className="new-news-badge" style={{ marginLeft: "8px" }}>
+                                        NEW
+                                    </span>
+                                )}
+                            </td>
 
-                        <td>{item.branchName}</td>
+                            <td>{branch.branchName}</td>
 
-                        <td>
-                            {role === "admin" && (
-                                <>
-                                    <button
-                                        className="edit-btn"
-                                        onClick={() => onEdit(item)}
-                                    >
-                                        Edit
-                                    </button>
+                            <td>
+                                {role === "admin" && (
+                                    <>
+                                        {/* ✅ FIXED EDIT */}
+                                        <button
+                                            className="edit-btn"
+                                            onClick={() =>
+                                                onEdit({
+                                                    ...branch,              // FULL branch
+                                                    sportIndex: index       // which sport to edit
+                                                })
+                                            }
+                                        >
+                                            Edit
+                                        </button>
 
-                                    <button
-                                        className="delete-btn"
-                                        onClick={() => deleteSport(item._id)}
-                                    >
-                                        Delete
-                                    </button>
-                                </>
-                            )}
-                        </td>
-                    </tr>
-                ))}
+                                        {/* ✅ DELETE SINGLE SPORT */}
+                                        <button
+                                            className="delete-btn"
+                                            onClick={() =>
+                                                deleteSport(branch._id, sport._id)
+                                            }
+                                        >
+                                            Delete
+                                        </button>
+                                    </>
+                                )}
+                            </td>
+                        </tr>
+                    ))
+                )}
             </tbody>
         </table>
     );
