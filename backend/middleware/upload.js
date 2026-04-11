@@ -121,3 +121,22 @@ export const uploadGallery = multer({
     fileFilter,
     limits: { fileSize: 5 * 1024 * 1024 }
 });
+
+export const uploadVideo = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            const folder = "uploads/videos";
+            fs.mkdirSync(folder, { recursive: true });
+            cb(null, folder);
+        },
+        filename: (req, file, cb) =>
+            cb(null, Date.now() + "-" + file.originalname)
+    }),
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith("video")) {
+            cb(null, true);
+        } else {
+            cb(new Error("Only video allowed"), false);
+        }
+    }
+});

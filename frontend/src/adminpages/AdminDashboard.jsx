@@ -10,12 +10,16 @@ import SportsTable from "./SportsTable";
 import AddSport from "./AddSport";
 import GalleryTable from "./GalleryTable";
 import AddGallery from "./AddGallery";
+import VideoTable from "./VideoTable";
+import AddVideo from "./AddVideo";
+
 
 const AdminDashboard = () => {
     const [data, setData] = useState([]);
     const [eventData, setEventData] = useState([]);
     const [sportsData, setSportsData] = useState([]);
     const [galleryData, setGalleryData] = useState([]);
+    const [videoData, setVideoData] = useState([]);
 
     const [activeMenu, setActiveMenu] = useState("news");
     const [editData, setEditData] = useState(null);
@@ -40,6 +44,7 @@ const AdminDashboard = () => {
         if (activeMenu === "events") fetchEvents(currentPage);
         if (activeMenu === "sports") fetchSports(currentPage);
         if (activeMenu === "gallery") fetchGallery();
+        if (activeMenu === "videos") fetchVideos();
     }, [currentPage, activeMenu]);
 
     const fetchNews = async (page = 1) => {
@@ -75,6 +80,15 @@ const AdminDashboard = () => {
         try {
             const res = await axios.get(`/gallery`);
             setGalleryData(res.data || []);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const fetchVideos = async () => {
+        try {
+            const res = await axios.get(`/videos`);
+            setVideoData(res.data || []);
         } catch (err) {
             console.log(err);
         }
@@ -141,6 +155,14 @@ const AdminDashboard = () => {
                             setSidebarOpen(false);
                         }}>
                         🖼️ Gallery
+                    </li>
+
+                    <li className={activeMenu === "videos" ? "active" : ""}
+                        onClick={() => {
+                            setActiveMenu("videos");
+                            setSidebarOpen(false);
+                        }}>
+                        🎥 Videos
                     </li>
                 </ul>
             </div>
@@ -344,6 +366,7 @@ const AdminDashboard = () => {
                         />
                     )}
 
+
                     {activeMenu === "gallery" && (
                         <>
                             <div className="news-header">
@@ -389,6 +412,54 @@ const AdminDashboard = () => {
                             onCancel={() => setActiveMenu("gallery")}
                         />
                     )}
+
+
+                    {activeMenu === "videos" && (
+                        <>
+                            <div className="news-header">
+                                <h2>🎥 Video Management</h2>
+
+                                <button
+                                    className="add-btn"
+                                    onClick={() => setActiveMenu("addVideo")}
+                                >
+                                    + Add Video
+                                </button>
+                            </div>
+
+                            <VideoTable
+                                videos={videoData}
+                                refresh={fetchVideos}
+                                onEdit={(item) => {
+                                    setEditData(item);
+                                    setActiveMenu("editVideo");
+                                }}
+                            />
+                        </>
+                    )}
+
+                    {activeMenu === "addVideo" && (
+                        <AddVideo
+                            onSuccess={() => {
+                                fetchVideos();
+                                setActiveMenu("videos");
+                            }}
+                            onCancel={() => setActiveMenu("videos")}
+                        />
+                    )}
+
+                    {activeMenu === "editVideo" && (
+                        <AddVideo
+                            editData={editData}
+                            onSuccess={() => {
+                                fetchVideos();
+                                setActiveMenu("videos");
+                            }}
+                            onCancel={() => setActiveMenu("videos")}
+                        />
+                    )}
+
+
 
                 </div>
             </div>

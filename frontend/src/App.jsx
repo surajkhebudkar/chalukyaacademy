@@ -16,6 +16,7 @@ import Login from "./pages/Login";
 import AdminDashboard from "./adminpages/AdminDashboard";
 import CoachDashboard from "./coachpages/CoachDashboard";
 import PrivateRoute from "./components/PrivateRoute";
+import VideoGallery from "./pages/VideoGallery";
 
 
 function AppContent() {
@@ -33,6 +34,7 @@ function AppContent() {
           <Route path="/events" element={<Events />} />
           <Route path="/sports" element={<Sports />} />
           <Route path="/photogallery" element={<PhotoGallery />} />
+          <Route path="/videogallery" element={<VideoGallery />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/login" element={<Login />} />
 

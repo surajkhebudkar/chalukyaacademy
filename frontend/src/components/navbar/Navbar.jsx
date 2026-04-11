@@ -29,21 +29,18 @@ const Navbar = () => {
             name: "Gallery",
             submenu: [
                 { name: "Photo Gallery", path: "/photogallery" },
-                { name: "Video Gallery", path: "/video-gallery" },
+                { name: "Video Gallery", path: "/videogallery" },
             ],
         },
         { name: "About", path: "/about" },
     ];
 
-    // ✅ Outside click handler FIXED
     useEffect(() => {
         const handleClickOutside = (e) => {
-            // profile dropdown
             if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
                 setDropdownOpen(false);
             }
 
-            // navbar dropdown
             if (navRef.current && !navRef.current.contains(e.target)) {
                 setSectorOpen(false);
                 setGalleryOpen(false);
@@ -56,7 +53,6 @@ const Navbar = () => {
 
     return (
         <>
-            {/* Overlay */}
             <div
                 className={`Navbaroverlay ${mobileOpen ? "show" : ""}`}
                 onClick={() => setMobileOpen(false)}
@@ -65,7 +61,6 @@ const Navbar = () => {
             <header className="navbar">
                 <div className="nav-wrapper">
 
-                    {/* HAMBURGER */}
                     <div
                         className={`hamburger ${mobileOpen ? "active" : ""}`}
                         onClick={() => setMobileOpen(!mobileOpen)}
@@ -75,13 +70,11 @@ const Navbar = () => {
                         <span></span>
                     </div>
 
-                    {/* MENU */}
                     <nav ref={navRef} className={`navmenu ${mobileOpen ? "open" : ""}`}>
                         <ul>
                             {menuItems.map((item, index) => (
                                 <li key={index} className="nav-item">
 
-                                    {/* NORMAL LINK */}
                                     {!item.submenu && (
                                         <Link
                                             to={item.path}
@@ -94,7 +87,6 @@ const Navbar = () => {
                                         </Link>
                                     )}
 
-                                    {/* DROPDOWN MENU */}
                                     {item.submenu && (
                                         <>
                                             <div
@@ -146,7 +138,6 @@ const Navbar = () => {
                         </ul>
                     </nav>
 
-                    {/* PROFILE */}
                     <div className="profile-container" ref={dropdownRef}>
                         <div
                             className="avatar"
