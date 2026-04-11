@@ -1,37 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "../utils/axiosInstance";
 import "./PhotoGallery.css";
 
 export default function PhotoGallery() {
+    const [galleryData, setGalleryData] = useState([]);
     const [activeAlbum, setActiveAlbum] = useState(null);
     const [activeImageIndex, setActiveImageIndex] = useState(null);
 
-    const galleryData = [
-        {
-            title: "Summer Camp",
-            cover: "/gallery/summercamp/cover.jpg",
-            photos: [
-                "/gallery/summercamp/1.jpg",
-                "/gallery/summercamp/2.jpg",
-                "/gallery/summercamp/3.jpg"
-            ]
-        },
-        {
-            title: "Academy Matches",
-            cover: "/gallery/matches/cover.jpg",
-            photos: [
-                "/gallery/matches/1.jpg",
-                "/gallery/matches/2.jpg"
-            ]
-        },
-        {
-            title: "Events",
-            cover: "/gallery/events/cover.jpg",
-            photos: [
-                "/gallery/events/1.jpg",
-                "/gallery/events/2.jpg"
-            ]
+    useEffect(() => {
+        fetchGallery();
+    }, []);
+
+    const fetchGallery = async () => {
+        try {
+            const res = await axios.get("/gallery");
+
+            const formatted = res.data.map(item => ({
+                _id: item._id,
+                title: item.title,
+                cover: `http://localhost:5000${item.coverImage}`,
+                photos: item.photos.map(p => `http://localhost:5000${p}`)
+            }));
+
+            setGalleryData(formatted);
+        } catch (err) {
+            console.log(err);
         }
-    ];
+    };
 
     const nextImage = () => {
         setActiveImageIndex((prev) =>
@@ -51,7 +46,7 @@ export default function PhotoGallery() {
             <div className="gallery-grid">
                 {galleryData.map((album, index) => (
                     <div
-                        key={index}
+                        key={album._id}
                         className="gallery-card"
                         style={{ animationDelay: `${index * 0.15}s` }}
                         onClick={() => setActiveAlbum(album)}

@@ -80,3 +80,44 @@ export const uploadEvents = multer({
             cb(null, Date.now() + path.extname(file.originalname))
     })
 });
+
+
+// =========================
+// ✅ GALLERY (DYNAMIC FOLDER)
+// =========================
+export const uploadGallery = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            let folderName = req.body.title;
+
+            if (!folderName) {
+                return cb(new Error("Album title is required"), false);
+            }
+
+            // convert to kebab-case
+            folderName = folderName
+                .toLowerCase()
+                .replace(/\s+/g, "-");
+
+            const basePath = `uploads/gallery/${folderName}`;
+
+            fs.mkdirSync(basePath, { recursive: true });
+
+            cb(null, basePath);
+        },
+
+        filename: function (req, file, cb) {
+            if (file.fieldname === "coverImage") {
+                cb(null, "cover" + path.extname(file.originalname));
+            } else if (file.fieldname === "photos") {
+                const unique =
+                    Date.now() +
+                    "-" +
+                    Math.round(Math.random() * 1e9);
+                cb(null, unique + path.extname(file.originalname));
+            }
+        }
+    }),
+    fileFilter,
+    limits: { fileSize: 5 * 1024 * 1024 }
+});

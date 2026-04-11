@@ -8,11 +8,14 @@ import AddEvent from "./AddEvent";
 import EventsTable from "./EventsTable";
 import SportsTable from "./SportsTable";
 import AddSport from "./AddSport";
+import GalleryTable from "./GalleryTable";
+import AddGallery from "./AddGallery";
 
 const AdminDashboard = () => {
     const [data, setData] = useState([]);
     const [eventData, setEventData] = useState([]);
     const [sportsData, setSportsData] = useState([]);
+    const [galleryData, setGalleryData] = useState([]);
 
     const [activeMenu, setActiveMenu] = useState("news");
     const [editData, setEditData] = useState(null);
@@ -36,6 +39,7 @@ const AdminDashboard = () => {
         if (activeMenu === "news") fetchNews(currentPage);
         if (activeMenu === "events") fetchEvents(currentPage);
         if (activeMenu === "sports") fetchSports(currentPage);
+        if (activeMenu === "gallery") fetchGallery();
     }, [currentPage, activeMenu]);
 
     const fetchNews = async (page = 1) => {
@@ -62,6 +66,15 @@ const AdminDashboard = () => {
         try {
             const res = await axios.get(`/sports`);
             setSportsData(res.data.data || []);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const fetchGallery = async () => {
+        try {
+            const res = await axios.get(`/gallery`);
+            setGalleryData(res.data || []);
         } catch (err) {
             console.log(err);
         }
@@ -121,6 +134,14 @@ const AdminDashboard = () => {
                         }}>
                         🏆 Sports
                     </li>
+
+                    <li className={activeMenu === "gallery" ? "active" : ""}
+                        onClick={() => {
+                            setActiveMenu("gallery");
+                            setSidebarOpen(false);
+                        }}>
+                        🖼️ Gallery
+                    </li>
                 </ul>
             </div>
 
@@ -161,6 +182,11 @@ const AdminDashboard = () => {
                     <div className="card gradient3">
                         <h3>Total Branches</h3>
                         <p>{sportsData.length}</p>
+                    </div>
+
+                    <div className="card gradient1">
+                        <h3>Total Gallery</h3>
+                        <p>{galleryData.length}</p>
                     </div>
                 </div>
 
@@ -315,6 +341,52 @@ const AdminDashboard = () => {
                                 setActiveMenu("sports");
                             }}
                             onCancel={() => setActiveMenu("sports")}
+                        />
+                    )}
+
+                    {activeMenu === "gallery" && (
+                        <>
+                            <div className="news-header">
+                                <h2>🖼️ Gallery Management</h2>
+
+                                {role === "admin" && (
+                                    <button
+                                        className="add-btn"
+                                        onClick={() => setActiveMenu("addGallery")}
+                                    >
+                                        + Add Gallery
+                                    </button>
+                                )}
+                            </div>
+
+                            <GalleryTable
+                                galleries={filterData(galleryData)}
+                                refresh={fetchGallery}
+                                onEdit={(item) => {
+                                    setEditData(item);
+                                    setActiveMenu("editGallery");
+                                }}
+                            />
+                        </>
+                    )}
+                    {activeMenu === "addGallery" && (
+                        <AddGallery
+                            onSuccess={() => {
+                                fetchGallery();
+                                setActiveMenu("gallery");
+                            }}
+                            onCancel={() => setActiveMenu("gallery")}
+                        />
+                    )}
+                    {activeMenu === "editGallery" && (
+                        <AddGallery
+                            editData={editData}
+                            onSuccess={() => {
+                                setEditData(null);
+                                fetchGallery();
+                                setActiveMenu("gallery");
+                            }}
+                            onCancel={() => setActiveMenu("gallery")}
                         />
                     )}
 
