@@ -52,7 +52,6 @@ body {
 .navmenu ul li a:hover {
     color: #0d6efd;
     background: rgba(13, 110, 253, 0.08);
-    transform: translateY(-2px);
 }
 
 .navmenu ul li a::after {
@@ -187,6 +186,63 @@ body {
     will-change: transform, opacity;
     pointer-events: none;
     transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.nav-item {
+    position: relative;
+}
+
+.dropdown-toggle {
+    position: relative;
+    color: #333;
+    font-weight: 500;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    font-family: 'Sora', sans-serif;
+}
+
+.dropdown-toggle:hover {
+    color: #0d6efd;
+    background: rgba(13, 110, 253, 0.08);
+}
+
+
+.submenu {
+    position: absolute;
+    top: 160%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    min-width: 180px;
+    width: max-content;
+    list-style: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s ease;
+    z-index: 1400;
+}
+
+.submenu.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+    padding: 10px;
+    height: 70px;
+}
+
+.submenu li {
+    width: 100%;
+}
+
+.submenu li a {
+    display: block;
+    white-space: nowrap;
+    padding: 10px 16px;
 }
 
 /* ===== MOBILE ===== */
@@ -344,4 +400,31 @@ body {
         opacity: 1;
         pointer-events: auto;
     }
+        .dropdown-toggle {
+            font-size: 20px;
+        }
+    
+        .submenu {
+            position: static;
+            background: transparent;
+            box-shadow: none;
+            backdrop-filter: none;
+            padding: 0;
+            margin-top: 10px;
+    
+            opacity: 1;
+            transform: none;
+            pointer-events: auto;
+            display: none;
+        }
+    
+        .submenu.show {
+            display: block;
+        }
+    
+        .submenu li a {
+            font-size: 16px;
+            padding: 8px 0;
+            color: #555;
+        }
 }

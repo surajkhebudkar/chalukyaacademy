@@ -4,32 +4,59 @@ import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
     const location = useLocation();
+
     const [mobileOpen, setMobileOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [sectorOpen, setSectorOpen] = useState(false);
+    const [galleryOpen, setGalleryOpen] = useState(false);
+
     const dropdownRef = useRef();
+    const navRef = useRef(); // ✅ added
 
     const menuItems = [
         { name: "Home", path: "/" },
         { name: "News", path: "/news" },
         { name: "Events", path: "/events" },
-        { name: "Sports", path: "/sports" },
-        { name: "Photo Gallery", path: "/gallery" },
+        {
+            name: "Working Sectors",
+            submenu: [
+                { name: "Sports", path: "/sports" },
+                { name: "Finance", path: "/finance" },
+                { name: "Technology", path: "/technology" },
+            ],
+        },
+        {
+            name: "Gallery",
+            submenu: [
+                { name: "Photo Gallery", path: "/photo-gallery" },
+                { name: "Video Gallery", path: "/video-gallery" },
+            ],
+        },
         { name: "About", path: "/about" },
     ];
 
-    // close dropdown when clicking outside
+    // ✅ Outside click handler FIXED
     useEffect(() => {
         const handleClickOutside = (e) => {
+            // profile dropdown
             if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
                 setDropdownOpen(false);
             }
+
+            // navbar dropdown
+            if (navRef.current && !navRef.current.contains(e.target)) {
+                setSectorOpen(false);
+                setGalleryOpen(false);
+            }
         };
+
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     return (
         <>
+            {/* Overlay */}
             <div
                 className={`Navbaroverlay ${mobileOpen ? "show" : ""}`}
                 onClick={() => setMobileOpen(false)}
@@ -37,6 +64,7 @@ const Navbar = () => {
 
             <header className="navbar">
                 <div className="nav-wrapper">
+
                     {/* HAMBURGER */}
                     <div
                         className={`hamburger ${mobileOpen ? "active" : ""}`}
@@ -48,26 +76,81 @@ const Navbar = () => {
                     </div>
 
                     {/* MENU */}
-                    <nav className={`navmenu ${mobileOpen ? "open" : ""}`}>
+                    <nav ref={navRef} className={`navmenu ${mobileOpen ? "open" : ""}`}>
                         <ul>
                             {menuItems.map((item, index) => (
-                                <li key={index}>
-                                    <Link
-                                        to={item.path}
-                                        onClick={() => setMobileOpen(false)}
-                                        className={location.pathname === item.path ? "active" : ""}
-                                    >
-                                        {item.name}
-                                    </Link>
+                                <li key={index} className="nav-item">
+
+                                    {/* NORMAL LINK */}
+                                    {!item.submenu && (
+                                        <Link
+                                            to={item.path}
+                                            onClick={() => setMobileOpen(false)}
+                                            className={
+                                                location.pathname === item.path ? "active" : ""
+                                            }
+                                        >
+                                            {item.name}
+                                        </Link>
+                                    )}
+
+                                    {/* DROPDOWN MENU */}
+                                    {item.submenu && (
+                                        <>
+                                            <div
+                                                className="dropdown-toggle"
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // ✅ IMPORTANT FIX
+
+                                                    if (item.name === "Working Sectors") {
+                                                        setSectorOpen((prev) => !prev);
+                                                        setGalleryOpen(false);
+                                                    } else if (item.name === "Gallery") {
+                                                        setGalleryOpen((prev) => !prev);
+                                                        setSectorOpen(false);
+                                                    }
+                                                }}
+                                            >
+                                                {item.name}
+                                            </div>
+
+                                            <ul
+                                                className={`submenu ${item.name === "Working Sectors"
+                                                        ? sectorOpen
+                                                            ? "show"
+                                                            : ""
+                                                        : galleryOpen
+                                                            ? "show"
+                                                            : ""
+                                                    }`}
+                                            >
+                                                {item.submenu.map((sub, i) => (
+                                                    <li key={i}>
+                                                        <Link
+                                                            to={sub.path}
+                                                            onClick={() => {
+                                                                setMobileOpen(false);
+                                                                setSectorOpen(false);
+                                                                setGalleryOpen(false);
+                                                            }}
+                                                        >
+                                                            {sub.name}
+                                                        </Link>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </>
+                                    )}
                                 </li>
                             ))}
                         </ul>
                     </nav>
-                    
+
+                    {/* PROFILE */}
                     <div className="profile-container" ref={dropdownRef}>
                         <div
                             className="avatar"
-                            onClick={() => setDropdownOpen(!dropdownOpen)}
+                            onClick={() => setDropdownOpen((prev) => !prev)}
                         >
                             👤
                         </div>
