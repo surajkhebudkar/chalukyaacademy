@@ -4,7 +4,7 @@ import "./Sports.css";
 
 export default function Sports() {
     const [activeSport, setActiveSport] = useState(null);
-    const [tab, setTab] = useState("history");
+    const [tab, setTab] = useState("coaches");
 
     const [branchesData, setBranchesData] = useState([]);
     const [activeBranch, setActiveBranch] = useState("");
@@ -34,14 +34,14 @@ export default function Sports() {
             const formatted = data.map(branch => ({
                 name: branch.branchName,
                 image: branch.branchImage
-                    ? `http://localhost:5000/uploads/sports/${branch.branchImage}`
+                    ? `http://localhost:5000/uploads/sports/branches/${branch.branchImage}`
                     : "/placeholder.png",
                 location: branch.branchLocation,
                 map: branch.branchMap,
                 sports: (branch.sports || []).map(s => ({
                     name: s.name,
                     image: s.image
-                        ? `http://localhost:5000/uploads/sports/${s.image}`
+                        ? `http://localhost:5000/uploads/sports/branchsports/${s.image}`
                         : "/placeholder.png",
                     history: s.history,
                     equipment: s.equipment || [],
@@ -138,71 +138,41 @@ export default function Sports() {
                         <h2>{activeSport.name}</h2>
 
                         <div className="tabs">
-                            <button onClick={() => setTab("history")}>History</button>
-                            <button onClick={() => setTab("equipment")}>Equipment</button>
-                            <button onClick={() => setTab("coaches")}>Coaches</button>
+                            
                         </div>
 
-                        {tab === "history" && (
-                            <p className="sport-text">
-                                {activeSport.history || "No history available"}
-                            </p>
-                        )}
+                        {/* COACHES ALWAYS SHOW */}
+                        <div className="coach-grid">
+                            {activeSport.coaches?.length > 0 ? (
+                                activeSport.coaches.map((coach, i) => (
+                                    <div key={i} className="coach-card">
+                                        <img
+                                            src={
+                                                coach.photo
+                                                    ? `http://localhost:5000/uploads/sports/coaches/${coach.photo}`
+                                                    : "/placeholder.png"
+                                            }
+                                            alt={coach.name}
+                                        />
+                                        <h4>{coach.name}</h4>
+                                        <p className="coach-exp">
+                                            Experience: {coach.experience}
+                                        </p>
 
-                        {tab === "equipment" && (
-                            <div className="equipment-grid">
-                                {activeSport.equipment?.length > 0 ? (
-                                    activeSport.equipment.map((item, i) => (
-                                        <div key={i} className="equipment-card">
-                                            <img
-                                                src={
-                                                    item.image
-                                                        ? `http://localhost:5000/uploads/sports/${item.image}`
-                                                        : "/placeholder.png"
-                                                }
-                                                alt={item.name}
-                                            />
-                                            <p>{item.name}</p>
+                                        <div className="badges">
+                                            {coach.achievements?.map((ach, j) => (
+                                                <span key={j} className="badge">
+                                                    🏆 {ach}
+                                                </span>
+                                            ))}
                                         </div>
-                                    ))
-                                ) : (
-                                    <p>No equipment available</p>
-                                )}
-                            </div>
-                        )}
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No coaches available</p>
+                            )}
+                        </div>
 
-                        {tab === "coaches" && (
-                            <div className="coach-grid">
-                                {activeSport.coaches?.length > 0 ? (
-                                    activeSport.coaches.map((coach, i) => (
-                                        <div key={i} className="coach-card">
-                                            <img
-                                                src={
-                                                    coach.photo
-                                                        ? `http://localhost:5000/uploads/sports/${coach.photo}`
-                                                        : "/placeholder.png"
-                                                }
-                                                alt={coach.name}
-                                            />
-                                            <h4>{coach.name}</h4>
-                                            <p className="coach-exp">
-                                                Experience: {coach.experience}
-                                            </p>
-
-                                            <div className="badges">
-                                                {coach.achievements?.map((ach, j) => (
-                                                    <span key={j} className="badge">
-                                                        🏆 {ach}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p>No coaches available</p>
-                                )}
-                            </div>
-                        )}
 
                         <button onClick={() => setActiveSport(null)}>Close</button>
                     </div>

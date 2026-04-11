@@ -14,11 +14,10 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
     const [files, setFiles] = useState({
         branchImage: null,
         sportImages: [],
-        equipmentImages: [],
         coachPhotos: []
     });
 
-    // ✅ EDIT LOAD FIX
+    // ✅ EDIT LOAD
     useEffect(() => {
         if (editData) {
             setForm({
@@ -36,17 +35,12 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
             ...prev,
             sports: [
                 ...prev.sports,
-                { name: "", history: "", equipment: [], coaches: [] }
+                { name: "", coaches: [] }
             ]
         }));
     };
 
-    const addEquipment = (sIndex) => {
-        const updated = [...form.sports];
-        updated[sIndex].equipment.push({ name: "" });
-        setForm({ ...form, sports: updated });
-    };
-
+    // ➕ ADD COACH
     const addCoach = (sIndex) => {
         const updated = [...form.sports];
         updated[sIndex].coaches.push({
@@ -57,10 +51,22 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
         setForm({ ...form, sports: updated });
     };
 
+    // ➕ ADD ACHIEVEMENT
     const addAchievement = (sIndex, cIndex) => {
         const updated = [...form.sports];
         updated[sIndex].coaches[cIndex].achievements.push("");
         setForm({ ...form, sports: updated });
+    };
+
+    // 🔥 GLOBAL INDEX FUNCTION (VERY IMPORTANT)
+    const getCoachGlobalIndex = (sIndex, cIndex) => {
+        let index = 0;
+
+        for (let i = 0; i < sIndex; i++) {
+            index += form.sports[i].coaches.length;
+        }
+
+        return index + cIndex;
     };
 
     // 🚀 SUBMIT
@@ -82,10 +88,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
 
             files.sportImages.forEach(f => {
                 if (f) formData.append("sportImages", f);
-            });
-
-            files.equipmentImages.forEach(f => {
-                if (f) formData.append("equipmentImages", f);
             });
 
             files.coachPhotos.forEach(f => {
@@ -132,7 +134,8 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                 />
 
                 <label>Branch Image</label>
-                <input type="file"
+                <input
+                    type="file"
                     onChange={(e) =>
                         setFiles({ ...files, branchImage: e.target.files[0] })
                     }
@@ -155,18 +158,9 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                             }}
                         />
 
-                        <textarea
-                            placeholder="History"
-                            value={sport.history}
-                            onChange={(e) => {
-                                const updated = [...form.sports];
-                                updated[sIndex].history = e.target.value;
-                                setForm({ ...form, sports: updated });
-                            }}
-                        />
-
                         {/* SPORT IMAGE */}
-                        <input type="file"
+                        <input
+                            type="file"
                             onChange={(e) => {
                                 const arr = [...files.sportImages];
                                 arr[sIndex] = e.target.files[0];
@@ -174,37 +168,12 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                             }}
                         />
 
-                        {/* EQUIPMENT */}
-                        <button type="button" className="add-btnsport"
-                            onClick={() => addEquipment(sIndex)}>
-                            + Add Equipment
-                        </button>
-
-                        {sport.equipment.map((eq, eIndex) => (
-                            <div key={eIndex}>
-                                <input
-                                    placeholder="Equipment"
-                                    value={eq.name}
-                                    onChange={(e) => {
-                                        const updated = [...form.sports];
-                                        updated[sIndex].equipment[eIndex].name = e.target.value;
-                                        setForm({ ...form, sports: updated });
-                                    }}
-                                />
-
-                                <input type="file"
-                                    onChange={(e) => {
-                                        const arr = [...files.equipmentImages];
-                                        arr[eIndex] = e.target.files[0]; // ✅ FIX
-                                        setFiles({ ...files, equipmentImages: arr });
-                                    }}
-                                />
-                            </div>
-                        ))}
-
                         {/* COACH */}
-                        <button type="button" className="add-btnsport"
-                            onClick={() => addCoach(sIndex)}>
+                        <button
+                            type="button"
+                            className="add-btnsport"
+                            onClick={() => addCoach(sIndex)}
+                        >
                             + Add Coach
                         </button>
 
@@ -231,10 +200,15 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                                     }}
                                 />
 
-                                <input type="file"
+                                {/* 🔥 FIXED COACH IMAGE */}
+                                <input
+                                    type="file"
                                     onChange={(e) => {
                                         const arr = [...files.coachPhotos];
-                                        arr[cIndex] = e.target.files[0]; // ✅ FIX
+                                        const globalIndex = getCoachGlobalIndex(sIndex, cIndex);
+
+                                        arr[globalIndex] = e.target.files[0];
+
                                         setFiles({ ...files, coachPhotos: arr });
                                     }}
                                 />

@@ -5,10 +5,15 @@ import Sport from "../models/Sport.js";
 // 🧹 DELETE FILE
 const deleteFile = (file) => {
     if (!file) return;
-    const filePath = path.join("uploads/sports", file);
-    if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-    }
+
+    const folders = ["branches", "branchsports", "coaches"];
+
+    folders.forEach(folder => {
+        const filePath = path.join("uploads/sports", folder, file);
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+    });
 };
 
 // ➕ CREATE (MULTIPLE SPORTS)
@@ -19,37 +24,31 @@ export const createSport = async (req, res) => {
 
         const branchImage = files["branchImage"]?.[0]?.filename;
         const sportImages = files["sportImages"] || [];
-        const equipmentImages = files["equipmentImages"] || [];
         const coachPhotos = files["coachPhotos"] || [];
 
-        let eqIndex = 0;
         let coachIndex = 0;
 
         const sports = (data.sports || []).map((sport, sIndex) => {
 
-            const equipment = (sport.equipment || []).map((eq) => {
-                const imageFile = equipmentImages[eqIndex++];
-                return {
-                    name: eq.name,
-                    image: imageFile ? imageFile.filename : null
-                };
-            });
+            const coachCount = (sport.coaches || []).length;
 
-            const coaches = (sport.coaches || []).map((c) => {
-                const photoFile = coachPhotos[coachIndex++];
-                return {
-                    name: c.name,
-                    experience: c.experience,
-                    achievements: c.achievements || [],
-                    photo: photoFile ? photoFile.filename : null
-                };
-            });
+            const coachSlice = coachPhotos.slice(
+                coachIndex,
+                coachIndex + coachCount
+            );
+
+            coachIndex += coachCount;
+
+            const coaches = (sport.coaches || []).map((c, i) => ({
+                name: c.name,
+                experience: c.experience,
+                achievements: c.achievements || [],
+                photo: coachSlice[i]?.filename || null
+            }));
 
             return {
                 name: sport.name,
-                history: sport.history,
                 image: sportImages[sIndex]?.filename || null,
-                equipment,
                 coaches
             };
         });
@@ -95,7 +94,6 @@ export const updateSport = async (req, res) => {
         const data = JSON.parse(req.body.data);
         const files = req.files || {};
 
-        // 🔥 branch update
         existing.branchName = data.branchName;
         existing.branchLocation = data.branchLocation;
         existing.branchMap = data.branchMap;
@@ -106,37 +104,31 @@ export const updateSport = async (req, res) => {
         }
 
         const sportImages = files["sportImages"] || [];
-        const equipmentImages = files["equipmentImages"] || [];
         const coachPhotos = files["coachPhotos"] || [];
 
-        let eqIndex = 0;
         let coachIndex = 0;
 
         existing.sports = (data.sports || []).map((sport, sIndex) => {
 
-            const equipment = (sport.equipment || []).map((eq) => {
-                const file = equipmentImages[eqIndex++];
-                return {
-                    name: eq.name,
-                    image: file ? file.filename : eq.image || null
-                };
-            });
+            const coachCount = (sport.coaches || []).length;
 
-            const coaches = (sport.coaches || []).map((c) => {
-                const file = coachPhotos[coachIndex++];
-                return {
-                    name: c.name,
-                    experience: c.experience,
-                    achievements: c.achievements || [],
-                    photo: file ? file.filename : c.photo || null
-                };
-            });
+            const coachSlice = coachPhotos.slice(
+                coachIndex,
+                coachIndex + coachCount
+            );
+
+            coachIndex += coachCount;
+
+            const coaches = (sport.coaches || []).map((c, i) => ({
+                name: c.name,
+                experience: c.experience,
+                achievements: c.achievements || [],
+                photo: coachSlice[i]?.filename || c.photo || null
+            }));
 
             return {
                 name: sport.name,
-                history: sport.history,
                 image: sportImages[sIndex]?.filename || sport.image || null,
-                equipment,
                 coaches
             };
         });
@@ -162,7 +154,6 @@ export const deleteSport = async (req, res) => {
 
         branch.sports.forEach(s => {
             deleteFile(s.image);
-            s.equipment?.forEach(eq => deleteFile(eq.image));
             s.coaches?.forEach(c => deleteFile(c.photo));
         });
 
@@ -187,7 +178,6 @@ export const deleteSingleSport = async (req, res) => {
         if (!sport) return res.status(404).json({ error: "Sport not found" });
 
         deleteFile(sport.image);
-        sport.equipment?.forEach(eq => deleteFile(eq.image));
         sport.coaches?.forEach(c => deleteFile(c.photo));
 
         sport.remove();

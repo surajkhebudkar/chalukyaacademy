@@ -13,7 +13,7 @@ import {
 
 const router = express.Router();
 
-// CREATE
+// ➕ CREATE
 router.post(
     "/",
     authMiddleware,
@@ -21,16 +21,15 @@ router.post(
     uploadSports.fields([
         { name: "branchImage", maxCount: 1 },
         { name: "sportImages" },
-        { name: "equipmentImages" },
         { name: "coachPhotos" }
     ]),
     createSport
 );
 
-// GET
+// 📄 GET
 router.get("/", getAllSports);
 
-// UPDATE
+// ✏️ UPDATE
 router.put(
     "/:id",
     authMiddleware,
@@ -38,16 +37,20 @@ router.put(
     uploadSports.fields([
         { name: "branchImage", maxCount: 1 },
         { name: "sportImages" },
-        { name: "equipmentImages" },
         { name: "coachPhotos" }
     ]),
     updateSport
 );
 
-// DELETE BRANCH
-router.delete("/:id", authMiddleware, checkRole(["admin"]), deleteSport);
+// ❌ DELETE FULL BRANCH
+router.delete(
+    "/:id",
+    authMiddleware,
+    checkRole(["admin"]),
+    deleteSport
+);
 
-// DELETE SINGLE SPORT
+// ❌ DELETE SINGLE SPORT
 router.delete(
     "/:branchId/sport/:sportId",
     authMiddleware,
