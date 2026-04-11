@@ -28,7 +28,7 @@ const Navbar = () => {
         {
             name: "Gallery",
             submenu: [
-                { name: "Photo Gallery", path: "/photo-gallery" },
+                { name: "Photo Gallery", path: "/photogallery" },
                 { name: "Video Gallery", path: "/video-gallery" },
             ],
         },
