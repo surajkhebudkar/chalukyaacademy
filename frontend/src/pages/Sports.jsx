@@ -13,16 +13,26 @@ export default function Sports() {
     const getMapUrl = (url) => {
         if (!url) return "";
 
-        if (url.includes("output=embed")) return url;
+        // already embed link
+        if (url.includes("embed")) return url;
 
-        if (url.includes("google.com/maps")) {
-            const query = url.split("q=")[1];
-            if (query) {
-                return `https://www.google.com/maps?q=${query}&output=embed`;
+        try {
+            // extract lat lng from google maps url
+            const match = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+
+            if (match) {
+                const lat = match[1];
+                const lng = match[2];
+
+                return `https://www.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
             }
-        }
 
-        return `https://www.google.com/maps?q=${encodeURIComponent(url)}&output=embed`;
+            // fallback
+            return `https://www.google.com/maps?q=${encodeURIComponent(url)}&output=embed`;
+
+        } catch {
+            return "";
+        }
     };
 
     // ✅ FETCH
