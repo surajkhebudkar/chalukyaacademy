@@ -232,7 +232,7 @@ body {
     transform: translateX(-50%) translateY(0);
     pointer-events: auto;
     padding: 10px;
-    height: 70px;
+
 }
 
 .submenu li {
@@ -257,11 +257,18 @@ body {
         padding: 0 20px;
     }
 
-
     .navmenu ul {
         flex-direction: column;
         align-items: center;
         gap: 25px;
+        width: 100%;
+    }
+
+    .nav-item {
+        width: 100%;
+        text-align: center;
+        margin: 0;
+        padding: 0;
     }
 
     .navmenu ul li a {
@@ -271,11 +278,10 @@ body {
         font-family: 'Sora', sans-serif;
     }
 
-    .navmenu ul li {
-        transform: translateY(20px);
-        opacity: 0;
-        /* transition: 0.4s ease; */
-    }
+        .navmenu>ul>.nav-item {
+            transform: translateY(20px);
+            opacity: 0;
+        }
 
     .navmenu.open ul li {
         transform: translateY(0);
@@ -392,6 +398,7 @@ body {
         z-index: 1500;
         transform: translateX(100%);
         opacity: 0;
+        overflow-y: auto;
         pointer-events: none;
     }
 
@@ -400,31 +407,40 @@ body {
         opacity: 1;
         pointer-events: auto;
     }
-        .dropdown-toggle {
-            font-size: 20px;
-        }
-    
-        .submenu {
-            position: static;
+
+    .dropdown-toggle {
+        width: 100%;
+        font-size: 20px;
+        padding: 10px 0;
+    }
+
+
+   .submenu li {
+       display: flex;
+       justify-content: center;
+   }
+
+
+    .submenu li a {
+        font-size: 16px;
+        padding: 8px 0;
+        color: #555;
+        display: inline-block;
+    }
+        .navmenu .submenu {
+            position: static !important;
+            left: 0 !important;
+            right: 0 !important;
+            top: auto !important;
+            transform: none !important;
+            width: 100%;
+            display: none;
+            margin: 0;
+            padding: 0;
             background: transparent;
             box-shadow: none;
-            backdrop-filter: none;
-            padding: 0;
-            margin-top: 10px;
-    
-            opacity: 1;
-            transform: none;
-            pointer-events: auto;
-            display: none;
         }
-    
-        .submenu.show {
-            display: block;
-        }
-    
-        .submenu li a {
-            font-size: 16px;
-            padding: 8px 0;
-            color: #555;
-        }
+                 .navmenu .submenu.show {
+                     display: block;
+                 }
 }

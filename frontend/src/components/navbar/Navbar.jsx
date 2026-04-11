@@ -92,7 +92,7 @@ const Navbar = () => {
                                             <div
                                                 className="dropdown-toggle"
                                                 onClick={(e) => {
-                                                    e.stopPropagation(); // ✅ IMPORTANT FIX
+                                                    e.stopPropagation();
 
                                                     if (item.name === "Working Sectors") {
                                                         setSectorOpen((prev) => !prev);
