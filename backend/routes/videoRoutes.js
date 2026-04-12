@@ -1,5 +1,3 @@
-// 🔥 FIXED videoRoutes.js (NO DUPLICATE IMPORT)
-
 import express from "express";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { checkRole } from "../middleware/roleMiddleware.js";
@@ -14,7 +12,6 @@ import {
 
 const router = express.Router();
 
-// CREATE
 router.post(
     "/",
     authMiddleware,
@@ -23,7 +20,6 @@ router.post(
     createVideo
 );
 
-// UPDATE
 router.put(
     "/:id",
     authMiddleware,
@@ -32,7 +28,6 @@ router.put(
     updateVideo
 );
 
-// DELETE
 router.delete(
     "/:id",
     authMiddleware,
@@ -40,7 +35,6 @@ router.delete(
     deleteVideo
 );
 
-// GET
 router.get("/", getAllVideos);
 
 export default router;
