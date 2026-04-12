@@ -1,6 +1,10 @@
 import axios from "../utils/axiosInstance";
 import "./AdminDashboard.css";
 
+
+const confirmDelete = (message) => {
+    return window.confirm(message);
+};
 const EventsTable = ({
     events,
     refresh,
@@ -10,9 +14,21 @@ const EventsTable = ({
     setCurrentPage
 }) => {
 
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const role = user?.role;
+   
+
+
     const deleteEvent = async (id) => {
-        await axios.delete(`/events/${id}`);
-        refresh();
+        if (!confirmDelete("⚠️ This action cannot be undone. Delete this event?")) return;
+
+        try {
+            await axios.delete(`/events/${id}`);
+            refresh();
+        } catch (err) {
+            console.log(err);
+            alert("Delete failed");
+        }
     };
 
     const isNew = (date) => {
@@ -36,7 +52,11 @@ const EventsTable = ({
                         <tr key={e._id}>
                             <td>
                                 <img
-                                    src={`http://localhost:5000/uploads/events/${e.image}`}
+                                    src={
+                                        e.image
+                                            ? `http://localhost:5000/uploads/events/${e.image}`
+                                            : "/placeholder.png"
+                                    }
                                     width="60"
                                 />
                             </td>

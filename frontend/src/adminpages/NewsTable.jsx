@@ -1,6 +1,10 @@
 import axios from "../utils/axiosInstance";
 import "./AdminDashboard.css";
 
+
+const confirmDelete = (message) => {
+    return window.confirm(message);
+};
 const NewsTable = ({
     news,
     refresh,
@@ -10,13 +14,12 @@ const NewsTable = ({
     onPageChange
 }) => {
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
     const role = user?.role;
+    
 
     const deleteNews = async (id) => {
-        const confirmDelete = window.confirm("⚠️ This action cannot be undone. Delete this news?");
-
-        if (!confirmDelete) return; // ❌ user clicked Cancel
+        if (!confirmDelete("⚠️ This action cannot be undone. Delete this news?")) return;
 
         try {
             await axios.delete(`http://localhost:5000/api/news/${id}`);
@@ -49,7 +52,11 @@ const NewsTable = ({
                         <tr key={item._id}>
                             <td>
                                 <img
-                                    src={`http://localhost:5000/uploads/news/${item.image}`}
+                                    src={
+                                        item.image
+                                            ? `http://localhost:5000/uploads/news/${item.image}`
+                                            : "/placeholder.png"
+                                    }
                                     width="60"
                                 />
                             </td>

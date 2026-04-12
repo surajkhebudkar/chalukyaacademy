@@ -1,6 +1,10 @@
 import axios from "../utils/axiosInstance";
 import "./AdminDashboard.css";
 
+
+const confirmDelete = (message) => {
+    return window.confirm(message);
+};
 const VideoTable = ({
     videos = [],
     refresh,
@@ -10,10 +14,12 @@ const VideoTable = ({
     onPageChange
 }) => {
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
     const role = user?.role;
 
     const deleteVideo = async (id) => {
+        if (!confirmDelete("⚠️ This action cannot be undone. Delete this video?")) return;
+
         try {
             await axios.delete(`/videos/${id}`);
             refresh();
@@ -39,9 +45,14 @@ const VideoTable = ({
                         <tr key={v._id}>
                             <td>
                                 <video
-                                    src={`http://localhost:5000${v.video}`}
-                                    width="100"
+                                    src={
+                                        v.video
+                                            ? `http://localhost:5000${v.video}`
+                                            : ""
+                                    }
+                                    width="70"
                                     muted
+                                    controls
                                 />
                             </td>
 

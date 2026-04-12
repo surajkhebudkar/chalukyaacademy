@@ -1,6 +1,10 @@
 import axios from "../utils/axiosInstance";
 import "./AdminDashboard.css";
 
+
+const confirmDelete = (message) => {
+    return window.confirm(message);
+};
 const GalleryTable = ({
     galleries = [],
     refresh,
@@ -10,10 +14,13 @@ const GalleryTable = ({
     onPageChange
 }) => {
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
     const role = user?.role;
+   
 
     const deleteGallery = async (id) => {
+        if (!confirmDelete("⚠️ This action cannot be undone. Delete this gallery?")) return;
+
         try {
             await axios.delete(`/gallery/${id}`);
             refresh();
