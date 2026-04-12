@@ -10,11 +10,19 @@ export default function AddVideo({ onSuccess, onCancel, editData }) {
 
     const [file, setFile] = useState(null);
 
+    const [preview, setPreview] = useState("");
+
     useEffect(() => {
         if (editData) {
             setForm({
                 title: editData.title || ""
             });
+
+            setPreview(
+                editData.video
+                    ? `http://localhost:5000${editData.video}`
+                    : ""
+            );
         }
     }, [editData]);
 
@@ -50,6 +58,7 @@ export default function AddVideo({ onSuccess, onCancel, editData }) {
         <div className="add-sport-container">
             <form onSubmit={handleSubmit} className="add-sport-form">
 
+                {/* TITLE */}
                 <input
                     placeholder="Video Title"
                     value={form.title}
@@ -57,12 +66,24 @@ export default function AddVideo({ onSuccess, onCancel, editData }) {
                     required
                 />
 
+                {/* OLD VIDEO PREVIEW */}
+                {preview && (
+                    <div className="dynamic-row">
+                        <video
+                            src={preview}
+                            controls
+                            width="100%"
+                            style={{ borderRadius: "8px" }}
+                        />
+                    </div>
+                )}
+
+                {/* UPLOAD NEW */}
                 <label>Upload Video</label>
                 <input
                     type="file"
                     accept="video/*"
                     onChange={(e) => setFile(e.target.files[0])}
-                    required={!editData}
                 />
 
                 <div className="btn-group">
