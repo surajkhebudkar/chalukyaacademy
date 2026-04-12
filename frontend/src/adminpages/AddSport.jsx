@@ -40,6 +40,13 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
         }));
     };
 
+    // ❌ DELETE SPORT
+    const deleteSportRow = (sIndex) => {
+        const updated = [...form.sports];
+        updated.splice(sIndex, 1);
+        setForm({ ...form, sports: updated });
+    };
+
     // ➕ ADD COACH
     const addCoach = (sIndex) => {
         const updated = [...form.sports];
@@ -51,6 +58,13 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
         setForm({ ...form, sports: updated });
     };
 
+    // ❌ DELETE COACH
+    const deleteCoach = (sIndex, cIndex) => {
+        const updated = [...form.sports];
+        updated[sIndex].coaches.splice(cIndex, 1);
+        setForm({ ...form, sports: updated });
+    };
+
     // ➕ ADD ACHIEVEMENT
     const addAchievement = (sIndex, cIndex) => {
         const updated = [...form.sports];
@@ -58,14 +72,19 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
         setForm({ ...form, sports: updated });
     };
 
-    // 🔥 GLOBAL INDEX FUNCTION (VERY IMPORTANT)
+    // ❌ DELETE ACHIEVEMENT
+    const deleteAchievement = (sIndex, cIndex, aIndex) => {
+        const updated = [...form.sports];
+        updated[sIndex].coaches[cIndex].achievements.splice(aIndex, 1);
+        setForm({ ...form, sports: updated });
+    };
+
+    // 🔥 GLOBAL INDEX FUNCTION
     const getCoachGlobalIndex = (sIndex, cIndex) => {
         let index = 0;
-
         for (let i = 0; i < sIndex; i++) {
             index += form.sports[i].coaches.length;
         }
-
         return index + cIndex;
     };
 
@@ -158,7 +177,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                             }}
                         />
 
-                        {/* SPORT IMAGE */}
                         <input
                             type="file"
                             onChange={(e) => {
@@ -168,7 +186,15 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                             }}
                         />
 
-                        {/* COACH */}
+                        {/* ❌ DELETE SPORT */}
+                        <button
+                            type="button"
+                            className="delete-btn"
+                            onClick={() => deleteSportRow(sIndex)}
+                        >
+                            ❌ Remove Sport
+                        </button>
+
                         <button
                             type="button"
                             className="add-btnsport"
@@ -200,39 +226,54 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                                     }}
                                 />
 
-                                {/* 🔥 FIXED COACH IMAGE */}
                                 <input
                                     type="file"
                                     onChange={(e) => {
                                         const arr = [...files.coachPhotos];
                                         const globalIndex = getCoachGlobalIndex(sIndex, cIndex);
-
                                         arr[globalIndex] = e.target.files[0];
-
                                         setFiles({ ...files, coachPhotos: arr });
                                     }}
                                 />
 
+                                {/* ❌ DELETE COACH */}
+                                <button
+                                    type="button"
+                                    className="delete-btn"
+                                    onClick={() => deleteCoach(sIndex, cIndex)}
+                                >
+                                    ❌ Remove Coach
+                                </button>
+
                                 <button
                                     type="button"
                                     className="add-btnsport"
-                                    style={{ marginLeft: "auto", display: "block" }}
                                     onClick={() => addAchievement(sIndex, cIndex)}
                                 >
                                     + Add Achievement
                                 </button>
 
                                 {c.achievements.map((a, aIndex) => (
-                                    <input
-                                        key={aIndex}
-                                        placeholder="Achievement"
-                                        value={a}
-                                        onChange={(e) => {
-                                            const updated = [...form.sports];
-                                            updated[sIndex].coaches[cIndex].achievements[aIndex] = e.target.value;
-                                            setForm({ ...form, sports: updated });
-                                        }}
-                                    />
+                                    <div key={aIndex} style={{ display: "flex", gap: "8px" }}>
+                                        <input
+                                            placeholder="Achievement"
+                                            value={a}
+                                            onChange={(e) => {
+                                                const updated = [...form.sports];
+                                                updated[sIndex].coaches[cIndex].achievements[aIndex] = e.target.value;
+                                                setForm({ ...form, sports: updated });
+                                            }}
+                                        />
+
+                                        {/* ❌ DELETE ACHIEVEMENT */}
+                                        <button
+                                            type="button"
+                                            className="delete-btn"
+                                            onClick={() => deleteAchievement(sIndex, cIndex, aIndex)}
+                                        >
+                                            ❌
+                                        </button>
+                                    </div>
                                 ))}
                             </div>
                         ))}
