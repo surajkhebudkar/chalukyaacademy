@@ -5,21 +5,22 @@ import axios from "../utils/axiosInstance";
 export default function News() {
     const [newsData, setNewsData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const [activeIndex, setActiveIndex] = useState(null);
     const [show, setShow] = useState(false);
 
-    const itemsPerPage = 4;
     const sectionRef = useRef();
 
-    // 👉 fetch news
+    // 👉 fetch news (backend pagination)
     useEffect(() => {
-        fetchNews();
-    }, []);
+        fetchNews(currentPage);
+    }, [currentPage]);
 
-    const fetchNews = async () => {
+    const fetchNews = async (page = 1) => {
         try {
-            const res = await axios.get("/news?page=1&limit=100");
-            setNewsData(res.data.data);
+            const res = await axios.get(`/news?page=${page}&limit=4`);
+            setNewsData(res.data.data || []);
+            setTotalPages(res.data.totalPages || 1);
         } catch (err) {
             console.log(err);
         }
@@ -29,6 +30,11 @@ export default function News() {
     useEffect(() => {
         setTimeout(() => setShow(true), 200);
     }, []);
+
+    // 👉 scroll top on page change
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, [currentPage]);
 
     // 👉 click outside = close overlay
     useEffect(() => {
@@ -56,7 +62,6 @@ export default function News() {
 
     const handleTouchEnd = () => {
         if (touchStartY.current < touchEndY.current - 50) {
-            // swipe down
             setActiveIndex(null);
         }
     };
@@ -67,20 +72,10 @@ export default function News() {
         return diff <= 3;
     };
 
-    // 👉 pagination
-    const indexOfLast = currentPage * itemsPerPage;
-    const indexOfFirst = indexOfLast - itemsPerPage;
-
-    const currentNews = Array.isArray(newsData)
-        ? newsData.slice(indexOfFirst, indexOfLast)
-        : [];
-
-    const totalPages = Math.ceil(newsData.length / itemsPerPage) || 1;
-
     return (
         <section ref={sectionRef} className={`news ${show ? "show" : ""}`}>
             <div className="news-grid">
-                {currentNews.map((item) => (
+                {newsData.map((item) => (
                     <div
                         className="news-card"
                         key={item._id}
@@ -93,6 +88,7 @@ export default function News() {
                     >
                         <img
                             src={`http://localhost:5000/uploads/news/${item.image}`}
+                            alt={item.title}
                         />
 
                         {isNew(item.createdAt) && (
@@ -100,8 +96,7 @@ export default function News() {
                         )}
 
                         <div
-                            className={`news-overlay ${activeIndex === item._id ? "active" : ""
-                                }`}
+                            className={`news-overlay ${activeIndex === item._id ? "active" : ""}`}
                             onClick={() => setActiveIndex(null)}
                         >
                             <h3>{item.title}</h3>
@@ -111,7 +106,7 @@ export default function News() {
                 ))}
             </div>
 
-            {/* Pagination */}
+            {/* 🔥 Pagination */}
             <div className="pagination">
                 <button
                     disabled={currentPage === 1}

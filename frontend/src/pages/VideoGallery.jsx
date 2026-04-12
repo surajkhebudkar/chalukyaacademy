@@ -6,25 +6,36 @@ export default function VideoGallery() {
     const [videos, setVideos] = useState([]);
     const [activeVideo, setActiveVideo] = useState(null);
 
+    // ✅ pagination states
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    // ✅ fetch with pagination
     useEffect(() => {
-        fetchVideos();
-    }, []);
+        fetchVideos(currentPage);
+    }, [currentPage]);
 
-    const fetchVideos = async () => {
+    const fetchVideos = async (page = 1) => {
         try {
-            const res = await axios.get("/videos");
+            const res = await axios.get(`/videos?page=${page}&limit=6`);
 
-            const formatted = res.data.map(v => ({
+            const formatted = (res.data.data || []).map(v => ({
                 _id: v._id,
                 title: v.title,
                 video: `http://localhost:5000${v.video}`
             }));
 
             setVideos(formatted);
+            setTotalPages(res.data.totalPages || 1);
         } catch (err) {
             console.log(err);
         }
     };
+
+    // ✅ scroll top on page change
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, [currentPage]);
 
     return (
         <section className="gallery">
@@ -77,6 +88,27 @@ export default function VideoGallery() {
                     />
                 </div>
             )}
+
+            {/* ✅ PAGINATION (NO DESIGN CHANGE) */}
+            <div className="pagination">
+                <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage((prev) => prev - 1)}
+                >
+                    ⬅ Prev
+                </button>
+
+                <span>
+                    {currentPage} / {totalPages}
+                </span>
+
+                <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage((prev) => prev + 1)}
+                >
+                    Next ➡
+                </button>
+            </div>
         </section>
     );
 }

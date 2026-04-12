@@ -13,7 +13,6 @@ import AddGallery from "./AddGallery";
 import VideoTable from "./VideoTable";
 import AddVideo from "./AddVideo";
 
-
 const AdminDashboard = () => {
     const [data, setData] = useState([]);
     const [eventData, setEventData] = useState([]);
@@ -25,8 +24,21 @@ const AdminDashboard = () => {
     const [editData, setEditData] = useState(null);
     const [search, setSearch] = useState("");
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
+    // ✅ separate pagination
+    const [newsPage, setNewsPage] = useState(1);
+    const [newsTotal, setNewsTotal] = useState(1);
+
+    const [eventPage, setEventPage] = useState(1);
+    const [eventTotal, setEventTotal] = useState(1);
+
+    const [sportsPage, setSportsPage] = useState(1);
+    const [sportsTotal, setSportsTotal] = useState(1);
+
+    const [galleryPage, setGalleryPage] = useState(1);
+    const [galleryTotal, setGalleryTotal] = useState(1);
+
+    const [videoPage, setVideoPage] = useState(1);
+    const [videoTotal, setVideoTotal] = useState(1);
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [touchStartX, setTouchStartX] = useState(0);
@@ -39,19 +51,20 @@ const AdminDashboard = () => {
         navigate("/login");
     };
 
+    // ✅ FETCH
     useEffect(() => {
-        if (activeMenu === "news") fetchNews(currentPage);
-        if (activeMenu === "events") fetchEvents(currentPage);
-        if (activeMenu === "sports") fetchSports(currentPage);
+        if (activeMenu === "news") fetchNews(newsPage);
+        if (activeMenu === "events") fetchEvents(eventPage);
+        if (activeMenu === "sports") fetchSports();
         if (activeMenu === "gallery") fetchGallery();
         if (activeMenu === "videos") fetchVideos();
-    }, [currentPage, activeMenu]);
+    }, [activeMenu, newsPage, eventPage]);
 
     const fetchNews = async (page = 1) => {
         try {
             const res = await axios.get(`/news?page=${page}&limit=5`);
             setData(res.data.data || []);
-            setTotalPages(res.data.totalPages || 1);
+            setNewsTotal(res.data.totalPages || 1);
         } catch (err) {
             console.log(err);
         }
@@ -61,16 +74,18 @@ const AdminDashboard = () => {
         try {
             const res = await axios.get(`/events?page=${page}&limit=5`);
             setEventData(res.data.data || []);
-            setTotalPages(res.data.totalPages || 1);
+            setEventTotal(res.data.totalPages || 1);
         } catch (err) {
             console.log(err);
         }
     };
 
-    const fetchSports = async (page = 1) => {
+    // ❗ no pagination backend
+    const fetchSports = async () => {
         try {
             const res = await axios.get(`/sports`);
             setSportsData(res.data.data || []);
+            setSportsTotal(1);
         } catch (err) {
             console.log(err);
         }
@@ -80,6 +95,7 @@ const AdminDashboard = () => {
         try {
             const res = await axios.get(`/gallery`);
             setGalleryData(res.data || []);
+            setGalleryTotal(1);
         } catch (err) {
             console.log(err);
         }
@@ -89,6 +105,7 @@ const AdminDashboard = () => {
         try {
             const res = await axios.get(`/videos`);
             setVideoData(res.data || []);
+            setVideoTotal(1);
         } catch (err) {
             console.log(err);
         }
@@ -123,93 +140,26 @@ const AdminDashboard = () => {
                 </div>
 
                 <ul>
-                    <li className={activeMenu === "news" ? "active" : ""}
-                        onClick={() => {
-                            setActiveMenu("news");
-                            setCurrentPage(1);
-                            setSidebarOpen(false);
-                        }}>
-                        📰 News
-                    </li>
-
-                    <li className={activeMenu === "events" ? "active" : ""}
-                        onClick={() => {
-                            setActiveMenu("events");
-                            setCurrentPage(1);
-                            setSidebarOpen(false);
-                        }}>
-                        📅 Events
-                    </li>
-
-                    <li className={activeMenu === "sports" ? "active" : ""}
-                        onClick={() => {
-                            setActiveMenu("sports");
-                            setSidebarOpen(false);
-                        }}>
-                        🏆 Sports
-                    </li>
-
-                    <li className={activeMenu === "gallery" ? "active" : ""}
-                        onClick={() => {
-                            setActiveMenu("gallery");
-                            setSidebarOpen(false);
-                        }}>
-                        🖼️ Gallery
-                    </li>
-
-                    <li className={activeMenu === "videos" ? "active" : ""}
-                        onClick={() => {
-                            setActiveMenu("videos");
-                            setSidebarOpen(false);
-                        }}>
-                        🎥 Videos
-                    </li>
+                    <li onClick={() => { setActiveMenu("news"); setNewsPage(1); setSidebarOpen(false); }}>📰 News</li>
+                    <li onClick={() => { setActiveMenu("events"); setEventPage(1); setSidebarOpen(false); }}>📅 Events</li>
+                    <li onClick={() => { setActiveMenu("sports"); setSidebarOpen(false); }}>🏆 Sports</li>
+                    <li onClick={() => { setActiveMenu("gallery"); setSidebarOpen(false); }}>🖼️ Gallery</li>
+                    <li onClick={() => { setActiveMenu("videos"); setSidebarOpen(false); }}>🎥 Videos</li>
                 </ul>
             </div>
 
-            {/* OVERLAY */}
-            {sidebarOpen && (
-                <div className="admin-overlay" onClick={() => setSidebarOpen(false)}></div>
-            )}
+            {sidebarOpen && <div className="admin-overlay" onClick={() => setSidebarOpen(false)}></div>}
 
             {/* MAIN */}
             <div className="main">
 
-                {/* TOPBAR */}
                 <div className="topbar">
                     <div className="left">
-                        <button className="menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
-                            ☰
-                        </button>
+                        <button className="menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>☰</button>
                         <h1>Dashboard</h1>
                     </div>
 
-                    <button className="logout-btn" onClick={handleLogout}>
-                        Logout
-                    </button>
-                </div>
-
-                {/* CARDS */}
-                <div className="cards">
-                    <div className="card gradient1">
-                        <h3>Total News</h3>
-                        <p>{data.length}</p>
-                    </div>
-
-                    <div className="card gradient2">
-                        <h3>Total Events</h3>
-                        <p>{eventData.length}</p>
-                    </div>
-
-                    <div className="card gradient3">
-                        <h3>Total Branches</h3>
-                        <p>{sportsData.length}</p>
-                    </div>
-
-                    <div className="card gradient1">
-                        <h3>Total Gallery</h3>
-                        <p>{galleryData.length}</p>
-                    </div>
+                    <button className="logout-btn" onClick={handleLogout}>Logout</button>
                 </div>
 
                 {/* SEARCH */}
@@ -243,7 +193,10 @@ const AdminDashboard = () => {
 
                             <NewsTable
                                 news={filterData(data)}
-                                refresh={() => fetchNews(currentPage)}
+                                refresh={() => fetchNews(newsPage)}
+                                currentPage={newsPage}
+                                totalPages={newsTotal}
+                                onPageChange={setNewsPage}
                                 onEdit={(item) => {
                                     setEditData(item);
                                     setActiveMenu("editNews");
@@ -255,7 +208,7 @@ const AdminDashboard = () => {
                     {activeMenu === "addNews" && (
                         <AddNews
                             onSuccess={() => {
-                                fetchNews(currentPage);
+                                fetchNews(newsPage);
                                 setActiveMenu("news");
                             }}
                             onCancel={() => setActiveMenu("news")}
@@ -266,7 +219,7 @@ const AdminDashboard = () => {
                         <AddNews
                             editData={editData}
                             onSuccess={() => {
-                                fetchNews(currentPage);
+                                fetchNews(newsPage);
                                 setActiveMenu("news");
                             }}
                             onCancel={() => setActiveMenu("news")}
@@ -287,7 +240,10 @@ const AdminDashboard = () => {
 
                             <EventsTable
                                 events={filterData(eventData)}
-                                refresh={() => fetchEvents(currentPage)}
+                                refresh={() => fetchEvents(eventPage)}
+                                currentPage={eventPage}
+                                totalPages={eventTotal}
+                                onPageChange={setEventPage}
                                 onEdit={(item) => {
                                     setEditData(item);
                                     setActiveMenu("editEvent");
@@ -296,46 +252,23 @@ const AdminDashboard = () => {
                         </>
                     )}
 
-                    {activeMenu === "addEvent" && (
-                        <AddEvent
-                            onSuccess={() => {
-                                fetchEvents(currentPage);
-                                setActiveMenu("events");
-                            }}
-                            onCancel={() => setActiveMenu("events")}
-                        />
-                    )}
-
-                    {activeMenu === "editEvent" && (
-                        <AddEvent
-                            editData={editData}
-                            onSuccess={() => {
-                                fetchEvents(currentPage);
-                                setActiveMenu("events");
-                            }}
-                            onCancel={() => setActiveMenu("events")}
-                        />
-                    )}
-
                     {/* SPORTS */}
                     {activeMenu === "sports" && (
                         <>
                             <div className="news-header">
                                 <h2>🏆 Sports Management</h2>
 
-                                {role === "admin" && (
-                                    <button
-                                        className="add-btn"
-                                        onClick={() => setActiveMenu("addSport")}
-                                    >
-                                        + Add Sport
-                                    </button>
-                                )}
+                                <button className="add-btn" onClick={() => setActiveMenu("addSport")}>
+                                    + Add Sport
+                                </button>
                             </div>
 
                             <SportsTable
                                 sports={filterData(sportsData)}
                                 refresh={fetchSports}
+                                currentPage={1}
+                                totalPages={1}
+                                onPageChange={() => { }}
                                 onEdit={(item) => {
                                     setEditData(item);
                                     setActiveMenu("editSport");
@@ -344,47 +277,23 @@ const AdminDashboard = () => {
                         </>
                     )}
 
-                    {activeMenu === "addSport" && (
-                        <AddSport
-                            onSuccess={() => {
-                                fetchSports();
-                                setActiveMenu("sports");
-                            }}
-                            onCancel={() => setActiveMenu("sports")}
-                        />
-                    )}
-
-                    {activeMenu === "editSport" && (
-                        <AddSport
-                            editData={editData}
-                            isEdit={true} 
-                            onSuccess={() => {
-                                fetchSports();
-                                setActiveMenu("sports");
-                            }}
-                            onCancel={() => setActiveMenu("sports")}
-                        />
-                    )}
-
-
+                    {/* GALLERY */}
                     {activeMenu === "gallery" && (
                         <>
                             <div className="news-header">
                                 <h2>🖼️ Gallery Management</h2>
 
-                                {role === "admin" && (
-                                    <button
-                                        className="add-btn"
-                                        onClick={() => setActiveMenu("addGallery")}
-                                    >
-                                        + Add Gallery
-                                    </button>
-                                )}
+                                <button className="add-btn" onClick={() => setActiveMenu("addGallery")}>
+                                    + Add Gallery
+                                </button>
                             </div>
 
                             <GalleryTable
                                 galleries={filterData(galleryData)}
                                 refresh={fetchGallery}
+                                currentPage={1}
+                                totalPages={1}
+                                onPageChange={() => { }}
                                 onEdit={(item) => {
                                     setEditData(item);
                                     setActiveMenu("editGallery");
@@ -392,37 +301,14 @@ const AdminDashboard = () => {
                             />
                         </>
                     )}
-                    {activeMenu === "addGallery" && (
-                        <AddGallery
-                            onSuccess={() => {
-                                fetchGallery();
-                                setActiveMenu("gallery");
-                            }}
-                            onCancel={() => setActiveMenu("gallery")}
-                        />
-                    )}
-                    {activeMenu === "editGallery" && (
-                        <AddGallery
-                            editData={editData}
-                            onSuccess={() => {
-                                setEditData(null);
-                                fetchGallery();
-                                setActiveMenu("gallery");
-                            }}
-                            onCancel={() => setActiveMenu("gallery")}
-                        />
-                    )}
 
-
+                    {/* VIDEOS */}
                     {activeMenu === "videos" && (
                         <>
                             <div className="news-header">
                                 <h2>🎥 Video Management</h2>
 
-                                <button
-                                    className="add-btn"
-                                    onClick={() => setActiveMenu("addVideo")}
-                                >
+                                <button className="add-btn" onClick={() => setActiveMenu("addVideo")}>
                                     + Add Video
                                 </button>
                             </div>
@@ -430,6 +316,9 @@ const AdminDashboard = () => {
                             <VideoTable
                                 videos={videoData}
                                 refresh={fetchVideos}
+                                currentPage={1}
+                                totalPages={1}
+                                onPageChange={() => { }}
                                 onEdit={(item) => {
                                     setEditData(item);
                                     setActiveMenu("editVideo");
@@ -437,29 +326,6 @@ const AdminDashboard = () => {
                             />
                         </>
                     )}
-
-                    {activeMenu === "addVideo" && (
-                        <AddVideo
-                            onSuccess={() => {
-                                fetchVideos();
-                                setActiveMenu("videos");
-                            }}
-                            onCancel={() => setActiveMenu("videos")}
-                        />
-                    )}
-
-                    {activeMenu === "editVideo" && (
-                        <AddVideo
-                            editData={editData}
-                            onSuccess={() => {
-                                fetchVideos();
-                                setActiveMenu("videos");
-                            }}
-                            onCancel={() => setActiveMenu("videos")}
-                        />
-                    )}
-
-
 
                 </div>
             </div>

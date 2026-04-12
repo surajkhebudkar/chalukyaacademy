@@ -71,11 +71,26 @@ export const createSport = async (req, res) => {
     }
 };
 
-// 📄 GET ALL
+// 📄 GET ALL (WITH PAGINATION)
 export const getAllSports = async (req, res) => {
     try {
-        const data = await Sport.find().sort({ createdAt: -1 });
-        res.json({ data });
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const skip = (page - 1) * limit;
+
+        const total = await Sport.countDocuments();
+
+        const data = await Sport.find()
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        res.json({
+            data,
+            totalPages: Math.ceil(total / limit),
+            currentPage: page
+        });
+
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

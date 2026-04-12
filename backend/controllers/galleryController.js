@@ -36,11 +36,26 @@ export const createGallery = async (req, res) => {
     }
 };
 
-// GET ALL
+// GET ALL (WITH PAGINATION)
 export const getAllGalleries = async (req, res) => {
     try {
-        const galleries = await Gallery.find().sort({ createdAt: -1 });
-        res.json(galleries);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 6;
+        const skip = (page - 1) * limit;
+
+        const total = await Gallery.countDocuments();
+
+        const galleries = await Gallery.find()
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        res.json({
+            data: galleries,
+            totalPages: Math.ceil(total / limit),
+            currentPage: page
+        });
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

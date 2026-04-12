@@ -7,15 +7,20 @@ export default function PhotoGallery() {
     const [activeAlbum, setActiveAlbum] = useState(null);
     const [activeImageIndex, setActiveImageIndex] = useState(null);
 
+    // ✅ pagination states
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    // ✅ fetch with pagination
     useEffect(() => {
-        fetchGallery();
-    }, []);
+        fetchGallery(currentPage);
+    }, [currentPage]);
 
-    const fetchGallery = async () => {
+    const fetchGallery = async (page = 1) => {
         try {
-            const res = await axios.get("/gallery");
+            const res = await axios.get(`/gallery?page=${page}&limit=6`);
 
-            const formatted = res.data.map(item => ({
+            const formatted = (res.data.data || []).map(item => ({
                 _id: item._id,
                 title: item.title,
                 cover: `http://localhost:5000${item.coverImage}`,
@@ -23,10 +28,16 @@ export default function PhotoGallery() {
             }));
 
             setGalleryData(formatted);
+            setTotalPages(res.data.totalPages || 1);
         } catch (err) {
             console.log(err);
         }
     };
+
+    // ✅ scroll top on page change
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, [currentPage]);
 
     const nextImage = () => {
         setActiveImageIndex((prev) =>
@@ -102,6 +113,27 @@ export default function PhotoGallery() {
                     </button>
                 </div>
             )}
+
+            {/* ✅ PAGINATION (NO DESIGN CHANGE) */}
+            <div className="pagination">
+                <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage((prev) => prev - 1)}
+                >
+                    ⬅ Prev
+                </button>
+
+                <span>
+                    {currentPage} / {totalPages}
+                </span>
+
+                <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage((prev) => prev + 1)}
+                >
+                    Next ➡
+                </button>
+            </div>
         </section>
     );
 }

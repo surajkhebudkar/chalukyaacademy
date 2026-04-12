@@ -1,8 +1,14 @@
 import axios from "../utils/axiosInstance";
 import "./AdminDashboard.css";
 
-
-const NewsTable = ({ news, refresh, onEdit }) => {
+const NewsTable = ({
+    news,
+    refresh,
+    onEdit,
+    currentPage,
+    totalPages,
+    onPageChange
+}) => {
 
     const user = JSON.parse(localStorage.getItem("user"));
     const role = user?.role;
@@ -23,52 +29,76 @@ const NewsTable = ({ news, refresh, onEdit }) => {
     };
 
     return (
-        <table className="news-table">
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {(Array.isArray(news) ? news : []).map((item) => (
-                    <tr key={item._id}>
-                        <td>
-                            <img
-                                src={`http://localhost:5000/uploads/news/${item.image}`}
-                                width="60"
-                            />
-                        </td>
-
-                        <td>
-                            {item.title}
-                            {isNew(item.createdAt) && (
-                                <span className="new-news-badge" style={{ marginLeft: "8px" }}>
-                                    NEW
-                                </span>
-                            )}
-                        </td>
-
-                        <td>{item.description}</td>
-                        <td>
-                            {role === "admin" && (
-                                <button className="edit-btn" onClick={() => onEdit(item)}>
-                                    Edit
-                                </button>
-                            )}
-                            {role === "admin" && (
-                                <button className="delete-btn" onClick={() => deleteNews(item._id)}>
-                                    Delete
-                                </button>
-                            )}
-                        </td>
+        <>
+            <table className="news-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Actions</th>
                     </tr>
-                ))}
-            </tbody>
-        </table>
+                </thead>
+
+                <tbody>
+                    {(Array.isArray(news) ? news : []).map((item) => (
+                        <tr key={item._id}>
+                            <td>
+                                <img
+                                    src={`http://localhost:5000/uploads/news/${item.image}`}
+                                    width="60"
+                                />
+                            </td>
+
+                            <td>
+                                {item.title}
+                                {isNew(item.createdAt) && (
+                                    <span className="new-news-badge" style={{ marginLeft: "8px" }}>
+                                        NEW
+                                    </span>
+                                )}
+                            </td>
+
+                            <td>{item.description}</td>
+
+                            <td>
+                                {role === "admin" && (
+                                    <button className="edit-btn" onClick={() => onEdit(item)}>
+                                        Edit
+                                    </button>
+                                )}
+                                {role === "admin" && (
+                                    <button className="delete-btn" onClick={() => deleteNews(item._id)}>
+                                        Delete
+                                    </button>
+                                )}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            {/* ✅ PAGINATION (NO DESIGN CHANGE) */}
+            <div className="pagination">
+                <button
+                    disabled={currentPage === 1}
+                    onClick={() => onPageChange(currentPage - 1)}
+                >
+                    ⬅ Prev
+                </button>
+
+                <span>
+                    {currentPage} / {totalPages}
+                </span>
+
+                <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => onPageChange(currentPage + 1)}
+                >
+                    Next ➡
+                </button>
+            </div>
+        </>
     );
 };
 

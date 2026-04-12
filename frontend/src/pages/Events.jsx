@@ -12,26 +12,31 @@ export default function Events() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    // ✅ Fetch events (with pagination)
-    const fetchEvents = async () => {
+    // ✅ Fetch events (backend pagination)
+    const fetchEvents = async (page = 1) => {
         try {
-            const res = await axios.get(`/events?page=${currentPage}&limit=6`);
-            setEventsData(res.data.data);
-            setTotalPages(res.data.totalPages);
+            const res = await axios.get(`/events?page=${page}&limit=6`);
+            setEventsData(res.data.data || []);
+            setTotalPages(res.data.totalPages || 1);
         } catch (err) {
             console.log(err);
         }
     };
 
-    // ✅ Page change la data reload
+    // ✅ Reload on page change
     useEffect(() => {
-        fetchEvents();
+        fetchEvents(currentPage);
     }, [currentPage]);
 
     // ✅ Animation trigger
     useEffect(() => {
         setTimeout(() => setShow(true), 200);
     }, []);
+
+    // ✅ Scroll top on page change
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, [currentPage]);
 
     // ✅ NEW badge logic
     const isNew = (date) => {
@@ -51,6 +56,7 @@ export default function Events() {
                     >
                         <img
                             src={`http://localhost:5000/uploads/events/${event.image}`}
+                            alt={event.title}
                         />
 
                         {isNew(event.createdAt) && (
@@ -94,7 +100,7 @@ export default function Events() {
                 </div>
             )}
 
-            {/* ✅ PAGINATION (same design) */}
+            {/* ✅ PAGINATION */}
             <div className="pagination">
                 <button
                     disabled={currentPage === 1}

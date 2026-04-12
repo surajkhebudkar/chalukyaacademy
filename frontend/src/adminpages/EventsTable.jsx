@@ -1,4 +1,5 @@
 import axios from "../utils/axiosInstance";
+import "./AdminDashboard.css";
 
 const EventsTable = ({
     events,
@@ -71,7 +72,26 @@ const EventsTable = ({
                 </tbody>
             </table>
 
-            
+            {/* ✅ PAGINATION (NO DESIGN CHANGE) */}
+            <div className="pagination">
+                <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(prev => prev - 1)}
+                >
+                    ⬅ Prev
+                </button>
+
+                <span>
+                    {currentPage} / {totalPages}
+                </span>
+
+                <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(prev => prev + 1)}
+                >
+                    Next ➡
+                </button>
+            </div>
         </>
     );
 };

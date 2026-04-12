@@ -55,11 +55,26 @@ export const updateVideo = async (req, res) => {
 
 
 
-// GET
+// GET ALL (WITH PAGINATION)
 export const getAllVideos = async (req, res) => {
     try {
-        const videos = await Video.find().sort({ createdAt: -1 });
-        res.json(videos);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 6;
+        const skip = (page - 1) * limit;
+
+        const total = await Video.countDocuments();
+
+        const videos = await Video.find()
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        res.json({
+            data: videos,
+            totalPages: Math.ceil(total / limit),
+            currentPage: page
+        });
+
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
