@@ -41,7 +41,7 @@ const GalleryTable = ({
                 </thead>
 
                 <tbody>
-                    {galleries.map((item) => (
+                    {(Array.isArray(galleries) ? galleries : []).map((item) => (
                         <tr key={item._id}>
                             <td>
                                 <img

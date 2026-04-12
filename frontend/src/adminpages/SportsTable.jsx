@@ -48,7 +48,7 @@ const SportsTable = ({
                                     <img
                                         src={
                                             sport.image
-                                                ? `http://localhost:5000/uploads/sports/${sport.image}`
+                                                ? `http://localhost:5000/uploads/sports/branchsports/${sport.image}`
                                                 : "/placeholder.png"
                                         }
                                         width="60"

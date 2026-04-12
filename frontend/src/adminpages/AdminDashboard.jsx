@@ -51,15 +51,27 @@ const AdminDashboard = () => {
         navigate("/login");
     };
 
-    // ✅ FETCH
     useEffect(() => {
         if (activeMenu === "news") fetchNews(newsPage);
-        if (activeMenu === "events") fetchEvents(eventPage);
-        if (activeMenu === "sports") fetchSports();
-        if (activeMenu === "gallery") fetchGallery();
-        if (activeMenu === "videos") fetchVideos();
-    }, [activeMenu, newsPage, eventPage]);
+    }, [newsPage, activeMenu]);
 
+    useEffect(() => {
+        if (activeMenu === "events") fetchEvents(eventPage);
+    }, [eventPage, activeMenu]);
+
+    useEffect(() => {
+        if (activeMenu === "sports") fetchSports(sportsPage);
+    }, [sportsPage, activeMenu]);
+
+    useEffect(() => {
+        if (activeMenu === "gallery") fetchGallery(galleryPage);
+    }, [galleryPage, activeMenu]);
+
+    useEffect(() => {
+        if (activeMenu === "videos") fetchVideos(videoPage);
+    }, [videoPage, activeMenu]);
+
+    
     const fetchNews = async (page = 1) => {
         try {
             const res = await axios.get(`/news?page=${page}&limit=5`);
@@ -79,33 +91,37 @@ const AdminDashboard = () => {
             console.log(err);
         }
     };
+    
 
-    // ❗ no pagination backend
-    const fetchSports = async () => {
+    const fetchSports = async (page = 1) => {
         try {
-            const res = await axios.get(`/sports`);
+            const res = await axios.get(`/sports?page=${page}&limit=5`);
             setSportsData(res.data.data || []);
-            setSportsTotal(1);
+            setSportsTotal(res.data.totalPages || 1);
         } catch (err) {
             console.log(err);
         }
     };
 
-    const fetchGallery = async () => {
+    const fetchGallery = async (page = 1) => {
         try {
-            const res = await axios.get(`/gallery`);
-            setGalleryData(res.data || []);
-            setGalleryTotal(1);
+            const res = await axios.get(`/gallery?page=${page}&limit=6`);
+
+            console.log("GALLERY RESPONSE:", res.data);
+
+            setGalleryData(res.data.data || []);
+            setGalleryTotal(res.data.totalPages || 1);
         } catch (err) {
             console.log(err);
         }
     };
 
-    const fetchVideos = async () => {
+    const fetchVideos = async (page = 1) => {
         try {
-            const res = await axios.get(`/videos`);
-            setVideoData(res.data || []);
-            setVideoTotal(1);
+            const res = await axios.get(`/videos?page=${page}&limit=6`);
+
+            setVideoData(res.data.data || []);
+            setVideoTotal(res.data.totalPages || 1);
         } catch (err) {
             console.log(err);
         }
@@ -142,9 +158,9 @@ const AdminDashboard = () => {
                 <ul>
                     <li onClick={() => { setActiveMenu("news"); setNewsPage(1); setSidebarOpen(false); }}>📰 News</li>
                     <li onClick={() => { setActiveMenu("events"); setEventPage(1); setSidebarOpen(false); }}>📅 Events</li>
-                    <li onClick={() => { setActiveMenu("sports"); setSidebarOpen(false); }}>🏆 Sports</li>
-                    <li onClick={() => { setActiveMenu("gallery"); setSidebarOpen(false); }}>🖼️ Gallery</li>
-                    <li onClick={() => { setActiveMenu("videos"); setSidebarOpen(false); }}>🎥 Videos</li>
+                    <li onClick={() => { setActiveMenu("sports"); setSportsPage(1); setSidebarOpen(false); }}>🏆 Sports</li>
+                    <li onClick={() => { setActiveMenu("gallery"); setGalleryPage(1); setSidebarOpen(false); }}>🖼️ Gallery</li>
+                    <li onClick={() => { setActiveMenu("videos"); setVideoPage(1); setSidebarOpen(false); }}>🎥 Videos</li>
                 </ul>
             </div>
 
@@ -252,6 +268,27 @@ const AdminDashboard = () => {
                         </>
                     )}
 
+                    {activeMenu === "addEvent" && (
+                        <AddEvent
+                            onSuccess={() => {
+                                fetchEvents(eventPage);
+                                setActiveMenu("events");
+                            }}
+                            onCancel={() => setActiveMenu("events")}
+                        />
+                    )}
+
+                    {activeMenu === "editEvent" && (
+                        <AddEvent
+                            editData={editData}
+                            onSuccess={() => {
+                                fetchEvents(eventPage);
+                                setActiveMenu("events");
+                            }}
+                            onCancel={() => setActiveMenu("events")}
+                        />
+                    )}
+
                     {/* SPORTS */}
                     {activeMenu === "sports" && (
                         <>
@@ -265,16 +302,37 @@ const AdminDashboard = () => {
 
                             <SportsTable
                                 sports={filterData(sportsData)}
-                                refresh={fetchSports}
-                                currentPage={1}
-                                totalPages={1}
-                                onPageChange={() => { }}
+                                refresh={() => fetchSports(sportsPage)}
+                                currentPage={sportsPage}
+                                totalPages={sportsTotal}
+                                onPageChange={setSportsPage}
                                 onEdit={(item) => {
                                     setEditData(item);
                                     setActiveMenu("editSport");
                                 }}
                             />
                         </>
+                    )}
+
+                    {activeMenu === "addSport" && (
+                        <AddSport
+                            onSuccess={() => {
+                                fetchSports(sportsPage);
+                                setActiveMenu("sports");
+                            }}
+                            onCancel={() => setActiveMenu("sports")}
+                        />
+                    )}
+
+                    {activeMenu === "editSport" && (
+                        <AddSport
+                            editData={editData}
+                            onSuccess={() => {
+                                fetchSports(sportsPage);
+                                setActiveMenu("sports");
+                            }}
+                            onCancel={() => setActiveMenu("sports")}
+                        />
                     )}
 
                     {/* GALLERY */}
@@ -290,16 +348,37 @@ const AdminDashboard = () => {
 
                             <GalleryTable
                                 galleries={filterData(galleryData)}
-                                refresh={fetchGallery}
-                                currentPage={1}
-                                totalPages={1}
-                                onPageChange={() => { }}
+                                refresh={() => fetchGallery(galleryPage)}
+                                currentPage={galleryPage}
+                                totalPages={galleryTotal}
+                                onPageChange={setGalleryPage}
                                 onEdit={(item) => {
                                     setEditData(item);
                                     setActiveMenu("editGallery");
                                 }}
                             />
                         </>
+                    )}
+
+                    {activeMenu === "addGallery" && (
+                        <AddGallery
+                            onSuccess={() => {
+                                fetchGallery(galleryPage);
+                                setActiveMenu("gallery");
+                            }}
+                            onCancel={() => setActiveMenu("gallery")}
+                        />
+                    )}
+
+                    {activeMenu === "editGallery" && (
+                        <AddGallery
+                            editData={editData}
+                            onSuccess={() => {
+                                fetchGallery(galleryPage);
+                                setActiveMenu("gallery");
+                            }}
+                            onCancel={() => setActiveMenu("gallery")}
+                        />
                     )}
 
                     {/* VIDEOS */}
@@ -315,16 +394,37 @@ const AdminDashboard = () => {
 
                             <VideoTable
                                 videos={videoData}
-                                refresh={fetchVideos}
-                                currentPage={1}
-                                totalPages={1}
-                                onPageChange={() => { }}
+                                refresh={() => fetchVideos(videoPage)}
+                                currentPage={videoPage}
+                                totalPages={videoTotal}
+                                onPageChange={setVideoPage}
                                 onEdit={(item) => {
                                     setEditData(item);
                                     setActiveMenu("editVideo");
                                 }}
                             />
                         </>
+                    )}
+
+                    {activeMenu === "addVideo" && (
+                        <AddVideo
+                            onSuccess={() => {
+                                fetchVideos(videoPage);
+                                setActiveMenu("videos");
+                            }}
+                            onCancel={() => setActiveMenu("videos")}
+                        />
+                    )}
+
+                    {activeMenu === "editVideo" && (
+                        <AddVideo
+                            editData={editData}
+                            onSuccess={() => {
+                                fetchVideos(videoPage);
+                                setActiveMenu("videos");
+                            }}
+                            onCancel={() => setActiveMenu("videos")}
+                        />
                     )}
 
                 </div>

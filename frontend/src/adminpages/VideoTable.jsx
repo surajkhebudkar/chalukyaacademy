@@ -35,7 +35,7 @@ const VideoTable = ({
                 </thead>
 
                 <tbody>
-                    {videos.map((v) => (
+                    {(Array.isArray(videos) ? videos : []).map((v) => (
                         <tr key={v._id}>
                             <td>
                                 <video
