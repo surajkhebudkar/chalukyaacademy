@@ -14,6 +14,10 @@ const NewsTable = ({
     const role = user?.role;
 
     const deleteNews = async (id) => {
+        const confirmDelete = window.confirm("⚠️ This action cannot be undone. Delete this news?");
+
+        if (!confirmDelete) return; // ❌ user clicked Cancel
+
         try {
             await axios.delete(`http://localhost:5000/api/news/${id}`);
             refresh();
