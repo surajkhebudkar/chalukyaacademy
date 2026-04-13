@@ -9,20 +9,21 @@ import {
     deleteNews
 } from "../controllers/newsController.js";
 
-
 const router = express.Router();
 
+// ➕ CREATE NEWS
 router.post(
     "/",
     authMiddleware,
     checkRole(["admin"]),
-    (req, res, next) => {
-        console.log("🔥 NEWS API HIT");
-        next();
-    },
     uploadNews.single("image"),
     createNews
 );
+
+// 📄 GET ALL NEWS
+router.get("/", getAllNews);
+
+// ✏️ UPDATE NEWS
 router.put(
     "/:id",
     authMiddleware,
@@ -30,7 +31,13 @@ router.put(
     uploadNews.single("image"),
     updateNews
 );
-router.delete("/:id", authMiddleware, checkRole(["admin"]), deleteNews);
-router.get("/", getAllNews);
+
+// ❌ DELETE NEWS
+router.delete(
+    "/:id",
+    authMiddleware,
+    checkRole(["admin"]),
+    deleteNews
+);
 
 export default router;

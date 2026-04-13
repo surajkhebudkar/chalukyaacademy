@@ -1,6 +1,6 @@
 import News from "../models/News.js";
 
-// ➕ ADD
+// ➕ ADD NEWS
 export const createNews = async (req, res) => {
     try {
         const { title, description } = req.body;
@@ -15,11 +15,12 @@ export const createNews = async (req, res) => {
             data: news,
         });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: error.message });
     }
 };
 
-// 📄 GET
+// 📄 GET ALL NEWS
 export const getAllNews = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -42,11 +43,12 @@ export const getAllNews = async (req, res) => {
         });
 
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: error.message });
     }
 };
 
-// ✏️ UPDATE
+// ✏️ UPDATE NEWS
 export const updateNews = async (req, res) => {
     try {
         const { id } = req.params;
@@ -60,21 +62,31 @@ export const updateNews = async (req, res) => {
             updateData.image = req.file.filename;
         }
 
-        const updatedNews = await News.findByIdAndUpdate(id, updateData, { new: true });
+        const updatedNews = await News.findByIdAndUpdate(
+            id,
+            updateData,
+            { new: true }
+        );
 
         res.status(200).json(updatedNews);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: error.message });
     }
 };
 
-// ❌ DELETE
+// ❌ DELETE NEWS
 export const deleteNews = async (req, res) => {
     try {
         const { id } = req.params;
+
         await News.findByIdAndDelete(id);
-        res.status(200).json({ message: "News deleted successfully" });
+
+        res.status(200).json({
+            message: "News deleted successfully"
+        });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: error.message });
     }
 };
