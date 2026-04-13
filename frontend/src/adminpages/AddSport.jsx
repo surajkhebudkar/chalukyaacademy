@@ -14,7 +14,7 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
     const [files, setFiles] = useState({
         branchImage: null,
         sportImages: [],
-        coachPhotos: []
+        coachPhotos: {} // 🔥 CHANGED (array → object)
     });
 
     // ✅ EDIT LOAD
@@ -25,6 +25,13 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                 branchLocation: editData.branchLocation || "",
                 branchMap: editData.branchMap || "",
                 sports: Array.isArray(editData.sports) ? editData.sports : []
+            });
+
+            // 🔥 RESET FILES (VERY IMPORTANT)
+            setFiles({
+                branchImage: null,
+                sportImages: [],
+                coachPhotos: {}
             });
         }
     }, [editData]);
@@ -40,7 +47,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
         }));
     };
 
-    // ❌ DELETE SPORT
     const deleteSportRow = (sIndex) => {
         const updated = [...form.sports];
         updated.splice(sIndex, 1);
@@ -58,7 +64,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
         setForm({ ...form, sports: updated });
     };
 
-    // ❌ DELETE COACH
     const deleteCoach = (sIndex, cIndex) => {
         const updated = [...form.sports];
         updated[sIndex].coaches.splice(cIndex, 1);
@@ -72,21 +77,14 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
         setForm({ ...form, sports: updated });
     };
 
-    // ❌ DELETE ACHIEVEMENT
     const deleteAchievement = (sIndex, cIndex, aIndex) => {
         const updated = [...form.sports];
         updated[sIndex].coaches[cIndex].achievements.splice(aIndex, 1);
         setForm({ ...form, sports: updated });
     };
 
-    // 🔥 GLOBAL INDEX FUNCTION
-    const getCoachGlobalIndex = (sIndex, cIndex) => {
-        let index = 0;
-        for (let i = 0; i < sIndex; i++) {
-            index += form.sports[i].coaches.length;
-        }
-        return index + cIndex;
-    };
+    // 🔥 NEW UNIQUE KEY (FIX)
+    const getCoachKey = (sIndex, cIndex) => `${sIndex}-${cIndex}`;
 
     // 🚀 SUBMIT
     const handleSubmit = async (e) => {
@@ -109,7 +107,8 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                 if (f) formData.append("sportImages", f);
             });
 
-            files.coachPhotos.forEach(f => {
+            // 🔥 FIXED COACH IMAGE SEND
+            Object.values(files.coachPhotos).forEach(f => {
                 if (f) formData.append("coachPhotos", f);
             });
 
@@ -186,7 +185,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                             }}
                         />
 
-                        {/* ❌ DELETE SPORT */}
                         <button
                             type="button"
                             className="delete-btn"
@@ -226,17 +224,21 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                                     }}
                                 />
 
+                                {/* 🔥 FIXED IMAGE */}
                                 <input
                                     type="file"
                                     onChange={(e) => {
-                                        const arr = [...files.coachPhotos];
-                                        const globalIndex = getCoachGlobalIndex(sIndex, cIndex);
-                                        arr[globalIndex] = e.target.files[0];
-                                        setFiles({ ...files, coachPhotos: arr });
+                                        const key = getCoachKey(sIndex, cIndex);
+                                        setFiles(prev => ({
+                                            ...prev,
+                                            coachPhotos: {
+                                                ...prev.coachPhotos,
+                                                [key]: e.target.files[0]
+                                            }
+                                        }));
                                     }}
                                 />
 
-                                {/* ❌ DELETE COACH */}
                                 <button
                                     type="button"
                                     className="delete-btn"
@@ -265,7 +267,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                                             }}
                                         />
 
-                                        {/* ❌ DELETE ACHIEVEMENT */}
                                         <button
                                             type="button"
                                             className="delete-btn"
