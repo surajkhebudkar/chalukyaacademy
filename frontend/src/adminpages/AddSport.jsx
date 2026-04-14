@@ -14,10 +14,9 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
     const [files, setFiles] = useState({
         branchImage: null,
         sportImages: [],
-        coachPhotos: {} // 🔥 CHANGED (array → object)
+        coachPhotos: {}
     });
 
-    // ✅ EDIT LOAD
     useEffect(() => {
         if (editData) {
             setForm({
@@ -27,7 +26,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                 sports: Array.isArray(editData.sports) ? editData.sports : []
             });
 
-            // 🔥 RESET FILES (VERY IMPORTANT)
             setFiles({
                 branchImage: null,
                 sportImages: [],
@@ -36,14 +34,10 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
         }
     }, [editData]);
 
-    // ➕ ADD SPORT
     const addSport = () => {
         setForm(prev => ({
             ...prev,
-            sports: [
-                ...prev.sports,
-                { name: "", coaches: [] }
-            ]
+            sports: [...prev.sports, { name: "", coaches: [] }]
         }));
     };
 
@@ -53,7 +47,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
         setForm({ ...form, sports: updated });
     };
 
-    // ➕ ADD COACH
     const addCoach = (sIndex) => {
         const updated = [...form.sports];
         updated[sIndex].coaches.push({
@@ -70,7 +63,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
         setForm({ ...form, sports: updated });
     };
 
-    // ➕ ADD ACHIEVEMENT
     const addAchievement = (sIndex, cIndex) => {
         const updated = [...form.sports];
         updated[sIndex].coaches[cIndex].achievements.push("");
@@ -83,7 +75,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
         setForm({ ...form, sports: updated });
     };
 
-    // 🔥 NEW UNIQUE KEY (FIX)
     const getCoachKey = (sIndex, cIndex) => `${sIndex}-${cIndex}`;
 
     // 🚀 SUBMIT
@@ -97,20 +88,55 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
 
         try {
             const formData = new FormData();
-            formData.append("data", JSON.stringify(form));
+
+            const cleanData = {
+                ...form,
+                sports: form.sports.map(s => ({
+                    ...s,
+                    coaches: s.coaches.map(c => ({
+                        name: c.name,
+                        experience: c.experience,
+                        achievements: c.achievements,
+                        photo: c.photo || null
+                    }))
+                }))
+            };
+
+            formData.append("data", JSON.stringify(cleanData));
 
             if (files.branchImage) {
                 formData.append("branchImage", files.branchImage);
             }
 
-            files.sportImages.forEach(f => {
-                if (f) formData.append("sportImages", f);
+            const sportKeys = [];
+            const coachKeys = [];
+
+            // ✅ SPORT IMAGES
+            form.sports.forEach((_, sIndex) => {
+                const file = files.sportImages[sIndex];
+
+                if (file instanceof File) {
+                    formData.append("sportImages", file);
+                    sportKeys.push(String(sIndex)); // 🔥 STRING IMPORTANT
+                }
             });
 
-            // 🔥 FIXED COACH IMAGE SEND
-            Object.values(files.coachPhotos).forEach(f => {
-                if (f) formData.append("coachPhotos", f);
+            // ✅ COACH IMAGES
+            form.sports.forEach((sport, sIndex) => {
+                sport.coaches.forEach((_, cIndex) => {
+                    const key = `${sIndex}-${cIndex}`;
+                    const file = files.coachPhotos[key];
+
+                    if (file instanceof File) {
+                        formData.append("coachPhotos", file);
+                        coachKeys.push(key);
+                    }
+                });
             });
+
+            // 🔥🔥 MAIN FIX (NO [] BRACKETS)
+            formData.append("sportImageKeys", JSON.stringify(sportKeys));
+            formData.append("coachPhotoKeys", JSON.stringify(coachKeys));
 
             if (editData) {
                 await axios.put(`/sports/${editData._id}`, formData);
@@ -123,7 +149,7 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
             onSuccess();
 
         } catch (err) {
-            console.log(err);
+            console.log("FRONTEND ERROR:", err.response?.data || err);
             alert("Error ❌");
         }
     };
@@ -185,19 +211,11 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                             }}
                         />
 
-                        <button
-                            type="button"
-                            className="delete-btn"
-                            onClick={() => deleteSportRow(sIndex)}
-                        >
+                        <button type="button" className="delete-btn" onClick={() => deleteSportRow(sIndex)}>
                             ❌ Remove Sport
                         </button>
 
-                        <button
-                            type="button"
-                            className="add-btnsport"
-                            onClick={() => addCoach(sIndex)}
-                        >
+                        <button type="button" className="add-btnsport" onClick={() => addCoach(sIndex)}>
                             + Add Coach
                         </button>
 
@@ -224,7 +242,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                                     }}
                                 />
 
-                                {/* 🔥 FIXED IMAGE */}
                                 <input
                                     type="file"
                                     onChange={(e) => {
@@ -239,19 +256,11 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                                     }}
                                 />
 
-                                <button
-                                    type="button"
-                                    className="delete-btn"
-                                    onClick={() => deleteCoach(sIndex, cIndex)}
-                                >
+                                <button type="button" className="delete-btn" onClick={() => deleteCoach(sIndex, cIndex)}>
                                     ❌ Remove Coach
                                 </button>
 
-                                <button
-                                    type="button"
-                                    className="add-btnsport"
-                                    onClick={() => addAchievement(sIndex, cIndex)}
-                                >
+                                <button type="button" className="add-btnsport" onClick={() => addAchievement(sIndex, cIndex)}>
                                     + Add Achievement
                                 </button>
 

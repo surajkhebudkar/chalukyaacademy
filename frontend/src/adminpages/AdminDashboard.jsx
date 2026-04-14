@@ -158,9 +158,9 @@ const AdminDashboard = () => {
                 <ul>
                     <li onClick={() => { setActiveMenu("news"); setNewsPage(1); setSidebarOpen(false); }}>📰 News</li>
                     <li onClick={() => { setActiveMenu("events"); setEventPage(1); setSidebarOpen(false); }}>📅 Events</li>
-                    <li onClick={() => { setActiveMenu("sports"); setSportsPage(1); setSidebarOpen(false); }}>🏆 Sports</li>
-                    <li onClick={() => { setActiveMenu("gallery"); setGalleryPage(1); setSidebarOpen(false); }}>🖼️ Gallery</li>
-                    <li onClick={() => { setActiveMenu("videos"); setVideoPage(1); setSidebarOpen(false); }}>🎥 Videos</li>
+                    <li onClick={() => { setActiveMenu("sports"); setSportsPage(1); setSidebarOpen(false); }}>🏆 Sports Branch</li>
+                    <li onClick={() => { setActiveMenu("gallery"); setGalleryPage(1); setSidebarOpen(false); }}>🖼️ Photo Gallery</li>
+                    <li onClick={() => { setActiveMenu("videos"); setVideoPage(1); setSidebarOpen(false); }}>🎥 Videos Gallery</li>
                 </ul>
             </div>
 
@@ -296,7 +296,7 @@ const AdminDashboard = () => {
                                 <h2>🏆 Sports Management</h2>
 
                                 <button className="add-btn" onClick={() => setActiveMenu("addSport")}>
-                                    + Add Sport
+                                    + Add Sport Branch
                                 </button>
                             </div>
 

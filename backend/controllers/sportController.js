@@ -16,41 +16,48 @@ const deleteFile = (file) => {
     });
 };
 
-// ➕ CREATE (MULTIPLE SPORTS)
+// ➕ CREATE
 export const createSport = async (req, res) => {
     try {
         const data = JSON.parse(req.body.data);
         const files = req.files || {};
 
         const branchImage = files["branchImage"]?.[0]?.filename;
+
         const sportImages = files["sportImages"] || [];
         const coachPhotos = files["coachPhotos"] || [];
 
-        let coachIndex = 0;
+        // 🔥 FINAL FIX
+        const sportImageKeys = JSON.parse(req.body.sportImageKeys || "[]");
+        const coachPhotoKeys = JSON.parse(req.body.coachPhotoKeys || "[]");
 
-        const sports = (data.sports || []).map((sport, sIndex) => {
-
-            const coachCount = (sport.coaches || []).length;
-
-            const coachSlice = coachPhotos.slice(
-                coachIndex,
-                coachIndex + coachCount
-            );
-
-            coachIndex += coachCount;
-
-            const coaches = (sport.coaches || []).map((c, i) => ({
+        const sports = (data.sports || []).map((sport) => ({
+            name: sport.name,
+            image: sport.image || null,
+            coaches: (sport.coaches || []).map(c => ({
                 name: c.name,
                 experience: c.experience,
                 achievements: c.achievements || [],
-                photo: coachSlice[i]?.filename || null
-            }));
+                photo: c.photo || null
+            }))
+        }));
 
-            return {
-                name: sport.name,
-                image: sportImages[sIndex]?.filename || null,
-                coaches
-            };
+        sportImageKeys.forEach((key, index) => {
+            const sIndex = Number(key);
+            if (sportImages[index] && sports[sIndex]) {
+                sports[sIndex].image = sportImages[index].filename;
+            }
+        });
+
+        coachPhotoKeys.forEach((key, index) => {
+            const file = coachPhotos[index];
+            if (!file) return;
+
+            const [sIndex, cIndex] = key.split("-").map(Number);
+
+            if (sports[sIndex] && sports[sIndex].coaches[cIndex]) {
+                sports[sIndex].coaches[cIndex].photo = file.filename;
+            }
         });
 
         const branch = new Sport({
@@ -66,37 +73,22 @@ export const createSport = async (req, res) => {
         res.status(201).json({ success: true, data: branch });
 
     } catch (err) {
-        console.log(err);
+        console.log("CREATE ERROR:", err);
         res.status(500).json({ error: err.message });
     }
 };
 
-// 📄 GET ALL (WITH PAGINATION)
+// 📄 GET
 export const getAllSports = async (req, res) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 5;
-        const skip = (page - 1) * limit;
-
-        const total = await Sport.countDocuments();
-
-        const data = await Sport.find()
-            .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(limit);
-
-        res.json({
-            data,
-            totalPages: Math.ceil(total / limit),
-            currentPage: page
-        });
-
+        const data = await Sport.find().sort({ createdAt: -1 });
+        res.json({ data });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
 
-// ✏️ UPDATE FULL BRANCH
+// ✏️ UPDATE
 export const updateSport = async (req, res) => {
     try {
         const { id } = req.params;
@@ -121,31 +113,40 @@ export const updateSport = async (req, res) => {
         const sportImages = files["sportImages"] || [];
         const coachPhotos = files["coachPhotos"] || [];
 
-        let coachIndex = 0;
+        // 🔥 FINAL FIX
+        const sportImageKeys = JSON.parse(req.body.sportImageKeys || "[]");
+        const coachPhotoKeys = JSON.parse(req.body.coachPhotoKeys || "[]");
 
-        existing.sports = (data.sports || []).map((sport, sIndex) => {
-
-            const coachCount = (sport.coaches || []).length;
-
-            const coachSlice = coachPhotos.slice(
-                coachIndex,
-                coachIndex + coachCount
-            );
-
-            coachIndex += coachCount;
-
-            const coaches = (sport.coaches || []).map((c, i) => ({
+        existing.sports = (data.sports || []).map((sport) => ({
+            name: sport.name,
+            image: sport.image || null,
+            coaches: (sport.coaches || []).map(c => ({
                 name: c.name,
                 experience: c.experience,
                 achievements: c.achievements || [],
-                photo: coachSlice[i]?.filename || c.photo || null
-            }));
+                photo: c.photo || null
+            }))
+        }));
 
-            return {
-                name: sport.name,
-                image: sportImages[sIndex]?.filename || sport.image || null,
-                coaches
-            };
+        sportImageKeys.forEach((key, index) => {
+            const sIndex = Number(key);
+            if (sportImages[index] && existing.sports[sIndex]) {
+                existing.sports[sIndex].image = sportImages[index].filename;
+            }
+        });
+
+        coachPhotoKeys.forEach((key, index) => {
+            const file = coachPhotos[index];
+            if (!file) return;
+
+            const [sIndex, cIndex] = key.split("-").map(Number);
+
+            if (
+                existing.sports[sIndex] &&
+                existing.sports[sIndex].coaches[cIndex]
+            ) {
+                existing.sports[sIndex].coaches[cIndex].photo = file.filename;
+            }
         });
 
         await existing.save();
@@ -153,12 +154,12 @@ export const updateSport = async (req, res) => {
         res.json({ success: true, data: existing });
 
     } catch (err) {
-        console.log(err);
+        console.log("UPDATE ERROR:", err);
         res.status(500).json({ error: err.message });
     }
 };
 
-// ❌ DELETE FULL BRANCH
+// ❌ DELETE
 export const deleteSport = async (req, res) => {
     try {
         const branch = await Sport.findById(req.params.id);
