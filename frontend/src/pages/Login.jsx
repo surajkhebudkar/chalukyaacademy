@@ -78,6 +78,7 @@ const Login = () => {
                         <input
                             type="email"
                             placeholder=" "
+                            style={{ cursor: "pointer" }}
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -89,6 +90,7 @@ const Login = () => {
                         <input
                             type={showPassword ? "text" : "password"}
                             placeholder=" "
+                            style={{ cursor: "pointer" }}
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
