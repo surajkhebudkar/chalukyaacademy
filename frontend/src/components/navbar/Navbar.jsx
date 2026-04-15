@@ -21,8 +21,7 @@ const Navbar = () => {
             name: "Working Sectors",
             submenu: [
                 { name: "Sports", path: "/sports" },
-                { name: "Finance", path: "/finance" },
-                { name: "Technology", path: "/technology" },
+                { name: "Finance", path: "/Micro Finance" },
             ],
         },
         {
