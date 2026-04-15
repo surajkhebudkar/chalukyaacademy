@@ -41,23 +41,30 @@ export default function Sports() {
             const res = await axios.get(`/sports`);
             const data = res.data.data || [];
 
-            const formatted = data.map(branch => ({
-                name: branch.branchName,
-                image: branch.branchImage
-                    ? `http://localhost:5000/uploads/sports/branches/${branch.branchImage}`
-                    : "/placeholder.png",
-                location: branch.branchLocation,
-                map: branch.branchMap,
-                sports: (branch.sports || []).map(s => ({
-                    name: s.name,
-                    image: s.image
-                        ? `http://localhost:5000/uploads/sports/branchsports/${s.image}`
+            const formatted = (data || [])
+                .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+                .map(branch => ({
+                    name: branch.branchName,
+                    image: branch.branchImage
+                        ? `http://localhost:5000/uploads/sports/branches/${branch.branchImage}`
                         : "/placeholder.png",
-                    history: s.history,
-                    equipment: s.equipment || [],
-                    coaches: s.coaches || []
-                }))
-            }));
+                    location: branch.branchLocation,
+                    map: branch.branchMap,
+
+                    sports: (branch.sports || [])
+                        .sort((a, b) =>
+                            a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+                        )
+                        .map(s => ({
+                            name: s.name,
+                            image: s.image
+                                ? `http://localhost:5000/uploads/sports/branchsports/${s.image}`
+                                : "/placeholder.png",
+                            history: s.history,
+                            equipment: s.equipment || [],
+                            coaches: s.coaches || []
+                        }))
+                }));
 
             setBranchesData(formatted);
 
