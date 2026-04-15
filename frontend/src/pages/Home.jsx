@@ -6,36 +6,49 @@ import NewsSection from "../components/news/NewsSection";
 import PhotoGallerySection from "../components/gallery/PhotoGallerySection";
 import BestPlayersSection from "../components/bestPlayers/BestPlayersSection";
 
-
 const Home = () => {
     const [text, setText] = useState("");
-    const fullText = "Chalukaya Sports Academy";
+    const [text2, setText2] = useState("");
+
+    const fullText = "Chalukyas Sports Academy";
+    const fullText2 = "Chalukyas Micro Finance";
 
     useEffect(() => {
-        let index = 0;
+        let index1 = 0;
+        let index2 = 0;
         let isDeleting = false;
         let timeout;
 
         const typing = () => {
-            if (!isDeleting) {
-                setText(fullText.slice(0, index + 1));
-                index++;
 
-                if (index === fullText.length) {
+            if (!isDeleting) {
+                // typing
+                setText(fullText.slice(0, index1));
+                setText2(fullText2.slice(0, index2));
+
+                index1++;
+                index2++;
+
+                if (index1 > fullText.length && index2 > fullText2.length) {
                     isDeleting = true;
-                    timeout = setTimeout(typing, 2000);
+                    timeout = setTimeout(typing, 1500); // pause after typing
                     return;
                 }
-            } else {
-                setText(fullText.slice(0, index - 1));
-                index--;
 
-                if (index === 0) {
+            } else {
+                // deleting
+                setText(fullText.slice(0, index1));
+                setText2(fullText2.slice(0, index2));
+
+                index1--;
+                index2--;
+
+                if (index1 === 0 && index2 === 0) {
                     isDeleting = false;
                 }
             }
 
-            timeout = setTimeout(typing, isDeleting ? 60 : 120);
+            timeout = setTimeout(typing, isDeleting ? 50 : 100);
         };
 
         typing();
@@ -60,16 +73,37 @@ const Home = () => {
 
                     {/* LEFT */}
                     <div className="hero-left">
-                        <h1>
-                            Train With Intencity, Lets Rebuild Dynasty <br />
-                            {" "}
-                            <span className="typing">{text}</span>
-                        </h1>
+                        <div className="parentcompany">
+                            <h1>
+                                Chalukyas Atmanirbhar Sports Foundation
+                            </h1>
+                        </div>
+                        <div className="chaildcompony">
+                            <h1 style={{
+                                fontSize: "30px",
+                            }}>
+                                Train With Intencity, Lets Rebuild Dynasty <br />
+                            </h1>
 
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </p>
+                            <h2 style={{
+                                fontSize: "30px",
+                                fontWeight: "700",
+                                color: "#2563eb",
+                                marginTop: "10px"
+                            }}>
+                                <span className="typing">{text}</span>
+                            </h2>
+
+                            <h2 style={{
+                                marginTop: "8px",
+                                fontSize: "30px",
+                                fontWeight: "700",
+                                color: "#2563eb",
+                                letterSpacing: "1px"
+                            }}>
+                                <span className="typing2">{text2}</span>
+                            </h2>
+                        </div>
 
                         <div className="stats">
                             <div>
@@ -100,7 +134,6 @@ const Home = () => {
                 </div>
             </section>
 
-            <RunningLine />
             <NewsSection />
             <ImageSlider />
             <PhotoGallerySection />

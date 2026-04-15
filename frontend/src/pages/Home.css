@@ -59,6 +59,16 @@
     animation-delay: 0.3s;
 }
 
+.parentcompany h1{
+    font-Size: 40px;
+    letter-Spacing: 3px;
+    font-weight: 900;
+    color: #000000;
+    margin-Bottom: 12px;
+    text-Transform: uppercase;
+    font-family: 'Sora', sans-serif;
+}
+
 @keyframes fadeUp {
     0% {
         opacity: 0;
@@ -97,6 +107,11 @@
 }
 
 .typing::after {
+    content: "|";
+    margin-left: 5px;
+    animation: blink 1s infinite;
+}
+.typing2::after {
     content: "|";
     margin-left: 5px;
     animation: blink 1s infinite;
