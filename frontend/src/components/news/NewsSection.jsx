@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "../../utils/axiosInstance";
 import "./NewsSection.css";
 
 const NewsSection = () => {
@@ -6,7 +8,9 @@ const NewsSection = () => {
     const sectionRef = useRef();
     const [show, setShow] = useState(false);
     const [newss, setNews] = useState([]);
+    const navigate = useNavigate(); // 🔥 ADD
 
+    // animation
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -15,9 +19,7 @@ const NewsSection = () => {
                     observer.unobserve(entry.target);
                 }
             },
-            {
-                threshold: 0.2,
-            }
+            { threshold: 0.2 }
         );
 
         if (sectionRef.current) {
@@ -27,14 +29,19 @@ const NewsSection = () => {
         return () => observer.disconnect();
     }, []);
 
+    // fetch latest 3 news
     useEffect(() => {
-        const dummyNews = [
-            { id: 1, title: "Archery Championship 2026", image: "/newsimages/1.jpg" },
-            { id: 2, title: "New Basketball Court Open", image: "/newsimages/3.jpg" },
-            { id: 3, title: "Yoga Camp Registration Open", image: "/newsimages/7.jpg" }
-        ];
+        const fetchNews = async () => {
+            try {
+                const res = await axios.get("/news?limit=3");
+                const data = res.data.data || res.data;
+                setNews(Array.isArray(data) ? data.slice(0, 3) : []);
+            } catch (err) {
+                console.log(err);
+            }
+        };
 
-        setNews(dummyNews);
+        fetchNews();
     }, []);
 
     return (
@@ -42,14 +49,24 @@ const NewsSection = () => {
             <h2 className="newsTitle">Latest News</h2>
 
             <div className="newsContainer">
-                {newss.map((item) => (
-                    <div className="newsCard" key={item.id}>
-                        <img src={item.image} alt="news" />
+                {(Array.isArray(newss) ? newss : []).map((item) => (
+
+                    <div
+                        className="newsCard"
+                        key={item._id}
+                        onClick={() => navigate("/news")}
+                        style={{ cursor: "pointer" }}
+                    >
+                        <img
+                            src={`http://localhost:5000/uploads/news/${item.image}`}
+                            alt="news"
+                        />
 
                         <div className="newsoverlay">
                             <h4>{item.title}</h4>
                         </div>
                     </div>
+
                 ))}
             </div>
         </section>
