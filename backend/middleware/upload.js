@@ -140,3 +140,27 @@ export const uploadVideo = multer({
         }
     }
 });
+
+// =========================
+//  IMAGE SLIDER
+// =========================
+export const uploadSlider = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            const folder = "uploads/imageslider";
+            fs.mkdirSync(folder, { recursive: true });
+            cb(null, folder);
+        },
+        filename: function (req, file, cb) {
+            const unique =
+                Date.now() +
+                "-" +
+                Math.round(Math.random() * 1e9) +
+                path.extname(file.originalname);
+
+            cb(null, unique);
+        }
+    }),
+    fileFilter,
+    limits: { fileSize: 5 * 1024 * 1024 }
+});

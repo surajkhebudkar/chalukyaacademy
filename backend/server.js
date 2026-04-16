@@ -10,6 +10,7 @@ import eventRoutes from "./routes/eventRoutes.js";
 import sportRoutes from "./routes/sportRoutes.js";
 import galleryRoutes from "./routes/galleryRoutes.js";
 import videoRoutes from "./routes/videoRoutes.js";
+import sliderRoutes from "./routes/imageSliderRoutes.js";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -31,6 +32,7 @@ app.use("/api/events", eventRoutes);
 app.use("/api/sports", sportRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/videos", videoRoutes);
+app.use("/api/slider", sliderRoutes);
 
 const PORT = 5000;
 app.listen(PORT, () => {

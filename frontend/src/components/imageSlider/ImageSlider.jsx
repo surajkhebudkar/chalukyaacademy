@@ -1,32 +1,48 @@
 import { useEffect, useState, useRef } from "react";
+import axios from "../../utils/axiosInstance";
 import "./ImageSlider.css";
 
-const slides = [
-    { img: "/sliderimages/1.jpg", title: "Chalukya Sports Academy" },
-    { img: "/sliderimages/2.jpg", title: "Professional Training" },
-    { img: "/sliderimages/3.jpg", title: "Championship Events" },
-    { img: "/sliderimages/4.jpg", title: "Modern Facilities" },
-    { img: "/sliderimages/5.jpg", title: "Modern Demos" },
-    { img: "/sliderimages/6.jpg", title: "Modern Demos" },
-    { img: "/sliderimages/7.jpg", title: "Modern Demos" },
-    { img: "/sliderimages/8.jpg", title: "Modern Demos" },
-    { img: "/sliderimages/9.jpg", title: "Modern Demos" },
-    { img: "/sliderimages/10.jpg", title: "Modern Demos" },
-];
-
 const ImageSlider = () => {
+    const [slides, setSlides] = useState([]);
     const [current, setCurrent] = useState(0);
     const [show, setShow] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
+
     const sliderRef = useRef();
     const touchStartX = useRef(0);
 
+    const fetchSlides = async () => {
+        try {
+            const res = await axios.get("/slider");
+            const data = res.data.data || [];
+
+            const formatted = data
+                .slice(0, 10)
+                .map(item => ({
+                    img: `http://localhost:5000/uploads/imageslider/${item.image}`,
+                    title: item.title || "Chalukya Sports Academy"
+                }));
+
+            setSlides(formatted);
+
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     useEffect(() => {
+        fetchSlides();
+    }, []);
+
+    useEffect(() => {
+        if (slides.length === 0 || isPaused) return;
+
         const interval = setInterval(() => {
             setCurrent((prev) => (prev + 1) % slides.length);
         }, 3000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [slides, isPaused]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -63,9 +79,14 @@ const ImageSlider = () => {
             className={`slider ${show ? "show" : ""}`}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
         >
             {slides.map((slide, index) => (
-                <div key={index} className={`slide ${index === current ? "active" : ""}`}>
+                <div
+                    key={index}
+                    className={`slide ${index === current ? "active" : ""}`}
+                >
                     <img src={slide.img} alt="slide" />
 
                     <div className="slideroverlay">

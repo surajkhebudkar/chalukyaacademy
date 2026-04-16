@@ -12,6 +12,8 @@ import GalleryTable from "./GalleryTable";
 import AddGallery from "./AddGallery";
 import VideoTable from "./VideoTable";
 import AddVideo from "./AddVideo";
+import AddSlider from "./AddSlider";
+import SliderTable from "./SliderTable";
 
 const AdminDashboard = () => {
     const [data, setData] = useState([]);
@@ -19,6 +21,8 @@ const AdminDashboard = () => {
     const [sportsData, setSportsData] = useState([]);
     const [galleryData, setGalleryData] = useState([]);
     const [videoData, setVideoData] = useState([]);
+    const [sliderData, setSliderData] = useState([]);
+    
 
     const [activeMenu, setActiveMenu] = useState("news");
     const [editData, setEditData] = useState(null);
@@ -38,6 +42,9 @@ const AdminDashboard = () => {
 
     const [videoPage, setVideoPage] = useState(1);
     const [videoTotal, setVideoTotal] = useState(1);
+
+    const [sliderPage, setSliderPage] = useState(1);
+    const [sliderTotal, setSliderTotal] = useState(1);
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [touchStartX, setTouchStartX] = useState(0);
@@ -69,6 +76,10 @@ const AdminDashboard = () => {
     useEffect(() => {
         if (activeMenu === "videos") fetchVideos(videoPage);
     }, [videoPage, activeMenu]);
+
+    useEffect(() => {
+        if (activeMenu === "slider") fetchSlider(sliderPage);
+    }, [activeMenu, sliderPage]);
 
     
     const fetchNews = async (page = 1) => {
@@ -126,6 +137,18 @@ const AdminDashboard = () => {
         }
     };
 
+    const fetchSlider = async (page = 1) => {
+        try {
+            const res = await axios.get(`/slider?page=${page}&limit=6`);
+
+            setSliderData(res.data.data || []);
+            setSliderTotal(res.data.totalPages || 1);
+
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     const filterData = (list) => {
         if (!search) return list;
         return list.filter(item =>
@@ -159,6 +182,7 @@ const AdminDashboard = () => {
                     <li onClick={() => { setActiveMenu("sports"); setSportsPage(1); setSidebarOpen(false); }}>🏆 Sports Branch</li>
                     <li onClick={() => { setActiveMenu("gallery"); setGalleryPage(1); setSidebarOpen(false); }}>🖼️ Photo Gallery</li>
                     <li onClick={() => { setActiveMenu("videos"); setVideoPage(1); setSidebarOpen(false); }}>🎥 Videos Gallery</li>
+                    <li onClick={() => { setActiveMenu("slider"); setSliderPage(1); setSidebarOpen(false); }}>🎞️ Image Slider</li>
                 </ul>
             </div>
 
@@ -415,6 +439,51 @@ const AdminDashboard = () => {
                                 setActiveMenu("videos");
                             }}
                             onCancel={() => setActiveMenu("videos")}
+                        />
+                    )}
+
+                    {activeMenu === "slider" && (
+                        <>
+                            <div className="news-header">
+                                <h2>🎞️ Slider Management</h2>
+
+                                <button className="add-btn" onClick={() => setActiveMenu("addSlider")}>
+                                    + Add Image
+                                </button>
+                            </div>
+
+                            <SliderTable
+                                slides={sliderData}
+                                refresh={() => fetchSlider(sliderPage)}
+                                currentPage={sliderPage}
+                                totalPages={sliderTotal}
+                                onPageChange={setSliderPage}
+                                onEdit={(item) => {
+                                    setEditData(item);
+                                    setActiveMenu("editSlider");
+                                }}
+                            />
+                        </>
+                    )}
+
+                    {activeMenu === "addSlider" && (
+                        <AddSlider
+                            onSuccess={() => {
+                                fetchSlider(sliderPage);
+                                setActiveMenu("slider");
+                            }}
+                            onCancel={() => setActiveMenu("slider")}
+                        />
+                    )}
+
+                    {activeMenu === "editSlider" && (
+                        <AddSlider
+                            editData={editData}
+                            onSuccess={() => {
+                                fetchSlider(sliderPage);
+                                setActiveMenu("slider");
+                            }}
+                            onCancel={() => setActiveMenu("slider")}
                         />
                     )}
 
