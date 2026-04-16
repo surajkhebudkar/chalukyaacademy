@@ -4,7 +4,6 @@ import "./RunningLine.css";
 const RunningLine = () => {
     const [show, setShow] = useState(true);
 
-    // ✅ future backend compatible structure
     const data = [
         {
             type: "news",
@@ -23,7 +22,6 @@ const RunningLine = () => {
         },
     ];
 
-    // ✅ format text (UI clean)
     const formatText = (item) => {
         if (item.type === "news") {
             return `📰 ${item.title}`;
@@ -40,19 +38,16 @@ const RunningLine = () => {
         return item.title;
     };
 
-    // ✅ main filter logic
     const getValidData = () => {
         const today = new Date();
 
         return data.filter((item) => {
-            // news + gallery = 3 days
             if (item.type === "news" || item.type === "gallery") {
                 const created = new Date(item.createdAt);
                 const diff = (today - created) / (1000 * 60 * 60 * 24);
                 return diff <= 3;
             }
 
-            // event = till event date
             if (item.type === "event") {
                 const eventDate = new Date(item.eventDate);
                 return today <= eventDate;

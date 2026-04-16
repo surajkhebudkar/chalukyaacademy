@@ -28,7 +28,6 @@
     box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
 }
 
-/* 🔥 dynamic rows */
 .dynamic-row {
     display: flex;
     flex-direction: column;
@@ -38,7 +37,6 @@
     border-radius: 6px;
 }
 
-/* 🔥 add button */
 .add-btnsport {
     padding: 8px;
     background: #10b981;
@@ -53,7 +51,6 @@
     background: #059669;
 }
 
-/* 🔥 buttons */
 .btn-group {
     display: flex;
     gap: 10px;

@@ -22,7 +22,6 @@ const Home = () => {
         const typing = () => {
 
             if (!isDeleting) {
-                // typing
                 setText(fullText.slice(0, index1));
                 setText2(fullText2.slice(0, index2));
 
@@ -36,7 +35,6 @@ const Home = () => {
                 }
 
             } else {
-                // deleting
                 setText(fullText.slice(0, index1));
                 setText2(fullText2.slice(0, index2));
 
@@ -58,20 +56,16 @@ const Home = () => {
 
     return (
         <>
-            {/* HERO SECTION */}
             <section className="hero section-dark">
 
-                {/* Background */}
                 <div className="hero-bg"></div>
 
-                {/* Floating Shapes */}
                 <div className="circle circle1"></div>
                 <div className="circle circle2"></div>
                 <div className="circle circle3"></div>
 
                 <div className="hero-container">
 
-                    {/* LEFT */}
                     <div className="hero-left">
                         <div className="parentcompany">
                             <h1>
@@ -123,7 +117,6 @@ const Home = () => {
                         </div>
                     </div>
 
-                    {/* RIGHT */}
                     <div className="hero-right">
                         <img
                             src="/chalukyaimages/chlukyaphoto.png"

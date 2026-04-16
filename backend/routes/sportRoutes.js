@@ -13,7 +13,7 @@ import {
 
 const router = express.Router();
 
-// ➕ CREATE
+// CREATE
 router.post(
     "/",
     authMiddleware,
@@ -26,10 +26,10 @@ router.post(
     createSport
 );
 
-// 📄 GET
+// GET
 router.get("/", getAllSports);
 
-// ✏️ UPDATE
+// UPDATE
 router.put(
     "/:id",
     authMiddleware,
@@ -42,7 +42,7 @@ router.put(
     updateSport
 );
 
-// ❌ DELETE FULL BRANCH
+// DELETE FULL BRANCH
 router.delete(
     "/:id",
     authMiddleware,
@@ -50,7 +50,7 @@ router.delete(
     deleteSport
 );
 
-// ❌ DELETE SINGLE SPORT
+// DELETE SINGLE SPORT
 router.delete(
     "/:branchId/sport/:sportId",
     authMiddleware,

@@ -106,10 +106,10 @@ export default function BestPlayersSection() {
                             className={`overlay ${activeIndex === index ? "active" : ""
                                 }`}
                         >
-                            <h3>{player.name}</h3>
-                            <p>{player.achievement}</p>
-                            <span>{player.medals}</span>
-                            <small>{player.level}</small>
+                            <h3 className="hpname">{player.name}</h3>
+                            <p className="hpachie">{player.achievement}</p>
+                            <span className="hpmedals">{player.medals}</span>
+                            <small className="hplevel">{player.level}</small>
                         </div>
                     </div>
                 ))}

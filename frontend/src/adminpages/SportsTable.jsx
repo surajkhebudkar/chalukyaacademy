@@ -96,7 +96,6 @@ const SportsTable = ({
                 </tbody>
             </table>
 
-            {/* ✅ PAGINATION */}
             <div className="pagination">
                 <button
                     disabled={currentPage === 1}

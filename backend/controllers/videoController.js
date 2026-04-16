@@ -55,7 +55,7 @@ export const updateVideo = async (req, res) => {
 
 
 
-// GET ALL (WITH PAGINATION)
+// GET ALL
 export const getAllVideos = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;

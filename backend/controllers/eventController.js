@@ -1,6 +1,6 @@
 import Event from "../models/Event.js";
 
-// ➕ CREATE
+// CREATE
 export const createEvent = async (req, res) => {
     try {
         const { title, description, date } = req.body;
@@ -24,7 +24,7 @@ export const createEvent = async (req, res) => {
     }
 };
 
-// 📄 GET
+// GET
 export const getAllEvents = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -50,7 +50,7 @@ export const getAllEvents = async (req, res) => {
     }
 };
 
-// ✏️ UPDATE
+// UPDATE
 export const updateEvent = async (req, res) => {
     try {
         const { id } = req.params;
@@ -73,7 +73,7 @@ export const updateEvent = async (req, res) => {
     }
 };
 
-// ❌ DELETE
+// DELETE
 export const deleteEvent = async (req, res) => {
     try {
         await Event.findByIdAndDelete(req.params.id);

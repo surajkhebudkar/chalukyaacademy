@@ -10,7 +10,6 @@ const NewsSection = () => {
     const [newss, setNews] = useState([]);
     const navigate = useNavigate(); // 🔥 ADD
 
-    // animation
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -29,7 +28,6 @@ const NewsSection = () => {
         return () => observer.disconnect();
     }, []);
 
-    // fetch latest 3 news
     useEffect(() => {
         const fetchNews = async () => {
             try {

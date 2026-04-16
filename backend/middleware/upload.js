@@ -2,7 +2,6 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-// 🔥 DYNAMIC STORAGE (CLEAN VERSION)
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         let folder = "uploads/sports/";
@@ -14,11 +13,9 @@ const storage = multer.diskStorage({
         } else if (file.fieldname === "coachPhotos") {
             folder += "coaches";
         } else {
-            // ✅ fallback (IMPORTANT)
             folder += "others";
         }
 
-        // ✅ ensure folder exists
         fs.mkdirSync(folder, { recursive: true });
 
         cb(null, folder);
@@ -35,7 +32,6 @@ const storage = multer.diskStorage({
     }
 });
 
-// ✅ FILE FILTER
 const fileFilter = (req, file, cb) => {
     if (file.mimetype.startsWith("image")) {
         cb(null, true);
@@ -44,7 +40,6 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-// ✅ SPORTS UPLOAD
 export const uploadSports = multer({
     storage,
     fileFilter,
@@ -52,7 +47,7 @@ export const uploadSports = multer({
 });
 
 // =========================
-// ✅ NEWS
+//  NEWS
 // =========================
 export const uploadNews = multer({
     storage: multer.diskStorage({
@@ -67,7 +62,7 @@ export const uploadNews = multer({
 });
 
 // =========================
-// ✅ EVENTS
+//  EVENTS
 // =========================
 export const uploadEvents = multer({
     storage: multer.diskStorage({
@@ -83,7 +78,7 @@ export const uploadEvents = multer({
 
 
 // =========================
-// ✅ GALLERY (DYNAMIC FOLDER)
+//  PHOTO GALLERY
 // =========================
 export const uploadGallery = multer({
     storage: multer.diskStorage({
@@ -121,6 +116,11 @@ export const uploadGallery = multer({
     fileFilter,
     limits: { fileSize: 5 * 1024 * 1024 }
 });
+
+
+// =========================
+//  VIDEO GALLERY
+// =========================
 
 export const uploadVideo = multer({
     storage: multer.diskStorage({

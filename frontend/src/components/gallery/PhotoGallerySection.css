@@ -9,6 +9,7 @@
     font-weight: 600;
     margin-bottom: 40px;
     position: relative;
+    text-transform: uppercase;
 }
 
 .Hgallery-title::after {
@@ -37,13 +38,16 @@
     opacity: 0;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
 }
+
 .no-animation .Hgallery-item {
     opacity: 1;
     transform: none;
 }
+
 .Hgallery.show .Hgallery-item {
     animation: slideUp 0.8s ease forwards;
 }
+
 .Hgallery-item:hover {
     transform: translateY(-5px);
 }

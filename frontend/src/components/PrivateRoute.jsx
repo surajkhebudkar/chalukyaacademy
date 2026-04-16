@@ -5,12 +5,10 @@ const PrivateRoute = ({ children, role }) => {
     const token = getToken();
     const userRole = getRole();
 
-    // Not logged in
     if (!token) {
         return <Navigate to="/login" replace />;
     }
 
-    // Role check
     if (role && role !== userRole) {
         return <Navigate to="/" replace />;
     }

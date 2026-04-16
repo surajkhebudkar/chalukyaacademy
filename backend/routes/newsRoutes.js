@@ -11,7 +11,7 @@ import {
 
 const router = express.Router();
 
-// ➕ CREATE NEWS
+// CREATE NEWS
 router.post(
     "/",
     authMiddleware,
@@ -20,10 +20,10 @@ router.post(
     createNews
 );
 
-// 📄 GET ALL NEWS
+// GET ALL NEWS
 router.get("/", getAllNews);
 
-// ✏️ UPDATE NEWS
+// UPDATE NEWS
 router.put(
     "/:id",
     authMiddleware,
@@ -32,7 +32,7 @@ router.put(
     updateNews
 );
 
-// ❌ DELETE NEWS
+// DELETE NEWS
 router.delete(
     "/:id",
     authMiddleware,

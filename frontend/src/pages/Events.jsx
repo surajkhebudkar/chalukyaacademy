@@ -8,11 +8,9 @@ export default function Events() {
     const [show, setShow] = useState(false);
     const sectionRef = useRef();
 
-    // ✅ Pagination states
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    // ✅ Fetch events (backend pagination)
     const fetchEvents = async (page = 1) => {
         try {
             const res = await axios.get(`/events?page=${page}&limit=6`);
@@ -23,22 +21,18 @@ export default function Events() {
         }
     };
 
-    // ✅ Reload on page change
     useEffect(() => {
         fetchEvents(currentPage);
     }, [currentPage]);
 
-    // ✅ Animation trigger
     useEffect(() => {
         setTimeout(() => setShow(true), 200);
     }, []);
 
-    // ✅ Scroll top on page change
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     }, [currentPage]);
 
-    // ✅ NEW badge logic
     const isNew = (date) => {
         const diff = (new Date() - new Date(date)) / (1000 * 60 * 60 * 24);
         return diff <= 3;
@@ -73,7 +67,6 @@ export default function Events() {
                 ))}
             </div>
 
-            {/* ✅ MODAL */}
             {activeEvent && (
                 <div
                     className="event-modal"
@@ -83,11 +76,13 @@ export default function Events() {
                         className="event-modal-content"
                         onClick={(e) => e.stopPropagation()}
                     >
+                        <div className="eventnd">
                         <h2>{activeEvent.title}</h2>
 
                         <p className="event-date">
                             {new Date(activeEvent.date).toLocaleDateString()}
                         </p>
+                        </div>
 
                         <p className="event-text">
                             {activeEvent.description}
@@ -100,7 +95,6 @@ export default function Events() {
                 </div>
             )}
 
-            {/* ✅ PAGINATION */}
             <div className="pagination">
                 <button
                     disabled={currentPage === 1}

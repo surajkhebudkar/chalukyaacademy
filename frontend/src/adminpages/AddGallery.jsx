@@ -42,14 +42,12 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
         }));
     };
 
-    // 🔥 DELETE OLD IMAGE (UI ONLY)
     const removeOldPhoto = (index) => {
         const updated = [...preview.photos];
         updated.splice(index, 1);
         setPreview({ ...preview, photos: updated });
     };
 
-    // 🔥 DELETE NEW IMAGE INPUT
     const removeNewPhoto = (index) => {
         const updated = [...files.photos];
         updated.splice(index, 1);
@@ -64,7 +62,6 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
 
             formData.append("title", form.title);
 
-            // 🔥 IMPORTANT
             formData.append("existingPhotos", JSON.stringify(preview.photos));
 
             if (files.coverImage) {
@@ -95,7 +92,6 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
         <div className="add-sport-container">
             <form onSubmit={handleSubmit} className="add-sport-form">
 
-                {/* TITLE */}
                 <input
                     placeholder="Album Title"
                     value={form.title}
@@ -103,7 +99,6 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
                     required
                 />
 
-                {/* COVER IMAGE */}
                 <label>Cover Image</label>
 
                 {preview.coverImage && (
@@ -124,7 +119,6 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
                     }
                 />
 
-                {/* ADD PHOTOS */}
                 <button
                     type="button"
                     className="add-btnsport"
@@ -133,7 +127,6 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
                     + Add Photos
                 </button>
 
-                {/* OLD PHOTOS */}
                 {preview.photos.length > 0 && (
                     <div className="dynamic-row" style={{ display: "flex", flexWrap: "wrap" }}>
                         {preview.photos.map((img, i) => (
@@ -145,7 +138,6 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
                                     style={{ borderRadius: "6px" }}
                                 />
 
-                                {/* ❌ DELETE BUTTON */}
                                 <button
                                     type="button"
                                     onClick={() => removeOldPhoto(i)}
@@ -170,7 +162,6 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
                     </div>
                 )}
 
-                {/* NEW PHOTOS */}
                 {files.photos.map((p, index) => (
                     <div key={index} className="dynamic-row" style={{ position: "relative" }}>
                         <input
@@ -182,7 +173,6 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
                             }}
                         />
 
-                        {/* ❌ DELETE NEW INPUT */}
                         <button
                             type="button"
                             onClick={() => removeNewPhoto(index)}
@@ -205,7 +195,6 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
                     </div>
                 ))}
 
-                {/* BUTTONS */}
                 <div className="btn-group">
                     <button type="submit" className="primary-btn">
                         {editData ? "Update Gallery" : "Add Gallery"}

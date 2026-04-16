@@ -20,7 +20,6 @@ const ImageSlider = () => {
     const sliderRef = useRef();
     const touchStartX = useRef(0);
 
-    // 🔥 auto slide
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrent((prev) => (prev + 1) % slides.length);
@@ -29,7 +28,6 @@ const ImageSlider = () => {
         return () => clearInterval(interval);
     }, []);
 
-    // 🔥 scroll animation trigger
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -45,7 +43,6 @@ const ImageSlider = () => {
         return () => observer.disconnect();
     }, []);
 
-    // 👉 swipe
     const handleTouchStart = (e) => {
         touchStartX.current = e.touches[0].clientX;
     };
@@ -77,13 +74,11 @@ const ImageSlider = () => {
                 </div>
             ))}
 
-            {/* controls */}
             <div className="controls">
                 <button onClick={() => setCurrent((current - 1 + slides.length) % slides.length)}>‹</button>
                 <button onClick={() => setCurrent((current + 1) % slides.length)}>›</button>
             </div>
 
-            {/* dots */}
             <div className="dots">
                 {slides.map((_, index) => (
                     <span

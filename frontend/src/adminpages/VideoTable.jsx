@@ -82,7 +82,6 @@ const VideoTable = ({
                 </tbody>
             </table>
 
-            {/* ✅ PAGINATION (NO DESIGN CHANGE) */}
             <div className="pagination">
                 <button
                     disabled={currentPage === 1}

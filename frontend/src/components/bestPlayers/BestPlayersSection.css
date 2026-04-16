@@ -10,6 +10,7 @@
     font-weight: 600;
     margin-bottom: 40px;
     position: relative;
+    text-transform: uppercase;
 }
 
 .players-title::after {
@@ -65,8 +66,18 @@
     transform: translateY(100%);
     transition: 0.4s ease;
 }
-
-
+.hpname{
+    text-transform: uppercase;
+}
+.hpachie{
+    text-transform: capitalize;
+}
+.hpmedals{
+    text-transform: uppercase;
+}
+.hplevel{
+    text-transform: capitalize;
+}
 
 .overlay.active {
     transform: translateY(0);

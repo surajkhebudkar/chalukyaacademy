@@ -7,11 +7,9 @@ export default function PhotoGallery() {
     const [activeAlbum, setActiveAlbum] = useState(null);
     const [activeImageIndex, setActiveImageIndex] = useState(null);
 
-    // ✅ pagination states
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    // ✅ fetch with pagination
     useEffect(() => {
         fetchGallery(currentPage);
     }, [currentPage]);
@@ -34,7 +32,6 @@ export default function PhotoGallery() {
         }
     };
 
-    // ✅ scroll top on page change
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     }, [currentPage]);

@@ -6,11 +6,9 @@ export default function VideoGallery() {
     const [videos, setVideos] = useState([]);
     const [activeVideo, setActiveVideo] = useState(null);
 
-    // ✅ pagination states
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    // ✅ fetch with pagination
     useEffect(() => {
         fetchVideos(currentPage);
     }, [currentPage]);
@@ -32,7 +30,6 @@ export default function VideoGallery() {
         }
     };
 
-    // ✅ scroll top on page change
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     }, [currentPage]);
@@ -89,7 +86,6 @@ export default function VideoGallery() {
                 </div>
             )}
 
-            {/* ✅ PAGINATION (NO DESIGN CHANGE) */}
             <div className="pagination">
                 <button
                     disabled={currentPage === 1}

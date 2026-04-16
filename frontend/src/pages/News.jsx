@@ -11,7 +11,6 @@ export default function News() {
 
     const sectionRef = useRef();
 
-    // 👉 fetch news (backend pagination)
     useEffect(() => {
         fetchNews(currentPage);
     }, [currentPage]);
@@ -26,17 +25,14 @@ export default function News() {
         }
     };
 
-    // 👉 animation trigger
     useEffect(() => {
         setTimeout(() => setShow(true), 200);
     }, []);
 
-    // 👉 scroll top on page change
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     }, [currentPage]);
 
-    // 👉 click outside = close overlay
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (!e.target.closest(".news-card")) {
@@ -48,7 +44,6 @@ export default function News() {
         return () => document.removeEventListener("click", handleClickOutside);
     }, []);
 
-    // 👉 swipe down to close (mobile)
     const touchStartY = useRef(0);
     const touchEndY = useRef(0);
 
@@ -66,7 +61,6 @@ export default function News() {
         }
     };
 
-    // 👉 new badge logic
     const isNew = (date) => {
         const diff = (new Date() - new Date(date)) / (1000 * 60 * 60 * 24);
         return diff <= 3;
@@ -106,7 +100,6 @@ export default function News() {
                 ))}
             </div>
 
-            {/* 🔥 Pagination */}
             <div className="pagination">
                 <button
                     disabled={currentPage === 1}

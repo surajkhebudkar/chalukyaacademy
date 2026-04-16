@@ -66,7 +66,6 @@ export default function AddVideo({ onSuccess, onCancel, editData }) {
                     required
                 />
 
-                {/* OLD VIDEO PREVIEW */}
                 {preview && (
                     <div className="dynamic-row">
                         <video
@@ -78,7 +77,6 @@ export default function AddVideo({ onSuccess, onCancel, editData }) {
                     </div>
                 )}
 
-                {/* UPLOAD NEW */}
                 <label>Upload Video</label>
                 <input
                     type="file"

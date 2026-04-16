@@ -106,13 +106,11 @@ body {
     transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* PROFILE */
 .profile-container {
     position: relative;
     margin-left: 20px;
 }
 
-/* AVATAR */
 .avatar {
     width: 38px;
     height: 38px;
@@ -134,7 +132,6 @@ body {
     box-shadow: 0 6px 18px rgba(13, 110, 253, 0.4);
 }
 
-/* DROPDOWN */
 .dropdown-menu a {
     display: block;
     margin: 8px;

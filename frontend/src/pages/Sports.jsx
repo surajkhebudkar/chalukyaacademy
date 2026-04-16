@@ -9,15 +9,12 @@ export default function Sports() {
     const [branchesData, setBranchesData] = useState([]);
     const [activeBranch, setActiveBranch] = useState("");
 
-    // ✅ MAP FIX FUNCTION
     const getMapUrl = (url) => {
         if (!url) return "";
 
-        // already embed link
         if (url.includes("embed")) return url;
 
         try {
-            // extract lat lng from google maps url
             const match = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
 
             if (match) {
@@ -35,7 +32,6 @@ export default function Sports() {
         }
     };
 
-    // ✅ FETCH
     const fetchSports = async () => {
         try {
             const res = await axios.get(`/sports`);
@@ -68,7 +64,6 @@ export default function Sports() {
 
             setBranchesData(formatted);
 
-            // ✅ FIX: only set once
             if (formatted.length > 0) {
                 setActiveBranch(prev => prev || formatted[0].name);
             }
@@ -85,7 +80,6 @@ export default function Sports() {
     return (
         <section className="sports">
 
-            {/* BRANCH TABS */}
             <div className="branch-tabs">
                 {branchesData.map((branch, i) => (
                     <button
@@ -98,7 +92,6 @@ export default function Sports() {
                 ))}
             </div>
 
-            {/* BRANCH DATA */}
             {branchesData
                 .filter(branch => branch.name === activeBranch)
                 .map((branch) => (
@@ -123,7 +116,6 @@ export default function Sports() {
                             </div>
                         </div>
 
-                        {/* SPORTS GRID */}
                         <div className="sports-grid">
                             {branch.sports.map((sport, index) => (
                                 <div
@@ -145,7 +137,6 @@ export default function Sports() {
                     </div>
                 ))}
 
-            {/* MODAL */}
             {activeSport && (
                 <div className="sport-modal" onClick={() => setActiveSport(null)}>
                     <div
@@ -158,7 +149,6 @@ export default function Sports() {
                             
                         </div>
 
-                        {/* COACHES ALWAYS SHOW */}
                         <div className="coach-grid">
                             {activeSport.coaches?.length > 0 ? (
                                 activeSport.coaches.map((coach, i) => (

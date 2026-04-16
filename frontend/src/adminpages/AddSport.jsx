@@ -77,7 +77,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
 
     const getCoachKey = (sIndex, cIndex) => `${sIndex}-${cIndex}`;
 
-    // 🚀 SUBMIT
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -111,7 +110,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
             const sportKeys = [];
             const coachKeys = [];
 
-            // ✅ SPORT IMAGES
             form.sports.forEach((_, sIndex) => {
                 const file = files.sportImages[sIndex];
 
@@ -121,7 +119,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                 }
             });
 
-            // ✅ COACH IMAGES
             form.sports.forEach((sport, sIndex) => {
                 sport.coaches.forEach((_, cIndex) => {
                     const key = `${sIndex}-${cIndex}`;
@@ -134,7 +131,6 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                 });
             });
 
-            // 🔥🔥 MAIN FIX (NO [] BRACKETS)
             formData.append("sportImageKeys", JSON.stringify(sportKeys));
             formData.append("coachPhotoKeys", JSON.stringify(coachKeys));
 

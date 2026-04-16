@@ -14,31 +14,6 @@ const Login = () => {
 
     const navigate = useNavigate();
 
-    // const handleLogin = async (e) => {
-    //     e.preventDefault();
-    //     setError("");
-    //     try {
-    //         setLoading(true);
-
-    //         const data = await loginUser({ email, password });
-
-    //         localStorage.setItem("token", data.token);
-    //         localStorage.setItem("user", JSON.stringify(data.user));
-
-    //         setAuth(data);
-
-    //         if (data.user.role === "admin") {
-    //             navigate("/adminpages/admin-dashboard");
-    //         } else {
-    //             navigate("/coachpages/coach-dashboard");
-    //         }
-
-    //     } catch (err) {
-    //         setError(err.message || "Login failed. Please try again.");
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
     const handleLogin = async (e) => {
         e.preventDefault();
 

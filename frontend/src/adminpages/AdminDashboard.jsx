@@ -24,7 +24,6 @@ const AdminDashboard = () => {
     const [editData, setEditData] = useState(null);
     const [search, setSearch] = useState("");
 
-    // ✅ separate pagination
     const [newsPage, setNewsPage] = useState(1);
     const [newsTotal, setNewsTotal] = useState(1);
 
@@ -148,7 +147,6 @@ const AdminDashboard = () => {
             }}
         >
 
-            {/* SIDEBAR */}
             <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
                 <div className="logo-container">
                     <img src="/chalukyaimages/chlukyaacademylogo.png" className="logo-img" />
@@ -166,7 +164,6 @@ const AdminDashboard = () => {
 
             {sidebarOpen && <div className="admin-overlay" onClick={() => setSidebarOpen(false)}></div>}
 
-            {/* MAIN */}
             <div className="main">
 
                 <div className="topbar">
@@ -178,7 +175,6 @@ const AdminDashboard = () => {
                     <button className="logout-btn" onClick={handleLogout}>Logout</button>
                 </div>
 
-                {/* SEARCH */}
                 <div style={{ marginBottom: "15px" }}>
                     <input
                         placeholder="🔍 Search..."
@@ -195,7 +191,6 @@ const AdminDashboard = () => {
 
                 <div className="section">
 
-                    {/* NEWS */}
                     {activeMenu === "news" && (
                         <>
                             <div className="news-header">
@@ -242,7 +237,6 @@ const AdminDashboard = () => {
                         />
                     )}
 
-                    {/* EVENTS */}
                     {activeMenu === "events" && (
                         <>
                             <div className="news-header">
@@ -289,7 +283,6 @@ const AdminDashboard = () => {
                         />
                     )}
 
-                    {/* SPORTS */}
                     {activeMenu === "sports" && (
                         <>
                             <div className="news-header">
@@ -335,7 +328,6 @@ const AdminDashboard = () => {
                         />
                     )}
 
-                    {/* GALLERY */}
                     {activeMenu === "gallery" && (
                         <>
                             <div className="news-header">
@@ -381,7 +373,6 @@ const AdminDashboard = () => {
                         />
                     )}
 
-                    {/* VIDEOS */}
                     {activeMenu === "videos" && (
                         <>
                             <div className="news-header">

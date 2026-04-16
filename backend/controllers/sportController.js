@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import Sport from "../models/Sport.js";
 
-// 🧹 DELETE FILE
+// DELETE FILE
 const deleteFile = (file) => {
     if (!file) return;
 
@@ -16,7 +16,7 @@ const deleteFile = (file) => {
     });
 };
 
-// ➕ CREATE
+// CREATE
 export const createSport = async (req, res) => {
     try {
         const data = JSON.parse(req.body.data);
@@ -27,7 +27,6 @@ export const createSport = async (req, res) => {
         const sportImages = files["sportImages"] || [];
         const coachPhotos = files["coachPhotos"] || [];
 
-        // 🔥 FINAL FIX
         const sportImageKeys = JSON.parse(req.body.sportImageKeys || "[]");
         const coachPhotoKeys = JSON.parse(req.body.coachPhotoKeys || "[]");
 
@@ -78,7 +77,7 @@ export const createSport = async (req, res) => {
     }
 };
 
-// 📄 GET
+// GET
 export const getAllSports = async (req, res) => {
     try {
         const data = await Sport.find().sort({ createdAt: -1 });
@@ -88,7 +87,7 @@ export const getAllSports = async (req, res) => {
     }
 };
 
-// ✏️ UPDATE
+// UPDATE
 export const updateSport = async (req, res) => {
     try {
         const { id } = req.params;
@@ -113,7 +112,6 @@ export const updateSport = async (req, res) => {
         const sportImages = files["sportImages"] || [];
         const coachPhotos = files["coachPhotos"] || [];
 
-        // 🔥 FINAL FIX
         const sportImageKeys = JSON.parse(req.body.sportImageKeys || "[]");
         const coachPhotoKeys = JSON.parse(req.body.coachPhotoKeys || "[]");
 
@@ -159,7 +157,7 @@ export const updateSport = async (req, res) => {
     }
 };
 
-// ❌ DELETE
+// DELETE
 export const deleteSport = async (req, res) => {
     try {
         const branch = await Sport.findById(req.params.id);
@@ -182,7 +180,7 @@ export const deleteSport = async (req, res) => {
     }
 };
 
-// ❌ DELETE SINGLE SPORT
+// DELETE SINGLE SPORT
 export const deleteSingleSport = async (req, res) => {
     try {
         const { branchId, sportId } = req.params;

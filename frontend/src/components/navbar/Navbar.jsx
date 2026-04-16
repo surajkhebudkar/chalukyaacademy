@@ -11,7 +11,7 @@ const Navbar = () => {
     const [galleryOpen, setGalleryOpen] = useState(false);
 
     const dropdownRef = useRef();
-    const navRef = useRef(); // ✅ added
+    const navRef = useRef();
 
     const menuItems = [
         { name: "Home", path: "/" },

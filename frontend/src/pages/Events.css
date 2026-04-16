@@ -74,9 +74,14 @@
     padding: 20px;
     animation: fadeIn 0.3s ease;
 }
-
+.eventnd{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .event-modal-content h2 {
     margin-bottom: 5px;
+    text-transform: uppercase;
 }
 
 .event-date {
@@ -88,6 +93,7 @@
 .event-text {
     font-size: 14px;
     line-height: 1.5;
+    text-transform: capitalize;
 }
 
 .event-modal-content iframe {
@@ -139,10 +145,12 @@
 
 .event-overlay h3 {
     font-size: 16px;
+    text-transform: uppercase;
 }
 
 .event-overlay span {
     font-size: 12px;
+    text-transform: capitalize;
 }
 
 .new-badge {
@@ -165,7 +173,6 @@
     border-radius: 6px;
     text-decoration: none;
 }
-/* PAGINATION */
 .pagination {
     display: flex;
     justify-content: center;

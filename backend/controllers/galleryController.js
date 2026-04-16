@@ -1,5 +1,3 @@
-// controllers/galleryController.js
-
 import Gallery from "../models/Gallery.js";
 import fs from "fs";
 
@@ -36,7 +34,7 @@ export const createGallery = async (req, res) => {
     }
 };
 
-// GET ALL (WITH PAGINATION)
+// GET ALL
 export const getAllGalleries = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;

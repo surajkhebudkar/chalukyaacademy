@@ -1,6 +1,6 @@
 import News from "../models/News.js";
 
-// ➕ ADD NEWS
+// ADD NEWS
 export const createNews = async (req, res) => {
     try {
         const { title, description } = req.body;
@@ -20,7 +20,7 @@ export const createNews = async (req, res) => {
     }
 };
 
-// 📄 GET ALL NEWS
+// GET ALL NEWS
 export const getAllNews = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -48,7 +48,7 @@ export const getAllNews = async (req, res) => {
     }
 };
 
-// ✏️ UPDATE NEWS
+// UPDATE NEWS
 export const updateNews = async (req, res) => {
     try {
         const { id } = req.params;
@@ -75,7 +75,7 @@ export const updateNews = async (req, res) => {
     }
 };
 
-// ❌ DELETE NEWS
+// DELETE NEWS
 export const deleteNews = async (req, res) => {
     try {
         const { id } = req.params;
