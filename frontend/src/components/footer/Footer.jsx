@@ -79,7 +79,7 @@ const Footer = () => {
                         <input type="text" placeholder="Contact" />
 
                         <select>
-                            <option>Select Sport</option>
+                            <option>Select Enquiry</option>
                             <option>Archery</option>
                             <option>Basketball</option>
                             <option>Fencing</option>
