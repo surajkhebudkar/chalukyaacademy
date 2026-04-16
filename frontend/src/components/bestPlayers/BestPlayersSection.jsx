@@ -1,55 +1,39 @@
 import React, { useState, useEffect, useRef } from "react";
+import axios from "../../utils/axiosInstance";
 import "./BestPlayersSection.css";
 
 export default function BestPlayersSection() {
     const [activeIndex, setActiveIndex] = useState(null);
     const [show, setShow] = useState(false);
+    const [players, setPlayers] = useState([]);
+
     const sectionRef = useRef();
 
-    const players = [
-        {
-            name: "Rahul Patil",
-            img: "/playerimages/5.jpg",
-            level: "National Player",
-            medals: "🥇 3 Gold | 🥈 2 Silver",
-            achievement: "National Archery Championship Winner"
-        },
-        {
-            name: "Sneha Kulkarni",
-            img: "/playerimages/2.jpg",
-            level: "State Player",
-            medals: "🥇 2 Gold",
-            achievement: "State Level Champion"
-        },
-        {
-            name: "Amit Deshmukh",
-            img: "/playerimages/3.jpg",
-            level: "International",
-            medals: "🥇 1 Gold | 🥉 2 Bronze",
-            achievement: "Represented India"
-        },
-        {
-            name: "Pooja Sharma",
-            img: "/playerimages/10.jpg",
-            level: "District",
-            medals: "🥇 4 Gold",
-            achievement: "District Winner"
-        },
-        {
-            name: "Rohit Jadhav",
-            img: "/playerimages/9.jpg",
-            level: "State Player",
-            medals: "🥈 3 Silver",
-            achievement: "Top 5 State Rank"
-        },
-        {
-            name: "Anjali More",
-            img: "/playerimages/7.jpg",
-            level: "National",
-            medals: "🥇 2 Gold | 🥉 1 Bronze",
-            achievement: "National Finalist"
-        }
-    ];
+    useEffect(() => {
+        const fetchPlayers = async () => {
+            try {
+                const res = await axios.get("/players?limit=6");
+
+                const formatted = (res.data.data || []).map(p => ({
+                    name: p.name,
+                    img: p.image
+                        ? `http://localhost:5000/uploads/bestplayers/${p.image}`
+                        : "/placeholder.png",
+                    level: p.level,
+                    medals: p.medals,
+                    achievement: p.achievement
+                }));
+
+                setPlayers(formatted);
+
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        fetchPlayers();
+    }, []);
+
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -68,17 +52,16 @@ export default function BestPlayersSection() {
     }, []);
 
     useEffect(() => {
-            const handleClickOutside = (e) => {
-                if (!e.target.closest(".player-card")) {
-                    setActiveIndex(null);
-                }
-            };
-    
-            document.addEventListener("click", handleClickOutside);
-    
-            return () => document.removeEventListener("click", handleClickOutside);
-        }, []);
+        const handleClickOutside = (e) => {
+            if (!e.target.closest(".player-card")) {
+                setActiveIndex(null);
+            }
+        };
 
+        document.addEventListener("click", handleClickOutside);
+
+        return () => document.removeEventListener("click", handleClickOutside);
+    }, []);
 
     return (
         <section

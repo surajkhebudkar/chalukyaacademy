@@ -14,6 +14,9 @@ import VideoTable from "./VideoTable";
 import AddVideo from "./AddVideo";
 import AddSlider from "./AddSlider";
 import SliderTable from "./SliderTable";
+import PlayerTable from "./PlayerTable";
+import AddPlayer from "./AddPlayer";
+
 
 const AdminDashboard = () => {
     const [data, setData] = useState([]);
@@ -22,6 +25,7 @@ const AdminDashboard = () => {
     const [galleryData, setGalleryData] = useState([]);
     const [videoData, setVideoData] = useState([]);
     const [sliderData, setSliderData] = useState([]);
+    const [playerData, setPlayerData] = useState([]);
     
 
     const [activeMenu, setActiveMenu] = useState("news");
@@ -45,6 +49,9 @@ const AdminDashboard = () => {
 
     const [sliderPage, setSliderPage] = useState(1);
     const [sliderTotal, setSliderTotal] = useState(1);
+
+    const [playerPage, setPlayerPage] = useState(1);
+    const [playerTotal, setPlayerTotal] = useState(1);
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [touchStartX, setTouchStartX] = useState(0);
@@ -80,6 +87,10 @@ const AdminDashboard = () => {
     useEffect(() => {
         if (activeMenu === "slider") fetchSlider(sliderPage);
     }, [activeMenu, sliderPage]);
+   
+    useEffect(() => {
+        if (activeMenu === "players") fetchPlayers(playerPage);
+    }, [playerPage, activeMenu]);
 
     
     const fetchNews = async (page = 1) => {
@@ -149,6 +160,16 @@ const AdminDashboard = () => {
         }
     };
 
+    const fetchPlayers = async (page = 1) => {
+        try {
+            const res = await axios.get(`/players?page=${page}&limit=5`);
+            setPlayerData(res.data.data || []);
+            setPlayerTotal(res.data.totalPages || 1);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     const filterData = (list) => {
         if (!search) return list;
         return list.filter(item =>
@@ -183,6 +204,7 @@ const AdminDashboard = () => {
                     <li onClick={() => { setActiveMenu("gallery"); setGalleryPage(1); setSidebarOpen(false); }}>🖼️ Photo Gallery</li>
                     <li onClick={() => { setActiveMenu("videos"); setVideoPage(1); setSidebarOpen(false); }}>🎥 Videos Gallery</li>
                     <li onClick={() => { setActiveMenu("slider"); setSliderPage(1); setSidebarOpen(false); }}>🎞️ Image Slider</li>
+                    <li onClick={() => { setActiveMenu("players"); setPlayerPage(1); setSidebarOpen(false); }}>🏅 Best Players</li>
                 </ul>
             </div>
 
@@ -486,6 +508,52 @@ const AdminDashboard = () => {
                             onCancel={() => setActiveMenu("slider")}
                         />
                     )}
+
+                    {activeMenu === "players" && (
+                        <>
+                            <div className="news-header">
+                                <h2>🏅 Player Management</h2>
+
+                                <button className="add-btn" onClick={() => setActiveMenu("addPlayer")}>
+                                    + Add Player
+                                </button>
+                            </div>
+
+                            <PlayerTable
+                                players={filterData(playerData)}
+                                refresh={() => fetchPlayers(playerPage)}
+                                currentPage={playerPage}
+                                totalPages={playerTotal}
+                                onPageChange={setPlayerPage}
+                                onEdit={(item) => {
+                                    setEditData(item);
+                                    setActiveMenu("editPlayer");
+                                }}
+                            />
+                        </>
+                    )}
+
+                    {activeMenu === "addPlayer" && (
+                        <AddPlayer
+                            onSuccess={() => {
+                                fetchPlayers(playerPage);
+                                setActiveMenu("players");
+                            }}
+                            onCancel={() => setActiveMenu("players")}
+                        />
+                    )}
+
+                    {activeMenu === "editPlayer" && (
+                        <AddPlayer
+                            editData={editData}
+                            onSuccess={() => {
+                                fetchPlayers(playerPage);
+                                setActiveMenu("players");
+                            }}
+                            onCancel={() => setActiveMenu("players")}
+                        />
+                    )}
+
 
                 </div>
             </div>

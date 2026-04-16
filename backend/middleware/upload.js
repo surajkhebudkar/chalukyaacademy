@@ -164,3 +164,20 @@ export const uploadSlider = multer({
     fileFilter,
     limits: { fileSize: 5 * 1024 * 1024 }
 });
+
+// =========================
+//  BEST PLAYERS
+// =========================
+export const uploadPlayer = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            const folder = "uploads/bestplayers";
+            fs.mkdirSync(folder, { recursive: true });
+            cb(null, folder);
+        },
+        filename: (req, file, cb) =>
+            cb(null, Date.now() + "-" + file.originalname)
+    }),
+    fileFilter,
+    limits: { fileSize: 5 * 1024 * 1024 }
+});
