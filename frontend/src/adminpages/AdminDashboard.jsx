@@ -115,7 +115,7 @@ const AdminDashboard = () => {
 
     const fetchGallery = async (page = 1) => {
         try {
-            const res = await axios.get(`/gallery?page=${page}&limit=6`);
+            const res = await axios.get(`/gallery?page=${page}&limit=5`);
 
             console.log("GALLERY RESPONSE:", res.data);
 
@@ -128,7 +128,7 @@ const AdminDashboard = () => {
 
     const fetchVideos = async (page = 1) => {
         try {
-            const res = await axios.get(`/videos?page=${page}&limit=6`);
+            const res = await axios.get(`/videos?page=${page}&limit=5`);
 
             setVideoData(res.data.data || []);
             setVideoTotal(res.data.totalPages || 1);
@@ -139,7 +139,7 @@ const AdminDashboard = () => {
 
     const fetchSlider = async (page = 1) => {
         try {
-            const res = await axios.get(`/slider?page=${page}&limit=6`);
+            const res = await axios.get(`/slider?page=${page}&limit=5`);
 
             setSliderData(res.data.data || []);
             setSliderTotal(res.data.totalPages || 1);
