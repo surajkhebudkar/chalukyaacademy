@@ -1,0 +1,126 @@
+.video-section {
+    padding: 60px 20px;
+    background: #f8f9fa;
+    overflow: hidden;
+}
+
+.videoTitle {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+}
+
+.videoTitle::after {
+    content: "";
+    width: 80px;
+    height: 3px;
+    background: #0d6efd;
+    display: block;
+    margin: 10px auto 0;
+    border-radius: 10px;
+}
+
+.videoContainer {
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.videoCard {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateX(60px) scale(0.9);
+    filter: blur(8px);
+    visibility: hidden;
+}
+
+.video-section.show .videoCard {
+    visibility: visible;
+    animation: premiumReveal 4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.video-section.show .videoCard:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.video-section.show .videoCard:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.video-section.show .videoCard:nth-child(3) {
+    animation-delay: 0.8s;
+}
+
+.videoCard video {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    transition: 0.4s ease;
+}
+.videoCard:hover video {
+    transform: scale(1.1);
+    filter: brightness(1.3);
+}
+
+.videoCard:hover {
+    transform: translateY(-6px);
+}
+
+.videooverlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    transition: 0.4s;
+}
+
+.videooverlay h4 {
+    color: white;
+}
+
+.videoCard:hover .videooverlay {
+    opacity: 0.2;
+    transform: translateY(100%);
+}
+
+
+@keyframes premiumReveal {
+    0% {
+        opacity: 0;
+        transform: translateX(60px) scale(0.9);
+        filter: blur(8px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .videoContainer {
+        grid-template-columns: 1fr;
+    }
+
+    .videoCard {
+        width: 80%;
+        margin: auto;
+    }
+
+    .videoCard video {
+        height: 250px;
+    }
+
+    .videooverlay {
+        transform: translateY(0);
+    }
+}

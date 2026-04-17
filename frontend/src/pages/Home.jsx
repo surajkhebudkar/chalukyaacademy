@@ -5,6 +5,7 @@ import ImageSlider from "../components/imageSlider/ImageSlider";
 import NewsSection from "../components/news/NewsSection";
 import PhotoGallerySection from "../components/gallery/PhotoGallerySection";
 import BestPlayersSection from "../components/bestPlayers/BestPlayersSection";
+import VideoSection from "../components/videosection/VideoSection";
 
 const Home = () => {
     const [text, setText] = useState("");
@@ -126,7 +127,8 @@ const Home = () => {
 
                 </div>
             </section>
-
+            
+            <VideoSection />
             <NewsSection />
             <ImageSlider />
             <PhotoGallerySection />

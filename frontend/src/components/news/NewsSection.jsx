@@ -8,7 +8,7 @@ const NewsSection = () => {
     const sectionRef = useRef();
     const [show, setShow] = useState(false);
     const [newss, setNews] = useState([]);
-    const navigate = useNavigate(); // 🔥 ADD
+    const navigate = useNavigate();
 
     useEffect(() => {
         const observer = new IntersectionObserver(
