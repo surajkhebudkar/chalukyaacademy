@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import axios from "../../utils/axiosInstance";
 import "./PhotoGallerySection.css";
 
 const PhotoGallerySection = () => {
@@ -23,27 +24,46 @@ const PhotoGallerySection = () => {
         return () => observer.disconnect();
     }, []);
 
-
     useEffect(() => {
-        const images = [
-            "/galleryimages/1.jpg",
-            "/galleryimages/2.jpg",
-            "/galleryimages/3.jpg",
-            "/galleryimages/4.jpg",
-            "/galleryimages/5.jpg",
-            "/galleryimages/6.jpg",
-            "/galleryimages/7.jpg",
-            "/galleryimages/8.jpg",
-            "/galleryimages/9.jpg",
-            "/galleryimages/10.jpg",
-            "/galleryimages/11.jpg",
-            "/galleryimages/12.jpg",
-            "/galleryimages/13.jpg",
-            "/galleryimages/14.jpg",
-            "/galleryimages/15.jpg",
-        ];
 
-        setPhotos(images);
+        const fetchPhotos = async () => {
+            try {
+                const res = await axios.get("/gallery?limit=100");
+                const albums = res.data.data || [];
+
+                let allPhotos = [];
+
+                albums.forEach(album => {
+                    (album.photos || []).forEach(p => {
+                        allPhotos.push(`http://localhost:5000${p}`);
+                    });
+                });
+
+                allPhotos.sort(() => Math.random() - 0.5);
+
+                const selected = allPhotos.slice(0, 15);
+
+                setPhotos(selected);
+
+                localStorage.setItem("gallery_cache", JSON.stringify(selected));
+                localStorage.setItem("gallery_time", Date.now());
+
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        const FIVE_DAYS = 5 * 24 * 60 * 60 * 1000;
+
+        const cached = localStorage.getItem("gallery_cache");
+        const time = localStorage.getItem("gallery_time");
+
+        if (cached && time && (Date.now() - time < FIVE_DAYS)) {
+            setPhotos(JSON.parse(cached));
+        } else {
+            fetchPhotos();
+        }
+
     }, []);
 
     return (
