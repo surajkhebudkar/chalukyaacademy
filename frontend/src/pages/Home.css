@@ -54,7 +54,6 @@
 .hero-left {
     opacity: 0;
     transform: translateY(30px);
-    filter: blur(8px);
     animation: fadeUp 1s ease forwards;
     animation-delay: 0.3s;
 }
@@ -100,7 +99,6 @@
     position: relative;
     opacity: 0;
     transform: translateY(30px);
-    filter: blur(6px);
     animation: fadeUp 1s ease forwards;
     animation-delay: 0.6s;
     z-index: 2;

@@ -31,7 +31,7 @@ const Home = () => {
 
                 if (index1 > fullText.length && index2 > fullText2.length) {
                     isDeleting = true;
-                    timeout = setTimeout(typing, 1500); // pause after typing
+                    timeout = setTimeout(typing, 1500);
                     return;
                 }
 
