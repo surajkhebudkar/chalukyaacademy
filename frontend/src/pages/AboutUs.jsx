@@ -77,12 +77,7 @@ export default function AboutUs() {
                             <li>Excellence</li>
                         </ul>
                     </div>
-
-                    <div className="about-card">
-                        <h3>Branches</h3>
-                        <p>Pune | Mumbai | Nashik</p>
-                    </div>
-
+                  
                 </div>
             </div>
 
