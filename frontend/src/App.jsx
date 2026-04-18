@@ -17,6 +17,7 @@ import AdminDashboard from "./adminpages/AdminDashboard";
 import CoachDashboard from "./coachpages/CoachDashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import VideoGallery from "./pages/VideoGallery";
+import Finance from "./pages/Finance";
 
 
 function AppContent() {
@@ -37,6 +38,7 @@ function AppContent() {
           <Route path="/videogallery" element={<VideoGallery />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/micro-finance" element={<Finance />} />
 
           <Route
             path="/adminpages/admin-dashboard"
