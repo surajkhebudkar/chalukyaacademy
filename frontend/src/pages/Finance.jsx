@@ -5,13 +5,11 @@ export default function Finance() {
     return (
         <section className="finance-page">
 
-            {/* 🔷 HERO */}
             <div className="finance-hero">
                 <h1>Finance & Fees</h1>
                 <p>Transparent pricing for all training programs</p>
             </div>
 
-            {/* 🔷 FEES */}
             <div className="finance-section">
                 <h2>Training Fees</h2>
 
@@ -48,7 +46,6 @@ export default function Finance() {
                 </div>
             </div>
 
-            {/* 🔷 PAYMENT METHODS */}
             <div className="finance-section">
                 <h2>Payment Options</h2>
 
@@ -59,23 +56,12 @@ export default function Finance() {
                 </div>
             </div>
 
-            {/* 🔷 SCHOLARSHIP */}
             <div className="finance-section highlight">
                 <h2>Scholarship Program</h2>
                 <p>
                     Talented players can apply for scholarships based on performance.
                     Up to 50% fee discount available.
                 </p>
-            </div>
-
-            {/* 🔷 CONTACT */}
-            <div className="finance-section contact">
-                <h2>Need Help?</h2>
-                <p>Contact us for fee details and enrollment</p>
-
-                <button className="contact-btn">
-                    Contact Now
-                </button>
             </div>
 
         </section>

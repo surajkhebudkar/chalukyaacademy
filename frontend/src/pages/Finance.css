@@ -3,7 +3,6 @@
     background: #f8f9fa;
 }
 
-/* HERO */
 .finance-hero {
     text-align: center;
     margin-bottom: 50px;
@@ -18,7 +17,6 @@
     color: #666;
 }
 
-/* SECTION */
 .finance-section {
     max-width: 1100px;
     margin: 50px auto;
@@ -29,7 +27,6 @@
     margin-bottom: 25px;
 }
 
-/* FEES */
 .fee-cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -57,7 +54,6 @@
     border: 2px solid #0d6efd;
 }
 
-/* PAYMENT */
 .payment-methods {
     display: flex;
     justify-content: center;
@@ -70,7 +66,6 @@
     border-radius: 10px;
 }
 
-/* HIGHLIGHT */
 .highlight {
     background: #0d6efd;
     color: white;
@@ -78,7 +73,6 @@
     border-radius: 12px;
 }
 
-/* CONTACT */
 .contact-btn {
     margin-top: 15px;
     padding: 10px 20px;
@@ -89,7 +83,6 @@
     cursor: pointer;
 }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
     .fee-cards {
         grid-template-columns: 1fr;
