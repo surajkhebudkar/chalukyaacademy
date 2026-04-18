@@ -75,10 +75,8 @@ body {
 .main {
     flex: 1;
     padding: 25px;
-    background: #f3f4f6;
     animation: fadeIn 0.6s ease;
-    height: 100vh;
-        overflow-y: auto;
+    overflow-y: auto;
 }
 
 .topbar {

@@ -143,7 +143,7 @@ export default function AddPlayer({ onSuccess, onCancel, editData }) {
 
                 <div className="btn-group">
                     <button type="submit" className="primary-btn">
-                        {editData ? "Update Player" : "Add Player"}
+                        {loading ? "Saving..." : editData ? "Update Player" : "Add Player"}
                     </button>
 
                     <button

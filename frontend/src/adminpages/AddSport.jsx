@@ -16,6 +16,7 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
         sportImages: [],
         coachPhotos: {}
     });
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (editData) {
@@ -86,6 +87,7 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
         }
 
         try {
+            setLoading(true);
             const formData = new FormData();
 
             const cleanData = {
@@ -115,7 +117,7 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
 
                 if (file instanceof File) {
                     formData.append("sportImages", file);
-                    sportKeys.push(String(sIndex)); // 🔥 STRING IMPORTANT
+                    sportKeys.push(String(sIndex));
                 }
             });
 
@@ -147,6 +149,8 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
         } catch (err) {
             console.log("FRONTEND ERROR:", err.response?.data || err);
             alert("Error ❌");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -288,7 +292,7 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
 
                 <div className="btn-group">
                     <button type="submit" className="primary-btn">
-                        {editData ? "Update Sports" : "Add All Sports"}
+                        {loading ? "Saving..." : editData ? "Update Sports" : "Add All Sports"}
                     </button>
 
                     <button type="button" className="cancel-btn" onClick={onCancel}>

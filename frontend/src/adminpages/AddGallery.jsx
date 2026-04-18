@@ -197,7 +197,7 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
 
                 <div className="btn-group">
                     <button type="submit" className="primary-btn">
-                        {editData ? "Update Gallery" : "Add Gallery"}
+                        {loading ? "Saving..." : editData ? "Update Gallery" : "Add Gallery"}
                     </button>
 
                     <button type="button" className="cancel-btn" onClick={onCancel}>

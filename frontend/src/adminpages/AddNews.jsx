@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../utils/axiosInstance";
 import "./AddNews.css";
+import "./AddSport.css"
 
 const AddNews = ({ onSuccess, onCancel, editData }) => {
 
@@ -89,14 +90,16 @@ const AddNews = ({ onSuccess, onCancel, editData }) => {
                 {preview && <img src={preview} className="preview-img" />}
 
                 <div className="btn-group">
-                    <button type="submit">
-                        {loading ? "Saving..." : editData ? "Update" : "Add"}
+                    <button type="submit" className="primary-btn">
+                        {loading ? "Saving..." : editData ? "Update News" : "Add News"}
                     </button>
 
                     <button type="button" className="cancel-btn" onClick={onCancel}>
                         Cancel
                     </button>
                 </div>
+
+               
             </form>
         </div>
     );

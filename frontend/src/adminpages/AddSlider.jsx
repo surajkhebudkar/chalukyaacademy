@@ -88,7 +88,7 @@ export default function AddSlider({ onSuccess, onCancel, editData }) {
 
                 <div className="btn-group">
                     <button type="submit" className="primary-btn">
-                        {editData ? "Update Image" : "Add Image"}
+                        {loading ? "Saving..." : editData ? "Update Image" : "Add Image"}
                     </button>
 
                     <button

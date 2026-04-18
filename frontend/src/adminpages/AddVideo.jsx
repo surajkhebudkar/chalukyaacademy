@@ -86,7 +86,7 @@ export default function AddVideo({ onSuccess, onCancel, editData }) {
 
                 <div className="btn-group">
                     <button type="submit" className="primary-btn">
-                        {editData ? "Update Video" : "Add Video"}
+                        {loading ? "Saving..." : editData ? "Update Video" : "Add Video"}
                     </button>
 
                     <button type="button" className="cancel-btn" onClick={onCancel}>
