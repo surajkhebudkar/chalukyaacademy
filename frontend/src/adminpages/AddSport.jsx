@@ -192,35 +192,39 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                 {form.sports.map((sport, sIndex) => (
                     <div key={sIndex} className="dynamic-row">
 
-                        <input
-                            placeholder="Sport Name"
-                            value={sport.name}
-                            onChange={(e) => {
-                                const updated = [...form.sports];
-                                updated[sIndex].name = e.target.value;
-                                setForm({ ...form, sports: updated });
-                            }}
-                        />
+                        <div className="row-header">
+                            <input
+                                placeholder="Sport Name"
+                                value={sport.name}
+                                onChange={(e) => {
+                                    const updated = [...form.sports];
+                                    updated[sIndex].name = e.target.value;
+                                    setForm({ ...form, sports: updated });
+                                }}
+                            />
 
-                        <input
-                            type="file"
-                            onChange={(e) => {
-                                const arr = [...files.sportImages];
-                                arr[sIndex] = e.target.files[0];
-                                setFiles({ ...files, sportImages: arr });
-                            }}
-                        />
+                            <input
+                                type="file"
+                                onChange={(e) => {
+                                    const arr = [...files.sportImages];
+                                    arr[sIndex] = e.target.files[0];
+                                    setFiles({ ...files, sportImages: arr });
+                                }}
+                            />
 
-                        <button type="button" className="delete-btn" onClick={() => deleteSportRow(sIndex)}>
-                            ❌ Remove Sport
-                        </button>
+                            <div className="row-actions">
+                                <button type="button" className="add-btnsport" onClick={() => addCoach(sIndex)}>
+                                    + Add Coach
+                                </button>
 
-                        <button type="button" className="add-btnsport" onClick={() => addCoach(sIndex)}>
-                            + Add Coach
-                        </button>
+                                <button type="button" className="delete-btn" onClick={() => deleteSportRow(sIndex)}>
+                                    ❌ Remove Sport
+                                </button>
+                            </div>
+                        </div>
 
                         {sport.coaches.map((c, cIndex) => (
-                            <div key={cIndex}>
+                            <div key={cIndex} className="coach-block">
 
                                 <input
                                     placeholder="Coach Name"
@@ -256,16 +260,18 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
                                     }}
                                 />
 
-                                <button type="button" className="delete-btn" onClick={() => deleteCoach(sIndex, cIndex)}>
-                                    ❌ Remove Coach
-                                </button>
+                                <div className="row-actions">
+                                    <button type="button" className="add-btnsport" onClick={() => addAchievement(sIndex, cIndex)}>
+                                        + Add Achievement
+                                    </button>
 
-                                <button type="button" className="add-btnsport" onClick={() => addAchievement(sIndex, cIndex)}>
-                                    + Add Achievement
-                                </button>
+                                    <button type="button" className="delete-btn" onClick={() => deleteCoach(sIndex, cIndex)}>
+                                        ❌ Remove Coach
+                                    </button>
+                                </div>
 
                                 {c.achievements.map((a, aIndex) => (
-                                    <div key={aIndex} style={{ display: "flex", gap: "8px" }}>
+                                    <div key={aIndex} className="achievement-row">
                                         <input
                                             placeholder="Achievement"
                                             value={a}
@@ -278,7 +284,7 @@ export default function AddSport({ onSuccess, onCancel, editData }) {
 
                                         <button
                                             type="button"
-                                            className="delete-btn"
+                                            className="delete-btn small-btn"
                                             onClick={() => deleteAchievement(sIndex, cIndex, aIndex)}
                                         >
                                             ❌
