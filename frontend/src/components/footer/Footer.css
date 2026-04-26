@@ -106,7 +106,13 @@
 .footer-logo img:active {
     transform: scale(0.95);
 }
-
+.error-text {
+    color: red;
+    font-size: 13px;
+    margin-top: -8px;
+    margin-bottom: 8px;
+    display: block;
+}
 
 
 

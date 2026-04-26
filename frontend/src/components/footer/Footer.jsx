@@ -4,7 +4,20 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 const Footer = () => {
     const footerRef = useRef();
+    const logoRef = useRef();
+
     const [show, setShow] = useState(false);
+
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        contact: "",
+        enquiry: "Select Enquiry",
+        remark: "",
+        feedback: "",
+    });
+
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -22,7 +35,6 @@ const Footer = () => {
 
         return () => observer.disconnect();
     }, []);
-    const logoRef = useRef();
 
     const handleTilt = (e) => {
         const rect = logoRef.current.getBoundingClientRect();
@@ -39,7 +51,97 @@ const Footer = () => {
     };
 
     const resetTilt = () => {
-        logoRef.current.style.transform = "rotateX(0) rotateY(0) scale(1)";
+        logoRef.current.style.transform =
+            "rotateX(0) rotateY(0) scale(1)";
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+
+        setErrors({
+            ...errors,
+            [name]: "",
+        });
+    };
+
+    const validateForm = () => {
+        let newErrors = {};
+
+        if (!formData.name.trim()) {
+            newErrors.name = "Please enter your name!";
+        }
+
+        if (!formData.contact.trim()) {
+            newErrors.contact = "Please enter your contact number!";
+        }
+
+        if (formData.enquiry === "Select Enquiry") {
+            newErrors.enquiry = "Please Select the Option!";
+        }
+
+        setErrors(newErrors);
+
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (validateForm()) {
+            console.log("Form Submitted:", formData);
+
+            alert("Enquiry submitted successfully!");
+
+            setFormData({
+                name: "",
+                email: "",
+                contact: "",
+                enquiry: "Select Enquiry",
+                remark: "",
+            });
+
+            setErrors({});
+        }
+    };
+
+    const validateFeedback = () => {
+        let newErrors = {};
+
+        if (!formData.feedback.trim()) {
+            newErrors.feedback = "Please write your feedback!";
+        }
+
+        setErrors({
+            ...errors,
+            ...newErrors,
+        });
+
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleFeedbackSubmit = (e) => {
+        e.preventDefault();
+
+        if (validateFeedback()) {
+            console.log("Feedback Submitted:", formData.feedback);
+
+            alert("Feedback sent successfully!");
+
+            setFormData({
+                ...formData,
+                feedback: "",
+            });
+
+            setErrors({
+                ...errors,
+                feedback: "",
+            });
+        }
     };
 
     return (
@@ -53,8 +155,8 @@ const Footer = () => {
 
                     <div
                         className="footer-logo"
-                        onMouseMove={(e) => handleTilt(e)}
-                        onMouseLeave={() => resetTilt()}
+                        onMouseMove={handleTilt}
+                        onMouseLeave={resetTilt}
                     >
                         <img
                             src="/chalukyaimages/chlukyaacademylogo.png"
@@ -69,16 +171,49 @@ const Footer = () => {
                     <p><i className="bi bi-whatsapp"></i> WhatsApp</p>
                     <p><i className="bi bi-instagram"></i> Instagram</p>
                     <p><i className="bi bi-facebook"></i> Facebook</p>
+                    <p><i className="bi bi-youtube"></i> Youtube</p>
                 </div>
 
                 <div className="footer-section section3">
                     <h4>Enquiry</h4>
-                    <form className="footer-form">
-                        <input type="text" placeholder="Name" />
-                        <input type="email" placeholder="Email" />
-                        <input type="text" placeholder="Contact" />
 
-                        <select>
+                    <form className="footer-form" onSubmit={handleSubmit}>
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Name"
+                            value={formData.name}
+                            onChange={handleChange}
+                        />
+                        {errors.name && (
+                            <small className="error-text">{errors.name}</small>
+                        )}
+
+                        <input type="email" placeholder="Email" />
+
+                        <input
+                            type="text"
+                            name="contact"
+                            placeholder="Contact"
+                            value={formData.contact}
+                            onChange={(e) => {
+                                const value = e.target.value;
+
+                                if (/^\d*$/.test(value)) {
+                                    handleChange(e);
+                                }
+                            }}
+                            maxLength="10"
+                        />
+                        {errors.contact && (
+                            <small className="error-text">{errors.contact}</small>
+                        )}
+
+                        <select
+                            name="enquiry"
+                            value={formData.enquiry}
+                            onChange={handleChange}
+                        >
                             <option>Select Enquiry</option>
                             <option>Archery</option>
                             <option>Basketball</option>
@@ -90,16 +225,42 @@ const Footer = () => {
                             <option>Yoga</option>
                             <option>Other</option>
                         </select>
+                        {errors.enquiry && (
+                            <small className="error-text">{errors.enquiry}</small>
+                        )}
 
-                        <textarea placeholder="Remark"></textarea>
+                        <textarea
+                            name="remark"
+                            placeholder="Remark"
+                            value={formData.remark}
+                            onChange={handleChange}
+                        ></textarea>
+
                         <button type="submit">Submit</button>
                     </form>
                 </div>
 
+
                 <div className="footer-section section4">
                     <h4>Feedback</h4>
-                    <textarea placeholder="Write feedback..." />
-                    <button className="feedback-btn">Send</button>
+
+                    <textarea
+                        name="feedback"
+                        placeholder="Write feedback..."
+                        value={formData.feedback}
+                        onChange={handleChange}
+                    />
+
+                    {errors.feedback && (
+                        <small className="error-text">{errors.feedback}</small>
+                    )}
+
+                    <button
+                        className="feedback-btn"
+                        onClick={handleFeedbackSubmit}
+                    >
+                        Send
+                    </button>
                 </div>
 
             </div>
