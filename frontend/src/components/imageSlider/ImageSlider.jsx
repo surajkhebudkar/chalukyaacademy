@@ -37,11 +37,22 @@ const ImageSlider = () => {
     useEffect(() => {
         if (slides.length === 0 || isPaused) return;
 
-        const interval = setInterval(() => {
-            setCurrent((prev) => (prev + 1) % slides.length);
-        }, 3000);
+        let timeout;
+        let interval;
 
-        return () => clearInterval(interval);
+        timeout = setTimeout(() => {
+            setCurrent((prev) => (prev + 1) % slides.length);
+
+            interval = setInterval(() => {
+                setCurrent((prev) => (prev + 1) % slides.length);
+            }, 3000);
+
+        }, 1000);
+
+        return () => {
+            clearTimeout(timeout);
+            clearInterval(interval);
+        };
     }, [slides, isPaused]);
 
     useEffect(() => {
@@ -49,12 +60,14 @@ const ImageSlider = () => {
             ([entry]) => {
                 if (entry.isIntersecting) {
                     setShow(true);
+                    observer.unobserve(entry.target);
                 }
             },
             { threshold: 0.2 }
         );
-
-        if (sliderRef.current) observer.observe(sliderRef.current);
+        if (sliderRef.current) {
+            observer.observe(sliderRef.current);
+        }
 
         return () => observer.disconnect();
     }, []);
