@@ -93,7 +93,7 @@ const Home = () => {
                                 marginTop: "8px",
                                 fontSize: "30px",
                                 fontWeight: "700",
-                                color: "#2563eb",
+                                color: "#138808",
                                 letterSpacing: "1px"
                             }}>
                                 <span className="typing2">{text2}</span>

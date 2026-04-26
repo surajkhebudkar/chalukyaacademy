@@ -29,7 +29,7 @@
     max-width: 1200px;
     margin: auto;
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
+    grid-template-columns: 1.5fr 0.7fr;
     gap: 40px;
     align-items: center;
 }
@@ -58,11 +58,11 @@
     animation-delay: 0.3s;
 }
 
-.parentcompany h1{
-    font-Size: 40px;
+.parentcompany h1 {
+    font-Size: 50px;
     letter-Spacing: 3px;
-    font-weight: 900;
-    color: #000000;
+    font-weight: bolder;
+    color: #D4AF37;
     margin-Bottom: 12px;
     text-Transform: uppercase;
     font-family: 'Sora', sans-serif;
@@ -93,8 +93,9 @@
 }
 
 .hero-right img {
-    width: 40%;
-    left: 130px;
+    width: 60%;
+    max-width: 400px;
+    left: 10px;
     border-radius: 20px;
     position: relative;
     opacity: 0;
@@ -109,6 +110,7 @@
     margin-left: 5px;
     animation: blink 1s infinite;
 }
+
 .typing2::after {
     content: "|";
     margin-left: 5px;
@@ -141,21 +143,21 @@
     width: 180px;
     height: 180px;
     top: 4%;
-    right: 17%;
+    right: 18%;
 }
 
 .circle2 {
     width: 130px;
     height: 130px;
-    bottom: 15%;
-    right: 16%;
+    bottom: 3%;
+    right: 12%;
     animation-delay: 2s;
 }
 
 .circle3 {
     width: 200px;
     height: 200px;
-    top: 50%;
+    top: 45%;
     left: 40%;
     animation-delay: 4s;
 }
@@ -201,12 +203,6 @@
     .hero-right {
         display: flex;
         justify-content: center;
-    }
-
-    .hero-right img {
-        width: 40%;
-        max-width: 400px;
-        left: 0;
     }
 
     .circle3 {
