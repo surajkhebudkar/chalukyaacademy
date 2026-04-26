@@ -1,0 +1,134 @@
+.event-section {
+    padding: 60px 20px;
+    background: #f8f9fa;
+    overflow: hidden;
+}
+
+.eventTitle {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+}
+
+.eventTitle::after {
+    content: "";
+    width: 80px;
+    height: 3px;
+    background: #0d6efd;
+    display: block;
+    margin: 10px auto 0;
+    border-radius: 10px;
+}
+
+.eventContainer {
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.eventCard {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateX(60px) scale(0.9);
+    filter: blur(8px);
+    visibility: hidden;
+}
+
+.event-section.show .eventCard {
+    visibility: visible;
+    animation: premiumReveal 4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.event-section.show .eventCard:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.event-section.show .eventCard:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.event-section.show .eventCard:nth-child(3) {
+    animation-delay: 0.8s;
+}
+
+.eventCard img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+}
+
+.eventCard:hover img {
+    transform: scale(1.1);
+    transition: 0.5s;
+}
+
+.eventCard:hover {
+    transform: translateY(-6px);
+}
+
+.eventoverlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    text-transform: uppercase;
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.8),
+            transparent);
+    transform: translateY(100%);
+    transition: 0.4s;
+}
+
+.eventoverlay h4 {
+    color: #fff;
+    font-size: 16px;
+}
+
+.eventCard:hover .eventoverlay {
+    transform: translateY(0);
+}
+
+@keyframes premiumReveal {
+    0% {
+        opacity: 0;
+        transform: translateX(60px) scale(0.9);
+        filter: blur(8px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .eventContainer {
+        grid-template-columns: 1fr;
+    }
+
+    .eventCard {
+        width: 80%;
+        margin: auto;
+    }
+
+    .eventCard img {
+        height: 250px;
+    }
+
+    .eventoverlay {
+        transform: translateY(0);
+        background: linear-gradient(to top,
+                rgba(0, 0, 0, 0.8),
+                transparent);
+    }
+}

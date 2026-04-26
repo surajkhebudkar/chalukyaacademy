@@ -6,6 +6,7 @@ import NewsSection from "../components/news/NewsSection";
 import PhotoGallerySection from "../components/gallery/PhotoGallerySection";
 import BestPlayersSection from "../components/bestPlayers/BestPlayersSection";
 import VideoSection from "../components/videosection/VideoSection";
+import EventSection from "../components/event/EventSection";
 
 const Home = () => {
     const [text, setText] = useState("");
@@ -130,6 +131,7 @@ const Home = () => {
             
             <VideoSection />
             <NewsSection />
+            <EventSection />
             <ImageSlider />
             <PhotoGallerySection />
             <BestPlayersSection />
