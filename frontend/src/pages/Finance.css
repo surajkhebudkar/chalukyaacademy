@@ -9,86 +9,148 @@
 }
 
 .finance-hero h1 {
-    font-size: 36px;
-    font-weight: 600;
+    font-size: 38px;
+    font-weight: 700;
+    margin-bottom: 10px;
 }
 
 .finance-hero p {
     color: #666;
+    font-size: 16px;
 }
 
 .finance-section {
-    max-width: 1100px;
-    margin: 50px auto;
+    max-width: 1200px;
+    margin: 60px auto;
     text-align: center;
 }
 
 .finance-section h2 {
-    margin-bottom: 25px;
+    font-size: 30px;
+    margin-bottom: 30px;
+    font-weight: 600;
 }
 
-.fee-cards {
+.loan-cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 25px;
 }
 
-.fee-card {
+.loan-card {
     background: white;
-    padding: 25px;
-    border-radius: 12px;
+    padding: 28px;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
     transition: 0.3s;
 }
 
-.fee-card:hover {
+.loan-card:hover {
     transform: translateY(-8px);
 }
 
-.fee-card .price {
+.loan-card h3 {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.loan-card .amount {
     font-size: 22px;
-    margin: 10px 0;
     font-weight: bold;
+    color: #0d6efd;
+    margin-bottom: 10px;
+}
+
+.loan-card .rate {
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.loan-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.loan-card ul li {
+    margin: 8px 0;
+    color: #444;
 }
 
 .premium {
     border: 2px solid #0d6efd;
 }
 
-.payment-methods {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
+.documents-box {
+    background: white;
+    padding: 35px;
+    border-radius: 14px;
+    text-align: left;
+    max-width: 800px;
+    margin: auto;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
 }
 
-.payment-card {
+.documents-box ul {
+    padding-left: 20px;
+}
+
+.documents-box ul li {
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: #333;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.feature-card {
     background: white;
-    padding: 15px 25px;
-    border-radius: 10px;
+    padding: 20px;
+    border-radius: 12px;
+    font-weight: 500;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
 }
 
 .highlight {
     background: #0d6efd;
     color: white;
-    padding: 30px;
-    border-radius: 12px;
+    padding: 40px;
+    border-radius: 14px;
 }
 
-.contact-btn {
-    margin-top: 15px;
-    padding: 10px 20px;
-    background: #10b981;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+.highlight h2 {
+    margin-bottom: 20px;
+}
+
+.highlight p {
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+@media (max-width: 992px) {
+
+    .loan-cards,
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 768px) {
-    .fee-cards {
+
+    .loan-cards,
+    .features-grid {
         grid-template-columns: 1fr;
     }
 
-    .payment-methods {
-        flex-direction: column;
+    .finance-hero h1 {
+        font-size: 30px;
+    }
+
+    .finance-section h2 {
+        font-size: 24px;
     }
 }
