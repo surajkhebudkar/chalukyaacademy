@@ -18,6 +18,8 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
         photos: []
     });
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         if (editData) {
             setForm({
@@ -58,10 +60,11 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
         e.preventDefault();
 
         try {
+            setLoading(true);
+
             const formData = new FormData();
 
             formData.append("title", form.title);
-
             formData.append("existingPhotos", JSON.stringify(preview.photos));
 
             if (files.coverImage) {
@@ -85,6 +88,8 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
         } catch (err) {
             console.log(err);
             alert("Error ❌");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -196,7 +201,7 @@ export default function AddGallery({ onSuccess, onCancel, editData }) {
                 ))}
 
                 <div className="btn-group">
-                    <button type="submit" className="primary-btn">
+                    <button type="submit" className="primary-btn" disabled={loading}>
                         {loading ? "Saving..." : editData ? "Update Gallery" : "Add Gallery"}
                     </button>
 

@@ -14,6 +14,8 @@ export default function AddPlayer({ onSuccess, onCancel, editData }) {
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState("");
 
+    const [loading, setLoading] = useState(false);
+
     const resetForm = () => {
         setForm({
             name: "",
@@ -48,8 +50,11 @@ export default function AddPlayer({ onSuccess, onCancel, editData }) {
         e.preventDefault();
 
         try {
+            setLoading(true);
+
             if (!image && !editData) {
                 alert("Please select image ❌");
+                setLoading(false);
                 return;
             }
 
@@ -88,6 +93,8 @@ export default function AddPlayer({ onSuccess, onCancel, editData }) {
         } catch (err) {
             console.log("PLAYER ERROR:", err.response?.data || err);
             alert("Error ❌");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -121,7 +128,7 @@ export default function AddPlayer({ onSuccess, onCancel, editData }) {
                 />
 
                 <input
-                    id="player-file"   // 🔥 important (reset साठी)
+                    id="player-file"
                     type="file"
                     onChange={(e) => {
                         const file = e.target.files[0];
@@ -142,7 +149,7 @@ export default function AddPlayer({ onSuccess, onCancel, editData }) {
                 )}
 
                 <div className="btn-group">
-                    <button type="submit" className="primary-btn">
+                    <button type="submit" className="primary-btn" disabled={loading}>
                         {loading ? "Saving..." : editData ? "Update Player" : "Add Player"}
                     </button>
 

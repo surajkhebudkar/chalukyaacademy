@@ -8,12 +8,15 @@ export default function AddSlider({ onSuccess, onCancel, editData }) {
     const [preview, setPreview] = useState("");
     const [title, setTitle] = useState("");
 
+    const [loading, setLoading] = useState(false);
+
     const resetForm = () => {
         setImage(null);
         setPreview("");
         setTitle("");
 
-        document.getElementById("slider-file").value = "";
+        const fileInput = document.getElementById("slider-file");
+        if (fileInput) fileInput.value = "";
     };
 
     useEffect(() => {
@@ -30,8 +33,11 @@ export default function AddSlider({ onSuccess, onCancel, editData }) {
         e.preventDefault();
 
         try {
+            setLoading(true);
+
             if (!image && !editData) {
                 alert("Please select image ❌");
+                setLoading(false);
                 return;
             }
 
@@ -54,6 +60,8 @@ export default function AddSlider({ onSuccess, onCancel, editData }) {
         } catch (err) {
             console.log("SLIDER ERROR:", err.response?.data || err);
             alert("Error ❌");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -70,7 +78,7 @@ export default function AddSlider({ onSuccess, onCancel, editData }) {
                 <label>Slider Image</label>
 
                 <input
-                    id="slider-file"  // 🔥 important
+                    id="slider-file"
                     type="file"
                     onChange={(e) => {
                         const file = e.target.files[0];
@@ -87,7 +95,7 @@ export default function AddSlider({ onSuccess, onCancel, editData }) {
                 )}
 
                 <div className="btn-group">
-                    <button type="submit" className="primary-btn">
+                    <button type="submit" className="primary-btn" disabled={loading}>
                         {loading ? "Saving..." : editData ? "Update Image" : "Add Image"}
                     </button>
 

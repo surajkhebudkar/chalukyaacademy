@@ -12,6 +12,8 @@ export default function AddVideo({ onSuccess, onCancel, editData }) {
 
     const [preview, setPreview] = useState("");
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         if (editData) {
             setForm({
@@ -30,6 +32,8 @@ export default function AddVideo({ onSuccess, onCancel, editData }) {
         e.preventDefault();
 
         try {
+            setLoading(true);
+
             const formData = new FormData();
 
             formData.append("title", form.title);
@@ -51,6 +55,8 @@ export default function AddVideo({ onSuccess, onCancel, editData }) {
         } catch (err) {
             console.log(err);
             alert("Error ❌");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -85,7 +91,7 @@ export default function AddVideo({ onSuccess, onCancel, editData }) {
                 />
 
                 <div className="btn-group">
-                    <button type="submit" className="primary-btn">
+                    <button type="submit" className="primary-btn" disabled={loading}>
                         {loading ? "Saving..." : editData ? "Update Video" : "Add Video"}
                     </button>
 
