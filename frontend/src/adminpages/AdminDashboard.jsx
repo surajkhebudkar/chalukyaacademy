@@ -16,6 +16,7 @@ import AddSlider from "./AddSlider";
 import SliderTable from "./SliderTable";
 import PlayerTable from "./PlayerTable";
 import AddPlayer from "./AddPlayer";
+import EnquiryTable from "./EnquiryTable";
 
 
 const AdminDashboard = () => {
@@ -26,6 +27,7 @@ const AdminDashboard = () => {
     const [videoData, setVideoData] = useState([]);
     const [sliderData, setSliderData] = useState([]);
     const [playerData, setPlayerData] = useState([]);
+    const [enquiryData, setEnquiryData] = useState([]);
     
 
     const [activeMenu, setActiveMenu] = useState("news");
@@ -52,6 +54,9 @@ const AdminDashboard = () => {
 
     const [playerPage, setPlayerPage] = useState(1);
     const [playerTotal, setPlayerTotal] = useState(1);
+
+    const [enquiryPage, setEnquiryPage] = useState(1);
+    const [enquiryTotal, setEnquiryTotal] = useState(1);
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [touchStartX, setTouchStartX] = useState(0);
@@ -91,6 +96,10 @@ const AdminDashboard = () => {
     useEffect(() => {
         if (activeMenu === "players") fetchPlayers(playerPage);
     }, [playerPage, activeMenu]);
+
+    useEffect(() => {
+        if (activeMenu === "enquiry") fetchEnquiries(enquiryPage);
+    }, [activeMenu, enquiryPage]);
 
     
     const fetchNews = async (page = 1) => {
@@ -170,6 +179,16 @@ const AdminDashboard = () => {
         }
     };
 
+    const fetchEnquiries = async (page = 1) => {
+        try {
+            const res = await axios.get(`/enquiry?page=${page}&limit=5`);
+            setEnquiryData(res.data.data || []);
+            setEnquiryTotal(res.data.totalPages || 1);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     const filterData = (list) => {
         if (!search) return list;
         return list.filter(item =>
@@ -205,6 +224,7 @@ const AdminDashboard = () => {
                     <li onClick={() => { setActiveMenu("videos"); setVideoPage(1); setSidebarOpen(false); }}>🎥 Videos Gallery</li>
                     <li onClick={() => { setActiveMenu("slider"); setSliderPage(1); setSidebarOpen(false); }}>🎞️ Image Slider</li>
                     <li onClick={() => { setActiveMenu("players"); setPlayerPage(1); setSidebarOpen(false); }}>🏅 Best Players</li>
+                    <li onClick={() => { setActiveMenu("enquiry"); setSidebarOpen(false); }}>📩 Enquiries</li>
                 </ul>
             </div>
 
@@ -552,6 +572,22 @@ const AdminDashboard = () => {
                             }}
                             onCancel={() => setActiveMenu("players")}
                         />
+                    )}
+
+
+                    {activeMenu === "enquiry" && (
+                        <>
+                            <div className="news-header">
+                                <h2>📩 Enquiry Management</h2>
+                            </div>
+
+                            <EnquiryTable
+                                enquiries={enquiryData}
+                                currentPage={enquiryPage}
+                                totalPages={enquiryTotal}
+                                onPageChange={setEnquiryPage}
+                            />
+                        </>
                     )}
 
 

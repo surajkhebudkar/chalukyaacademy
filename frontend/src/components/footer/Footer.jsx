@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Footer.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import axios from "../utils/axiosInstance";
 
 const Footer = () => {
     const footerRef = useRef();
@@ -89,23 +90,27 @@ const Footer = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (validateForm()) {
-            console.log("Form Submitted:", formData);
+            try {
+                await axios.post("/enquiry", formData);
 
-            alert("Enquiry submitted successfully!");
+                alert("Enquiry submitted successfully!");
 
-            setFormData({
-                name: "",
-                email: "",
-                contact: "",
-                enquiry: "Select Enquiry",
-                remark: "",
-            });
+                setFormData({
+                    name: "",
+                    email: "",
+                    contact: "",
+                    enquiry: "Select Enquiry",
+                    remark: "",
+                    feedback: ""
+                });
 
-            setErrors({});
+            } catch (error) {
+                alert("Failed to send enquiry");
+            }
         }
     };
 
@@ -189,7 +194,13 @@ const Footer = () => {
                             <small className="error-text">{errors.name}</small>
                         )}
 
-                        <input type="email" placeholder="Email" />
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            value={formData.email}
+                            onChange={handleChange}
+                        />
 
                         <input
                             type="text"
