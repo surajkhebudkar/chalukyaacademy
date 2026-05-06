@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Footer.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import axios from "../utils/axiosInstance";
+import axios from "../../utils/axiosInstance";
 
 const Footer = () => {
     const footerRef = useRef();

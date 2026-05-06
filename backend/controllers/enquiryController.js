@@ -1,7 +1,7 @@
 import Enquiry from "../models/Enquiry.js";
 import nodemailer from "nodemailer";
 
-// CREATE ENQUIRY + SEND MAIL
+// CREATE ENQUIRY
 export const createEnquiry = async (req, res) => {
     try {
         const { name, email, contact, enquiry, remark } = req.body;
