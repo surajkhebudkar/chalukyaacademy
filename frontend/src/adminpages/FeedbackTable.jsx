@@ -1,90 +1,66 @@
 import axios from "../utils/axiosInstance";
 import "./AdminDashboard.css";
 
-const EnquiryTable = ({
-    enquiries,
+const FeedbackTable = ({
+    feedbacks,
     currentPage,
     totalPages,
     onPageChange,
     refresh
 }) => {
 
-    const deleteEnquiry = async (id) => {
+    const deleteFeedback = async (id) => {
+
         const confirmDelete = window.confirm(
-            "Delete this enquiry?"
+            "Delete this feedback?"
         );
 
         if (!confirmDelete) return;
 
         try {
-            await axios.delete(`/enquiry/${id}`);
+
+            await axios.delete(`/feedback/${id}`);
 
             refresh();
 
         } catch (err) {
+
             console.log(err);
+
             alert("Delete failed");
+
         }
     };
 
     return (
         <>
             <table className="news-table">
+
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Contact</th>
-                        <th>Enquiry</th>
-                        <th>Remark</th>
+                        <th>Feedback</th>
                         <th>Date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    {(enquiries || []).map((item) => (
+
+                    {(feedbacks || []).map((item) => (
                         <tr key={item._id}>
 
-                            <td>{item.name}</td>
-
-                            <td>{item.email || "-"}</td>
-
-                            <td>{item.contact}</td>
-
-                            <td>{item.enquiry}</td>
-
-                            <td>{item.remark || "-"}</td>
+                            <td>{item.feedback}</td>
 
                             <td>
                                 {new Date(item.createdAt)
                                     .toLocaleString()}
                             </td>
 
-                            <td
-                                style={{
-                                    display: "flex",
-                                    gap: "8px",
-                                    flexWrap: "wrap"
-                                }}
-                            >
-
-                                {item.email && (
-                                    <a
-                                        href={`mailto:${item.email}`}
-                                        className="edit-btn"
-                                        style={{
-                                            textDecoration: "none",
-                                            display: "inline-block"
-                                        }}
-                                    >
-                                        Reply
-                                    </a>
-                                )}
+                            <td>
 
                                 <button
                                     className="delete-btn"
-                                    onClick={() => deleteEnquiry(item._id)}
+                                    onClick={() => deleteFeedback(item._id)}
                                 >
                                     Delete
                                 </button>
@@ -93,7 +69,9 @@ const EnquiryTable = ({
 
                         </tr>
                     ))}
+
                 </tbody>
+
             </table>
 
             <div className="pagination">
@@ -121,4 +99,4 @@ const EnquiryTable = ({
     );
 };
 
-export default EnquiryTable;
+export default FeedbackTable;

@@ -17,6 +17,7 @@ import SliderTable from "./SliderTable";
 import PlayerTable from "./PlayerTable";
 import AddPlayer from "./AddPlayer";
 import EnquiryTable from "./EnquiryTable";
+import FeedbackTable from "./FeedbackTable";
 
 
 const AdminDashboard = () => {
@@ -28,6 +29,7 @@ const AdminDashboard = () => {
     const [sliderData, setSliderData] = useState([]);
     const [playerData, setPlayerData] = useState([]);
     const [enquiryData, setEnquiryData] = useState([]);
+    const [feedbackData, setFeedbackData] = useState([]);
     
 
     const [activeMenu, setActiveMenu] = useState("news");
@@ -57,6 +59,9 @@ const AdminDashboard = () => {
 
     const [enquiryPage, setEnquiryPage] = useState(1);
     const [enquiryTotal, setEnquiryTotal] = useState(1);
+
+    const [feedbackPage, setFeedbackPage] = useState(1);
+    const [feedbackTotal, setFeedbackTotal] = useState(1);
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [touchStartX, setTouchStartX] = useState(0);
@@ -100,6 +105,10 @@ const AdminDashboard = () => {
     useEffect(() => {
         if (activeMenu === "enquiry") fetchEnquiries(enquiryPage);
     }, [activeMenu, enquiryPage]);
+
+    useEffect(() => {
+        if (activeMenu === "feedback") fetchFeedbacks(feedbackPage);
+    }, [activeMenu, feedbackPage]);
 
     
     const fetchNews = async (page = 1) => {
@@ -189,6 +198,16 @@ const AdminDashboard = () => {
         }
     };
 
+    const fetchFeedbacks = async (page = 1) => {
+        try {
+            const res = await axios.get(`/feedback?page=${page}&limit=5`);
+            setFeedbackData(res.data.data || []);
+            setFeedbackTotal(res.data.totalPages || 1);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     const filterData = (list) => {
         if (!search) return list;
         return list.filter(item =>
@@ -225,6 +244,7 @@ const AdminDashboard = () => {
                     <li onClick={() => { setActiveMenu("slider"); setSliderPage(1); setSidebarOpen(false); }}>🎞️ Image Slider</li>
                     <li onClick={() => { setActiveMenu("players"); setPlayerPage(1); setSidebarOpen(false); }}>🏅 Best Players</li>
                     <li onClick={() => { setActiveMenu("enquiry"); setSidebarOpen(false); }}>📩 Enquiries</li>
+                    <li onClick={() => {setActiveMenu("feedback"); setSidebarOpen(false); }}>💬 Feedbacks</li>
                 </ul>
             </div>
 
@@ -582,10 +602,27 @@ const AdminDashboard = () => {
                             </div>
 
                             <EnquiryTable
-                                enquiries={enquiryData}
+                                enquiries={filterData(enquiryData)}
                                 currentPage={enquiryPage}
                                 totalPages={enquiryTotal}
                                 onPageChange={setEnquiryPage}
+                                refresh={() => fetchEnquiries(enquiryPage)}
+                            />
+                        </>
+                    )}
+
+                    {activeMenu === "feedback" && (
+                        <>
+                            <div className="news-header">
+                                <h2>💬 Feedback Management</h2>
+                            </div>
+
+                            <FeedbackTable
+                                feedbacks={filterData(feedbackData)}
+                                currentPage={feedbackPage}
+                                totalPages={feedbackTotal}
+                                onPageChange={setFeedbackPage}
+                                refresh={() => fetchFeedbacks(feedbackPage)}
                             />
                         </>
                     )}

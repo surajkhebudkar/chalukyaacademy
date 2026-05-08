@@ -13,7 +13,7 @@ import videoRoutes from "./routes/videoRoutes.js";
 import sliderRoutes from "./routes/imageSliderRoutes.js";
 import playerRoutes from "./routes/bestPlayerRoutes.js";
 import enquiryRoutes from "./routes/enquiryRoutes.js";
-
+import feedbackRoutes from "./routes/feedbackRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,6 +37,7 @@ app.use("/api/videos", videoRoutes);
 app.use("/api/slider", sliderRoutes);
 app.use("/api/players", playerRoutes);
 app.use("/api/enquiry", enquiryRoutes);
+app.use("/api/feedback", feedbackRoutes);
 
 const PORT = 5000;
 app.listen(PORT, () => {

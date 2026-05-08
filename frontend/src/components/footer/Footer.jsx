@@ -129,23 +129,34 @@ const Footer = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleFeedbackSubmit = (e) => {
+    const handleFeedbackSubmit = async (e) => {
         e.preventDefault();
 
         if (validateFeedback()) {
-            console.log("Feedback Submitted:", formData.feedback);
 
-            alert("Feedback sent successfully!");
+            try {
 
-            setFormData({
-                ...formData,
-                feedback: "",
-            });
+                await axios.post("/feedback", {
+                    feedback: formData.feedback,
+                });
 
-            setErrors({
-                ...errors,
-                feedback: "",
-            });
+                alert("Feedback sent successfully!");
+
+                setFormData({
+                    ...formData,
+                    feedback: "",
+                });
+
+                setErrors({
+                    ...errors,
+                    feedback: "",
+                });
+
+            } catch (error) {
+
+                alert("Failed to send feedback");
+
+            }
         }
     };
 
