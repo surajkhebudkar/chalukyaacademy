@@ -7,6 +7,25 @@ const EnquiryTable = ({
     totalPages,
     onPageChange
 }) => {
+
+    const deleteEnquiry = async (id) => {
+        const confirmDelete = window.confirm(
+            "Delete this enquiry?"
+        );
+
+        if (!confirmDelete) return;
+
+        try {
+            await axios.delete(`/enquiry/${id}`);
+
+            window.location.reload();
+
+        } catch (err) {
+            console.log(err);
+            alert("Delete failed");
+        }
+    };
+
     return (
         <>
             <table className="news-table">
@@ -18,26 +37,66 @@ const EnquiryTable = ({
                         <th>Enquiry</th>
                         <th>Remark</th>
                         <th>Date</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     {(enquiries || []).map((item) => (
                         <tr key={item._id}>
+
                             <td>{item.name}</td>
+
                             <td>{item.email || "-"}</td>
+
                             <td>{item.contact}</td>
+
                             <td>{item.enquiry}</td>
+
                             <td>{item.remark || "-"}</td>
+
                             <td>
-                                {new Date(item.createdAt).toLocaleString()}
+                                {new Date(item.createdAt)
+                                    .toLocaleString()}
                             </td>
+
+                            <td
+                                style={{
+                                    display: "flex",
+                                    gap: "8px",
+                                    flexWrap: "wrap"
+                                }}
+                            >
+
+                                {item.email && (
+                                    <a
+                                        href={`mailto:${item.email}`}
+                                        className="edit-btn"
+                                        style={{
+                                            textDecoration: "none",
+                                            display: "inline-block"
+                                        }}
+                                    >
+                                        Reply
+                                    </a>
+                                )}
+
+                                <button
+                                    className="delete-btn"
+                                    onClick={() => deleteEnquiry(item._id)}
+                                >
+                                    Delete
+                                </button>
+
+                            </td>
+
                         </tr>
                     ))}
                 </tbody>
             </table>
 
             <div className="pagination">
+
                 <button
                     disabled={currentPage === 1}
                     onClick={() => onPageChange(currentPage - 1)}
@@ -55,6 +114,7 @@ const EnquiryTable = ({
                 >
                     Next ➡
                 </button>
+
             </div>
         </>
     );

@@ -74,4 +74,24 @@ export const getAllEnquiries = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+
+    // DELETE ENQUIRY
+    export const deleteEnquiry = async (req, res) => {
+        try {
+
+            await Enquiry.findByIdAndDelete(req.params.id);
+
+            res.status(200).json({
+                success: true,
+                message: "Enquiry deleted successfully"
+            });
+
+        } catch (error) {
+
+            res.status(500).json({
+                error: error.message
+            });
+
+        }
+    };
 };
