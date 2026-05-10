@@ -191,7 +191,6 @@ body {
     width: 100%;
     border-collapse: collapse;
     text-align: center;
-    display: block;
     overflow-x: auto;
     white-space: nowrap;
 }
