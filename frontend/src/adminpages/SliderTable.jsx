@@ -48,7 +48,7 @@ const SliderTable = ({
                                     style={{
                                         width: "80px",
                                         height: "60px",
-                                        objectFit: "cover", // 🔥 FIX
+                                        objectFit: "cover",
                                         borderRadius: "6px"
                                     }}
                                 />
@@ -62,7 +62,8 @@ const SliderTable = ({
                                 <div style={{
                                     display: "flex",
                                     gap: "8px",
-                                    alignItems: "center"
+                                    alignItems: "center",
+                                    justifyContent: "center"
                                 }}>
                                     <button
                                         className="edit-btn"

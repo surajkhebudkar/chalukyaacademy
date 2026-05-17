@@ -61,13 +61,14 @@ const EnquiryTable = ({
                                     .toLocaleString()}
                             </td>
 
-                            <td
-                                style={{
-                                    display: "flex",
-                                    gap: "8px",
-                                    flexWrap: "wrap"
-                                }}
-                            >
+                            <td>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    }}
+                                >
 
                                 {item.email && (
                                     <a
@@ -89,6 +90,7 @@ const EnquiryTable = ({
                                     Delete
                                 </button>
 
+                                </div>
                             </td>
 
                         </tr>

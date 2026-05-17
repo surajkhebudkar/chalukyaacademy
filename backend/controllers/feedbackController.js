@@ -15,10 +15,18 @@ export const createFeedback = async (req, res) => {
         await newFeedback.save();
 
         // SEND EMAIL
+        // const transporter = nodemailer.createTransport({
+        //     host: "smtpout.secureserver.net",
+        //     port: 465,
+        //     secure: true,
+        //     auth: {
+        //         user: process.env.EMAIL_USER,
+        //         pass: process.env.EMAIL_PASS,
+        //     },
+        // });
+
         const transporter = nodemailer.createTransport({
-            host: "smtpout.secureserver.net",
-            port: 465,
-            secure: true,
+            service: "gmail",
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS,
